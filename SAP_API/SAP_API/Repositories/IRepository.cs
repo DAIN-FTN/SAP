@@ -2,12 +2,12 @@
 
 namespace SAP_API.Repositories
 {
-    public interface IRepository<T, TId> where T : IEntity, TId: Guid
+    public interface IRepository<T> where T : IEntity
     {
-        IEnumerable<T> getAll();
-        IEnumerable<T> getBy(Guid id);
-        T create(T entity);
-        T update(T entity);
-        T delete(Guid id);
+        IEnumerable<T> GetAll();
+        T GetById(Guid id);
+        T Create(T entity);
+        T Update(T entity);
+        bool Delete(Guid id);
     }
 }

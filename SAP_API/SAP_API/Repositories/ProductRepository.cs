@@ -4,43 +4,79 @@ namespace SAP_API.Repositories
 {
     public class ProductRepository : IRepository<Product>
     {
-        private List<Product> _products;
+        private List<Product> _products = new List<Product>();
 
-        public ProductRepository(List<Product> products)
+        public ProductRepository()
         {
-            _products = products;
+            SeedData();
         }
 
-        public Product create(Product entity)
+        public Product Create(Product entity)
         {
-            throw new NotImplementedException();
+            _products.Add(entity);
+            return entity;
         }
 
-        public Product delete(Guid id)
+        public bool Delete(Guid id)
         {
-            throw new NotImplementedException();
+            return _products.Remove(_products.FirstOrDefault(p => p.Id == id));
         }
 
-        public IEnumerable<Product> getAll()
+        public IEnumerable<Product> GetAll()
         {
-            throw new NotImplementedException();
+            return _products;
         }
 
-        public IEnumerable<Product> getBy(Guid id)
+        public Product GetById (Guid id)
         {
-            throw new NotImplementedException();
+            return _products.FirstOrDefault(p => p.Id == id);
         }
 
-        public Product update(Product entity)
+        public List<Product> GetByName(string name) 
+        { 
+            return _products.FindAll(p => p.Name == name);
+        }
+
+        public Product Update(Product productUpdate)
         {
-            throw new NotImplementedException();
+            Product product = GetById(productUpdate.Id);
+
+            product.BakingTimeInMins = productUpdate.BakingTimeInMins; 
+            product.Name = productUpdate.Name; 
+            product.BakingTempInC = productUpdate.BakingTempInC;
+            product.Size = productUpdate.Size;
+
+            return product;
         }
 
         private List<Product> SeedData()
         {
             return new List<Product>()
             {
-           
+                new Product
+                {
+                    BakingTempInC = 120,
+                    BakingTimeInMins= 30,
+                    Id= Guid.NewGuid(),
+                    Name = "Croissant",
+                    Size = 4
+                },
+                new Product
+                {
+                    BakingTempInC = 150,
+                    BakingTimeInMins= 60,
+                    Id= Guid.NewGuid(),
+                    Name = "Pizza",
+                    Size = 6
+                },
+                new Product
+                {
+                    BakingTempInC = 200,
+                    BakingTimeInMins= 45,
+                    Id= Guid.NewGuid(),
+                    Name = "Bagguete",
+                    Size = 6
+                }
             };
         }
     }
