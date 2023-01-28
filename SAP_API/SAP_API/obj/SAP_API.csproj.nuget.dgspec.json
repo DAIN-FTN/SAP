@@ -1,23 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\Natalija\\source\\repos\\SAP_API\\SAP_API\\SAP_API.csproj": {}
+    "C:\\Users\\Vladimir\\Documents\\SAP\\SAP_API\\SAP_API\\SAP_API.csproj": {}
   },
   "projects": {
-    "C:\\Users\\Natalija\\source\\repos\\SAP_API\\SAP_API\\SAP_API.csproj": {
+    "C:\\Users\\Vladimir\\Documents\\SAP\\SAP_API\\SAP_API\\SAP_API.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\Natalija\\source\\repos\\SAP_API\\SAP_API\\SAP_API.csproj",
+        "projectUniqueName": "C:\\Users\\Vladimir\\Documents\\SAP\\SAP_API\\SAP_API\\SAP_API.csproj",
         "projectName": "SAP_API",
-        "projectPath": "C:\\Users\\Natalija\\source\\repos\\SAP_API\\SAP_API\\SAP_API.csproj",
-        "packagesPath": "C:\\Users\\Natalija\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\Natalija\\source\\repos\\SAP_API\\SAP_API\\obj\\",
+        "projectPath": "C:\\Users\\Vladimir\\Documents\\SAP\\SAP_API\\SAP_API\\SAP_API.csproj",
+        "packagesPath": "C:\\Users\\Vladimir\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\Vladimir\\Documents\\SAP\\SAP_API\\SAP_API\\obj\\",
         "projectStyle": "PackageReference",
-        "fallbackFolders": [
-          "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
-        ],
         "configFilePaths": [
-          "C:\\Users\\Natalija\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\Vladimir\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
@@ -67,7 +64,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.100\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.102\\RuntimeIdentifierGraph.json"
         }
       }
     }
