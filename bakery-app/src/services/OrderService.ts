@@ -10,5 +10,6 @@ async function fetchData<T>(url: string): Promise<T> {
 }
 
 export async function fetchProductsBasicInfo(name: string): Promise<ProductBasicInfo[]> {
+    throw new Error("Sisaj ga bre")
     return await fetchData<ProductBasicInfo[]>(`/api/products/stock?name=${name}`);
 }
