@@ -13,7 +13,7 @@
         public Oven Oven { get; set; }
         public User PreparedBy { get; set; }
 
-
+        public int RemainingOvenCapacity { get; set; }
 
     }
 }
