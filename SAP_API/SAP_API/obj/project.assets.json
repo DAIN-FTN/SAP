@@ -230,11 +230,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\Natalija\\source\\repos\\SAP_API\\SAP_API\\SAP_API.csproj",
+      "projectUniqueName": "C:\\Users\\Natalija\\Desktop\\master danilo\\SAP\\SAP_API\\SAP_API\\SAP_API.csproj",
       "projectName": "SAP_API",
-      "projectPath": "C:\\Users\\Natalija\\source\\repos\\SAP_API\\SAP_API\\SAP_API.csproj",
+      "projectPath": "C:\\Users\\Natalija\\Desktop\\master danilo\\SAP\\SAP_API\\SAP_API\\SAP_API.csproj",
       "packagesPath": "C:\\Users\\Natalija\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\Natalija\\source\\repos\\SAP_API\\SAP_API\\obj\\",
+      "outputPath": "C:\\Users\\Natalija\\Desktop\\master danilo\\SAP\\SAP_API\\SAP_API\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
