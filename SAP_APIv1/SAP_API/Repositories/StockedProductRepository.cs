@@ -16,7 +16,8 @@ namespace SAP_API.Repositories
 
         public StockedProduct Create(StockedProduct entity)
         {
-            throw new NotImplementedException();
+            _stockedProducts.Add(entity);
+            return entity;
         }
 
         public bool Delete(Guid id)
