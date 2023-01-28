@@ -10,5 +10,5 @@ async function fetchData<T>(url: string): Promise<T> {
 }
 
 export async function fetchProductsBasicInfo(name: string): Promise<ProductBasicInfo[]> {
-    return await fetchData<ProductBasicInfo[]>(`/getProducts?name=${name}`);
+    return await fetchData<ProductBasicInfo[]>(`/api/products/stock?name=${name}`);
 }

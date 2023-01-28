@@ -1,7 +1,8 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { FC } from "react";
 import styled from "styled-components";
 import { ProductBasicInfo } from "../models/ProductBasicInfo";
+import { fetchProductsBasicInfo } from "../services/OrderService";
 import AvailableProductsList, { AvailableProductsListProps } from "./AvailableProductsList";
 import Button from "./Button";
 
@@ -42,6 +43,19 @@ const CreateOrderPage: FC = () => {
             { id: "3", name: "Product 3", availableQuantity: 30 }
         ]
     };
+
+    const [productsOnStock, setProductsOnStock] = useState<ProductBasicInfo[] | []>([
+        { id: "1", name: "Product 1", availableQuantity: 10 },
+        { id: "2", name: "Product 2", availableQuantity: 20 },
+        { id: "3", name: "Product 3", availableQuantity: 30 }
+    ]);
+
+    useEffect(() => {
+        fetchProductsBasicInfo("Croissant")
+        .then((products) => {
+            setProductsOnStock(products);
+        });
+    }, []);
     
 
     return (
@@ -53,7 +67,7 @@ const CreateOrderPage: FC = () => {
                     <Button buttonProps={{name: "Search"}}></Button>
                 </SearchWrapper>
                 <Label>List of products in stock</Label>
-                <AvailableProductsList props={products} />
+                <AvailableProductsList props={{products: productsOnStock}} />
                 <Label>Products in order</Label>
                 <AvailableProductsList props={products} />
             </Panel>
