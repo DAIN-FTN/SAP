@@ -55,13 +55,13 @@ namespace SAP_API.Repositories
 
         private List<Product> SeedData()
         {
-            return new List<Product>()
+            return new List<Product>
             {
                 new Product
                 {
                     BakingTempInC = 120,
                     BakingTimeInMins= 30,
-                    Id= Guid.NewGuid(),
+                    Id= Guid.Parse("5cd54cb6-0df4-420f-96fd-f6e2cf6e2000"),
                     Name = "Croissant",
                     Size = 4
                 },
@@ -69,7 +69,7 @@ namespace SAP_API.Repositories
                 {
                     BakingTempInC = 150,
                     BakingTimeInMins= 60,
-                    Id= Guid.NewGuid(),
+                    Id= Guid.Parse("d174996a-63e4-4b6b-b322-fdf235d91444"),
                     Name = "Pizza",
                     Size = 6
                 },
@@ -77,7 +77,7 @@ namespace SAP_API.Repositories
                 {
                     BakingTempInC = 200,
                     BakingTimeInMins= 45,
-                    Id= Guid.NewGuid(),
+                    Id= Guid.Parse("725b7a84-c8de-4c77-9c61-dcdafe0ea091"),
                     Name = "Bagguete",
                     Size = 6
                 }
