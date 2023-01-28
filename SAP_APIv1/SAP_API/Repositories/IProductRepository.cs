@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace SAP_API.Repositories
 {
-    interface IProductRepository: IRepository<Product>
+    public interface IProductRepository: IRepository<Product>
     {
         public List<Product> GetByName(string name);
     }
