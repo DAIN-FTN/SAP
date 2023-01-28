@@ -1,0 +1,11 @@
+{
+  "Version": 1,
+  "Hash": "XWWiWI9S8qiFjwMqgp1EyYV0xMcsBLqh8FXuca3tWX4=",
+  "Source": "SAP_API",
+  "BasePath": "_content/SAP_API",
+  "Mode": "Default",
+  "ManifestType": "Build",
+  "ReferencedProjectsConfiguration": [],
+  "DiscoveryPatterns": [],
+  "Assets": []
+}

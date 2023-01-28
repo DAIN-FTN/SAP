@@ -1,0 +1,3 @@
+﻿<Project>
+  <Import Project="..\build\SAP_API.props" />
+</Project>
