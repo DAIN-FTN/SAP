@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace SAP_API.DTOs
 {
-    public class ProductStockDTO
+    public class ProductStockResponse
     {
         public Guid Id { get; set; }
         public string Name { get; set; }

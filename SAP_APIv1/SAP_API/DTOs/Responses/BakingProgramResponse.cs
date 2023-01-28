@@ -1,11 +1,12 @@
-﻿using System;
+﻿using SAP_API.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace SAP_API.Models
+namespace SAP_API.DTOs.Responses
 {
-    public class BakingProgram: IEntity
+    public class BakingProgramResponse
     {
         public Guid Id { get; set; }
         public string Code { get; set; }
@@ -15,9 +16,7 @@ namespace SAP_API.Models
         public int BakingTempInC { get; set; }
         public DateTime BakingProgrammedAt { get; set; }
         public DateTime BakingStartedAt { get; set; }
-        public Oven Oven { get; set; }
-        public User PreparedBy { get; set; }
+        public string OvenCode { get; set; }
 
-        public int RemainingOvenCapacity { get; set; }
     }
 }

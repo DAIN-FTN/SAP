@@ -9,9 +9,9 @@ namespace SAP_API.Mappers
 {
     public class ProductMapper
     {
-        public static ProductStockDTO CreateProductStockDTO(Product product, int availableQuantity)
+        public static ProductStockResponse CreateProductStockDTO(Product product, int availableQuantity)
         {
-            return new ProductStockDTO
+            return new ProductStockResponse
             {
                 Id = product.Id,
                 Name = product.Name,

@@ -54,13 +54,13 @@ namespace SAP_API.Repositories
                     ReservedQuantity = 10,
                     Product = new Product
                     {
-                     BakingTempInC = 120,
-                     BakingTimeInMins= 30,
-                     Id= Guid.Parse("5cd54cb6-0df4-420f-96fd-f6e2cf6e2000"),
-                     Name = "Chocolate Croissant",
-                     Size = 4
+                        BakingTempInC = 120,
+                        BakingTimeInMins= 30,
+                        Id= Guid.Parse("5cd54cb6-0df4-420f-96fd-f6e2cf6e2000"),
+                        Name = "Chocolate Croissant",
+                        Size = 4
                     },
-                    StockLocation = new StockLocation()
+                    Location = new StockLocation()
                 },
                 new StockedProduct
                 {
@@ -69,13 +69,13 @@ namespace SAP_API.Repositories
                     ReservedQuantity = 10,
                     Product = new Product
                     {
-                     BakingTempInC = 120,
-                     BakingTimeInMins= 30,
-                     Id= Guid.Parse("5cd54cb6-0df4-420f-96fd-f6e2cf6e2001"),
-                     Name = "Vanilla Croissant",
-                     Size = 4
+                        BakingTempInC = 120,
+                        BakingTimeInMins= 30,
+                        Id= Guid.Parse("5cd54cb6-0df4-420f-96fd-f6e2cf6e2001"),
+                        Name = "Vanilla Croissant",
+                        Size = 4
                     },
-                    StockLocation = new StockLocation()
+                    Location = new StockLocation()
                 },
                 new StockedProduct
                 {
@@ -84,13 +84,13 @@ namespace SAP_API.Repositories
                     ReservedQuantity = 10,
                     Product = new Product
                     {
-                     BakingTempInC = 120,
-                     BakingTimeInMins= 30,
-                     Id= Guid.Parse("5cd54cb6-0df4-420f-96fd-f6e2cf6e2000"),
-                     Name = "Chocolate Croissant",
-                     Size = 4
+                        BakingTempInC = 120,
+                        BakingTimeInMins= 30,
+                        Id= Guid.Parse("5cd54cb6-0df4-420f-96fd-f6e2cf6e2000"),
+                        Name = "Chocolate Croissant",
+                        Size = 4
                     },
-                    StockLocation = new StockLocation()
+                    Location = new StockLocation()
                 },
                 new StockedProduct
                 {
@@ -99,13 +99,13 @@ namespace SAP_API.Repositories
                     ReservedQuantity = 10,
                     Product = new Product
                     {
-                      BakingTempInC = 150,
-                      BakingTimeInMins= 60,
-                      Id= Guid.Parse("d174996a-63e4-4b6b-b322-fdf235d91444"),
-                      Name = "Pizza",
-                      Size = 6
+                        BakingTempInC = 150,
+                        BakingTimeInMins= 60,
+                        Id= Guid.Parse("d174996a-63e4-4b6b-b322-fdf235d91444"),
+                        Name = "Pizza",
+                        Size = 6
                     },
-                    StockLocation = new StockLocation()
+                    Location = new StockLocation()
                 },                
                 new StockedProduct
                 {
@@ -114,13 +114,13 @@ namespace SAP_API.Repositories
                     ReservedQuantity = 10,
                     Product = new Product
                     {
-                      BakingTempInC = 150,
-                      BakingTimeInMins= 60,
-                      Id= Guid.Parse("d174996a-63e4-4b6b-b322-fdf235d91444"),
-                      Name = "Pizza",
-                      Size = 6
+                        BakingTempInC = 150,
+                        BakingTimeInMins= 60,
+                        Id= Guid.Parse("d174996a-63e4-4b6b-b322-fdf235d91444"),
+                        Name = "Pizza",
+                        Size = 6
                     },
-                    StockLocation = new StockLocation()
+                    Location = new StockLocation()
                 },
                 new StockedProduct
                 {
@@ -129,13 +129,13 @@ namespace SAP_API.Repositories
                     ReservedQuantity = 10,
                     Product = new Product
                     {
-                      BakingTempInC = 200,
-                      BakingTimeInMins= 45,
-                      Id= Guid.Parse("725b7a84-c8de-4c77-9c61-dcdafe0ea091"),
-                      Name = "Bagguete",
-                      Size = 6
+                         BakingTempInC = 200,
+                         BakingTimeInMins= 45,
+                         Id= Guid.Parse("725b7a84-c8de-4c77-9c61-dcdafe0ea091"),
+                         Name = "Bagguete",
+                         Size = 6
                     },
-                    StockLocation = new StockLocation()
+                    Location = new StockLocation()
                 }
             };
         }
