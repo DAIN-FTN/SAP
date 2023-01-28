@@ -38,7 +38,7 @@ namespace SAP_API.Repositories
 
         public List<Product> GetByName(string name)
         {
-            return _products.FindAll(p => p.Name == name);
+            return _products.FindAll(p => p.Name.Contains(name));
         }
 
         public Product Update(Product productUpdate)
@@ -53,16 +53,24 @@ namespace SAP_API.Repositories
             return product;
         }
 
-        private List<Product> SeedData()
+        private void SeedData()
         {
-            return new List<Product>
+            _products = new List<Product>
             {
                 new Product
                 {
                     BakingTempInC = 120,
                     BakingTimeInMins= 30,
                     Id= Guid.Parse("5cd54cb6-0df4-420f-96fd-f6e2cf6e2000"),
-                    Name = "Croissant",
+                    Name = "Chocolate Croissant",
+                    Size = 4
+                },
+                new Product
+                {
+                    BakingTempInC = 120,
+                    BakingTimeInMins= 30,
+                    Id= Guid.Parse("5cd54cb6-0df4-420f-96fd-f6e2cf6e2001"),
+                    Name = "Vanilla Croissant",
                     Size = 4
                 },
                 new Product

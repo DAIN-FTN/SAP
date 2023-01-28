@@ -58,7 +58,22 @@ namespace SAP_API.Repositories
                      BakingTimeInMins= 30,
                      BakingTempInC = 120,
                      Id= Guid.Parse("5cd54cb6-0df4-420f-96fd-f6e2cf6e2000"),
-                     Name = "Croissant",
+                     Name = "Chocolate Croissant",
+                     Size = 4
+                    },
+                    StockLocation = new StockLocation()
+                },
+                new StockedProduct
+                {
+                    Id = Guid.NewGuid(),
+                    Quantity = 20,
+                    ReservedQuantity = 10,
+                    Product = new Product
+                    {
+                     BakingTempInC = 120,
+                     BakingTimeInMins= 30,
+                     Id= Guid.Parse("5cd54cb6-0df4-420f-96fd-f6e2cf6e2001"),
+                     Name = "Vanilla Croissant",
                      Size = 4
                     },
                     StockLocation = new StockLocation()
@@ -73,7 +88,7 @@ namespace SAP_API.Repositories
                      BakingTempInC = 120,
                      BakingTimeInMins= 30,
                      Id= Guid.Parse("5cd54cb6-0df4-420f-96fd-f6e2cf6e2000"),
-                     Name = "Croissant",
+                     Name = "Chocolate Croissant",
                      Size = 4
                     },
                     StockLocation = new StockLocation()

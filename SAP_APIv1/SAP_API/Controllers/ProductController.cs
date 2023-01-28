@@ -17,7 +17,7 @@ namespace SAP_API.Controllers
             _productService = productService;
         }
 
-        [HttpGet("/stock")]
+        [HttpGet("stock")]
         public ActionResult<ProductStockDTO> GetProductStock([FromQuery] String name)
         {
             List<ProductStockDTO> response = _productService.GetProductStock(name);
