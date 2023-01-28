@@ -1,6 +1,11 @@
-﻿namespace SAP_API.Models
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+
+namespace SAP_API.Models
 {
-    public class BakingProgramProduct
+    public class BakingProgramProduct: IEntity
     {
         public Guid Id { get; set; }
         public Product Product { get; set; }

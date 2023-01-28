@@ -1,8 +1,12 @@
 ﻿using SAP_API.Models;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace SAP_API.Repositories
 {
-    public class ProductRepository : IRepository<Product>
+    public class ProductRepository : IProductRepository
     {
         private List<Product> _products = new List<Product>();
 
@@ -27,13 +31,13 @@ namespace SAP_API.Repositories
             return _products;
         }
 
-        public Product GetById (Guid id)
+        public Product GetById(Guid id)
         {
             return _products.FirstOrDefault(p => p.Id == id);
         }
 
-        public List<Product> GetByName(string name) 
-        { 
+        public List<Product> GetByName(string name)
+        {
             return _products.FindAll(p => p.Name == name);
         }
 
@@ -41,8 +45,8 @@ namespace SAP_API.Repositories
         {
             Product product = GetById(productUpdate.Id);
 
-            product.BakingTimeInMins = productUpdate.BakingTimeInMins; 
-            product.Name = productUpdate.Name; 
+            product.BakingTimeInMins = productUpdate.BakingTimeInMins;
+            product.Name = productUpdate.Name;
             product.BakingTempInC = productUpdate.BakingTempInC;
             product.Size = productUpdate.Size;
 
