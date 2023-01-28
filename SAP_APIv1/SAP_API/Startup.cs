@@ -20,6 +20,7 @@ namespace SAP_API
         {
             services.AddControllers();
             services.AddScoped<IProductService, ProductService>();
+            services.AddScoped<IBakingProgramService, BakingProgramService>();
             services.AddScoped<IProductRepository, ProductRepository>();
             services.AddScoped<IStockedProductRepository, StockedProductRepository>();
             services.AddScoped<IBakingProgramRepository, BakingProgramRepository>();

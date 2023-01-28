@@ -20,8 +20,8 @@ namespace SAP_API.Controllers
             _bakingProgramService = bakingProgramService;
         }
 
-        [HttpPost]
-        public ActionResult<List<BakingProgramResponse>> CheckAvailableBakingPrograms([FromBody] FindAvailableBakingProgramsRequest body)
+        [HttpPost("available")]
+        public ActionResult<List<BakingProgramResponse>> FindAvailableBakingPrograms([FromBody] FindAvailableBakingProgramsRequest body)
         {
             List<BakingProgramResponse> response = _bakingProgramService.FindAvailableBakingPrograms(body);
             if (response.Count == 0)

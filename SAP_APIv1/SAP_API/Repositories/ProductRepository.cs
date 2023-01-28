@@ -63,15 +63,15 @@ namespace SAP_API.Repositories
                     BakingTimeInMins= 30,
                     Id= Guid.Parse("5cd54cb6-0df4-420f-96fd-f6e2cf6e2000"),
                     Name = "Chocolate Croissant",
-                    Size = 4
+                    Size = 2
                 },
                 new Product
                 {
-                    BakingTempInC = 120,
+                    BakingTempInC = 140,
                     BakingTimeInMins= 30,
                     Id= Guid.Parse("5cd54cb6-0df4-420f-96fd-f6e2cf6e2001"),
                     Name = "Vanilla Croissant",
-                    Size = 4
+                    Size = 1
                 },
                 new Product
                 {

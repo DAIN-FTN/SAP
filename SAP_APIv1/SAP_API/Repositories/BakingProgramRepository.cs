@@ -60,26 +60,26 @@ namespace SAP_API.Repositories
                     Id = new Guid("00000000-0000-0000-0000-000000000000"),
                     CreatedAt = new DateTime(2020, 1, 1, 12, 0, 0),
                     Status = BakingPogramStatus.Created,
-                    BakingTimeInMins = 60,
-                    BakingTimeInC = 180,
+                    BakingTimeInMins = 30,
+                    BakingTempInC = 120,
                     BakingProgrammedAt = new DateTime(2020, 1, 1, 12, 0, 0),
                     BakingStartedAt = new DateTime(2020, 1, 1, 12, 0, 0),
                     Oven = new Oven { Id = new Guid("00000000-0000-0000-0000-000000000001"), Code = "Oven 1" },
                     PreparedBy = new User { Id = new Guid("00000000-0000-0000-0000-000000000002"), Username = "John", Password = "Doe" },
-                    RemainingOvenCapacity = 2
+                    RemainingOvenCapacity = 10
                 },
                 new BakingProgram
                 {
                     Id = new Guid("00000000-0000-0000-0000-000000000001"),
                     CreatedAt = new DateTime(2020, 2, 1, 12, 0, 0),
                     Status = BakingPogramStatus.Created,
-                    BakingTimeInMins = 90,
-                    BakingTimeInC = 200,
+                    BakingTimeInMins = 30,
+                    BakingTempInC = 140,
                     BakingProgrammedAt = new DateTime(2020, 2, 1, 12, 0, 0),
                     BakingStartedAt = new DateTime(2020, 2, 1, 12, 30, 0),
                     Oven = new Oven { Id = new Guid("00000000-0000-0000-0000-000000000002"), Code = "Oven 2" },
                     PreparedBy = new User { Id = new Guid("00000000-0000-0000-0000-000000000003"), Username = "Jane", Password = "Doe" },
-                    RemainingOvenCapacity = 1
+                    RemainingOvenCapacity = 10
                 },
                 new BakingProgram
                 {
@@ -87,13 +87,19 @@ namespace SAP_API.Repositories
                     CreatedAt = new DateTime(2020, 3, 1, 12, 0, 0),
                     Status = BakingPogramStatus.Created,
                     BakingTimeInMins = 120,
-                    BakingTimeInC = 190,
+                    BakingTempInC = 190,
                     BakingProgrammedAt = new DateTime(2020, 3, 1, 12, 0, 0),
                     BakingStartedAt = new DateTime(2020, 3, 1, 12, 45, 0),
                     Oven = new Oven { Id = new Guid("00000000-0000-0000-0000-000000000003"), Code = "Oven 3" },
-                    PreparedBy = new User { Id = new Guid("00000000-0000-0000-0000-000000000004"), Username = "Bob", Password = "Smith" }
+                    PreparedBy = new User { Id = new Guid("00000000-0000-0000-0000-000000000004"), Username = "Bob", Password = "Smith" },
+                    RemainingOvenCapacity = 10
                 }
             };
+        }
+
+        public List<BakingProgram> GetByTempAndTime(int temp, int time)
+        {
+            return _bakingPrograms.FindAll(x => x.BakingTempInC == temp && x.BakingTimeInMins == time);
         }
     }
 }

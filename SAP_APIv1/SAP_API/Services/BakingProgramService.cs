@@ -10,29 +10,112 @@ namespace SAP_API.Services
     public class BakingProgramService : IBakingProgramService
     {
         private readonly IProductRepository _productRepository;
+        private readonly IBakingProgramRepository _bakingProgramRepository;
+
+        public BakingProgramService(IProductRepository productRepository, IBakingProgramRepository bakingProgramRepository)
+        {
+            _productRepository = productRepository;
+            _bakingProgramRepository = bakingProgramRepository;
+        }
 
         internal class TimeAndTempKey
         {
-            string key;
+            public string Key { get; }
+            public int Temp { get; set; }
+            public int Time { get; set; }
+
+
             public TimeAndTempKey(int temp, int time)
             {
-                key = temp + "" + time;
+                Key = temp + "_" + time;
+                Temp = temp;
+                Time = time;
+
             }
+
+            public override bool Equals(object obj)
+            {
+                if (obj is TimeAndTempKey)
+                    return ((TimeAndTempKey)obj).Key.Equals(this.Key);
+                return false;
+            }
+
+            public override int GetHashCode()
+            {
+                return this.Key.GetHashCode();
+            }
+
+        }
+
+        internal class ProductQuantity
+        {
+            public Product Product {get; set;}
+            public int Quantity { get; set; }
+
+
         }
 
         public List<BakingProgramResponse> FindAvailableBakingPrograms(FindAvailableBakingProgramsRequest body)
         {
-            Dictionary<TimeAndTempKey, List<Product>> productsDict = new Dictionary<TimeAndTempKey, List<Product>>();
+            Dictionary<TimeAndTempKey, List<ProductQuantity>> productsDict = new Dictionary<TimeAndTempKey, List<ProductQuantity>>();
             List<BakingProgramResponse> resultList = new List<BakingProgramResponse>();
-            List<OrderProductRequest> products = body.OrderProducts;
+            List<OrderProductRequest> orderProducts = body.OrderProducts;
 
-            populateProductsWithSameTimeAndTempDictionary(productsDict, products);
-            
+            populateProductsWithSameTimeAndTempDictionary(productsDict, orderProducts);
+
+            IEnumerable<TimeAndTempKey> keys = productsDict.Keys;
+            foreach(TimeAndTempKey key in keys)
+            {
+                int temp = key.Temp;
+                int time = key.Time;
+                List<ProductQuantity> products = productsDict[key];
+                List<BakingProgram> bakingPrograms = _bakingProgramRepository.GetByTempAndTime(temp, time);
+                int bakingProgramIndex = 0;
+                int bakingProgramsCount = bakingPrograms.Count;
+                int productIndex = 0;
+                int productCount = products.Count;
+
+                while(bakingProgramIndex < bakingProgramsCount && productIndex < productCount)
+                {
+                    BakingProgram program = bakingPrograms[bakingProgramIndex];
+                    int remainingCapacity = program.RemainingOvenCapacity;
+                    while(remainingCapacity > 0 && productIndex < productCount)
+                    {
+                        ProductQuantity product = products[productIndex];
+                        int size = product.Product.Size;
+                        int quantity = product.Quantity;
+                        int numberOfProductsFittingInOven = remainingCapacity / size;
+                        int numberOfProductsForOven = Math.Min(quantity, numberOfProductsFittingInOven);
+                        if(numberOfProductsForOven == 0)
+                        {
+                            bakingProgramIndex++;
+                            break;
+                        }
+                        remainingCapacity -= size * numberOfProductsForOven;
+                        product.Quantity -= numberOfProductsForOven;
+                        if(product.Quantity == 0)
+                        {
+                            productIndex++;
+                        }
+
+                    }
+                }
+
+                if(productIndex < productCount)
+                {
+
+                }
+                
+
+
+            }
+
+
 
             return resultList;
         }
 
-        private void populateProductsWithSameTimeAndTempDictionary(Dictionary<TimeAndTempKey, List<Product>> productsDict, List<OrderProductRequest> products)
+        private void populateProductsWithSameTimeAndTempDictionary(Dictionary<TimeAndTempKey, List<ProductQuantity>> productsDict, List<OrderProductRequest> products)
         {
             foreach (OrderProductRequest product in products)
             {
@@ -44,11 +127,19 @@ namespace SAP_API.Services
                 TimeAndTempKey key = new TimeAndTempKey(temp, time);
 
                 if (productsDict.ContainsKey(key))
-                    productsDict[key].Add(productDetails);
+                    productsDict[key].Add(new ProductQuantity 
+                    { 
+                        Product = productDetails,
+                        Quantity = quantity
+                    });
                 else
                 {
-                    List<Product> productsWithSameBakingTimeAndTemp = new List<Product>();
-                    productsWithSameBakingTimeAndTemp.Add(productDetails);
+                    List<ProductQuantity> productsWithSameBakingTimeAndTemp = new List<ProductQuantity>();
+                    productsWithSameBakingTimeAndTemp.Add(new ProductQuantity
+                    {
+                        Product = productDetails,
+                        Quantity = quantity
+                    });
                     productsDict.Add(key, productsWithSameBakingTimeAndTemp);
                 }
 
