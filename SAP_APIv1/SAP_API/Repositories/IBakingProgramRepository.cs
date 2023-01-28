@@ -1,6 +1,8 @@
-﻿namespace SAP_API.Repositories
+﻿using SAP_API.Models;
+
+namespace SAP_API.Repositories
 {
-    public interface IBakingProgramRepository
+    public interface IBakingProgramRepository: IRepository<BakingProgram>
     {
     }
 }

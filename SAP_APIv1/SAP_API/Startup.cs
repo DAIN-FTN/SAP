@@ -22,6 +22,7 @@ namespace SAP_API
             services.AddScoped<IProductRepository, ProductRepository>();
             services.AddScoped<IStockedProductRepository, StockedProductRepository>();
             services.AddScoped<IBakingProgramRepository, BakingProgramRepository>();
+            services.AddScoped<IOvenRepository, OvenRepository>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
