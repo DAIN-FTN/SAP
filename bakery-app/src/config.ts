@@ -1,5 +1,5 @@
 export const config = { 
     serverAddress: "localhost", 
-    port: ":44200", 
+    port: ":5000", 
     httpProtocol: "http://",
   } as const;

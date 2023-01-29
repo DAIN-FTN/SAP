@@ -1,75 +1,64 @@
-import React from "react";
+import Paper from "@mui/material/Paper";
+import Table from "@mui/material/Table";
+import TableBody from "@mui/material/TableBody";
+import TableCell from "@mui/material/TableCell";
+import TableContainer from "@mui/material/TableContainer";
+import TableHead from "@mui/material/TableHead";
+import TableRow from "@mui/material/TableRow";
+import React, { useState } from "react";
 import { FC } from "react";
 import styled from "styled-components";
 import { ProductBasicInfo } from "../models/ProductBasicInfo";
 // import Table from 'react-bootstrap/Table';
 // import 'bootstrap/dist/css/bootstrap.min.css';
-
-const Container = styled.div`
-`;
-
-const Table = styled.table`
-    width: 100%;
-    font-size: 20px;
-`;
-
-const AdditionContainer = styled.div`
-    display: flex;
-    flex-direction: row;
-`;
-
-
-const PlusMinusButton = styled.span`
-    width: 24px;
-    height: 24px;
-    border-radius: 15px;
-    align-items: center;
-    justify-content: center;
-    &:hover {
-        cursor: pointer;
-    }
-`;
-
-const MinusButton = styled(PlusMinusButton)`
-    background-color: red;
-`;
-
-const PlusButton = styled(PlusMinusButton)`
-    background-color: green;
-`;
+import AddCircleIcon from '@mui/icons-material/AddCircle';
+import RemoveCircleIcon from '@mui/icons-material/RemoveCircle';
+import IconButton from "@mui/material/IconButton";
+import TextField from "@mui/material/TextField";
 
 export interface AvailableProductsListProps {
     products: ProductBasicInfo[];
 }
 
 const AvailableProductsList: FC<{ props: AvailableProductsListProps }> = ({ props }) => {
+    if (props.products.length === 0) {
+        return <p>No products available</p>;
+    }
+
     return (
-        <Container>
-            <Table>
-                <thead>
-                    <tr>
-                        <td>Product name</td>
-                        <td>Available quantity</td>
-                        <td>For this order</td>
-                    </tr>
-                </thead>
-                <tbody>
+        <TableContainer component={Paper}>
+            <Table sx={{ minWidth: 150 }} size="small" aria-label="simple table">
+                <TableHead>
+                    <TableRow>
+                        <TableCell>Product name</TableCell>
+                        <TableCell align="right">Available</TableCell>
+                        <TableCell align="right">Quantity for ordering</TableCell>
+                    </TableRow>
+                </TableHead>
+                <TableBody>
                     {props.products.map((product) => (
-                        <tr key={product.id}>
-                            <td>{product.name}</td>
-                            <td>{product.availableQuantity}</td>
-                            <td>
-                                <AdditionContainer>
-                                    <MinusButton>-</MinusButton>
-                                    <span>0</span>
-                                    <PlusButton>+</PlusButton>
-                                </AdditionContainer>
-                            </td>
-                        </tr>
+                        <TableRow
+                            key={product.id}
+                            sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                        >
+                            <TableCell component="th" scope="row">
+                                {product.name}
+                            </TableCell>
+                            <TableCell align="right">{product.quantity}</TableCell>
+                            <TableCell align="right">
+                                <IconButton aria-label="delete">
+                                    <RemoveCircleIcon />
+                                </IconButton>
+                                <TextField id={`standard-basic-${product.id}`} label="Quantity" variant="standard" size="small" sx={{width: '70px'}}/>
+                                <IconButton aria-label="delete">
+                                    <AddCircleIcon />
+                                </IconButton>
+                            </TableCell>
+                        </TableRow>
                     ))}
-                </tbody>
+                </TableBody>
             </Table>
-        </Container>
+        </TableContainer>
     );
 };
 

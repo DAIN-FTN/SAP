@@ -5,6 +5,8 @@ import Header from './components/Header';
 import styled from 'styled-components';
 import NavMenu from './components/NavMenu';
 import CreateOrderPage from './components/CreateOrderPage';
+import { AdapterLuxon } from '@mui/x-date-pickers/AdapterLuxon';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider'
 
 const Container = styled.div`
     display: flex;
@@ -18,16 +20,17 @@ const SecondRow = styled.div`
     height: 100%;
 `;
 
-
 function App() {
   return (
-    <Container>
-      <Header/>
-      <SecondRow>
-        <NavMenu />
-        <CreateOrderPage />
-      </SecondRow>
-    </Container>
+    <LocalizationProvider dateAdapter={AdapterLuxon}>
+      <Container>
+        <Header />
+        <SecondRow>
+          <NavMenu />
+          <CreateOrderPage />
+        </SecondRow>
+      </Container>
+    </LocalizationProvider>
   );
 }
 

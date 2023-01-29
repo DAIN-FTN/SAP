@@ -2,9 +2,15 @@ import React, { useEffect, useState } from "react";
 import { FC } from "react";
 import styled from "styled-components";
 import { ProductBasicInfo } from "../models/ProductBasicInfo";
-import { fetchProductsBasicInfo } from "../services/OrderService";
+import { fetchBakingTimeSlots, fetchProductsBasicInfo } from "../services/OrderService";
 import AvailableProductsList, { AvailableProductsListProps } from "./AvailableProductsList";
-import Button from "./Button";
+import Button from '@mui/material/Button';
+import TextField from "@mui/material/TextField";
+import { NewOrderRequest } from "../models/NewOrderRequest";
+import { BakingTimeSlot } from "../models/BakingTimeSlot";
+import BakingTimeSlotsList, { BakingTimeSlotsListProps } from "./BakingTimeSlotsList";
+import { DateTimePicker } from "@mui/x-date-pickers/DateTimePicker";
+import { stringify } from "querystring";
 
 const Container = styled.div`
     background-color: #e2e2e2;
@@ -36,45 +42,88 @@ const SearchField = styled.input`
 `;
 
 const CreateOrderPage: FC = () => {
-    const products: AvailableProductsListProps = {
-        products: [
-            { id: "1", name: "Product 1", availableQuantity: 10 },
-            { id: "2", name: "Product 2", availableQuantity: 20 },
-            { id: "3", name: "Product 3", availableQuantity: 30 }
-        ]
+    const [productsOnStock, setProductsOnStock] = useState<ProductBasicInfo[] | []>([]);
+    // const [newOrderRequest, setNewOrderRequest] = useState<NewOrderRequest | null>(null);
+
+    let productsForNewOrderRequest: ProductBasicInfo[] = [];
+    let newOrderRequest: NewOrderRequest = {
+        products: productsForNewOrderRequest,
+        bakingProgramId: null,
+    };
+    let bakingTimeSlots: BakingTimeSlotsListProps = {
+        bakingTimeSlots: [],
     };
 
-    const [productsOnStock, setProductsOnStock] = useState<ProductBasicInfo[] | []>([
-        { id: "1", name: "Product 1", availableQuantity: 10 },
-        { id: "2", name: "Product 2", availableQuantity: 20 },
-        { id: "3", name: "Product 3", availableQuantity: 30 }
-    ]);
+    // let productsOnStock: AvailableProductsListProps = {
+    //     products: []
+    // };
 
-    useEffect(() => {
-        fetchProductsBasicInfo("Croissant")
-        .then((products) => {
-            setProductsOnStock(products);
-        });
-    }, []);
-    
+    // useEffect(() => {
+    //     console.log('fetchProductsBasicInfo() in CreateOrderPage');
+    //     fetchProductsBasicInfo("Croissant")
+    //         .then((products) => {
+    //             console.log('fetch finished for fetchProductsBasicInfo() in CreateOrderPage');
+    //             // productsOnStock = { products: products };
+    //             setProductsOnStock(products);
+    //         });
+    // }, []);
+
+    const setDateTimeHandler = (e: any) => {
+        let dateTime = new Date(e.target.value);
+        console.log("setDateTimeHandler", dateTime);
+        fetchBakingTimeSlots(dateTime, productsForNewOrderRequest);
+    };
+
+    const productNameSearchChangeHandler = (e: { target: { value: string; }; }) => {
+        const productName = e.target.value;
+        console.log(productName);
+        if (!productName) {
+            setProductsOnStock([]);
+        } else {
+            fetchProductsBasicInfo(productName).then((products) => {
+                console.log('fetch finished for fetchProductsBasicInfo() in CreateOrderPage');
+                setProductsOnStock(products);
+            });
+        }
+    };
+
+    const createOrderHandler = () => {
+        console.log(newOrderRequest);
+
+    };
+
+    console.log('rendered CreateOrderPage');
 
     return (
         <Container>
             <Panel>
                 <Label>Search products in stock to add to order</Label>
                 <SearchWrapper>
-                    <SearchField type="text" placeholder="Search products"></SearchField>
-                    <Button buttonProps={{name: "Search"}}></Button>
+                    <TextField id="standard-basic" label="Product name" variant="standard" fullWidth sx={{ paddingRight: '16px' }} 
+                    onChange={productNameSearchChangeHandler}/>
+                    <Button variant="contained">Search</Button>
+
                 </SearchWrapper>
-                <Label>List of products in stock</Label>
+                <Label>Products in stock</Label>
                 <AvailableProductsList props={{products: productsOnStock}} />
-                <Label>Products in order</Label>
-                <AvailableProductsList props={products} />
+                <Label>Products for the new order</Label>
+                {/* <AvailableProductsList props={{products: productsOnStock}} /> */}
             </Panel>
             <Panel>
                 <Label>Order delivery date and time</Label>
+                <TextField
+                    id="datetime-local"
+                    type="datetime-local"
+                    defaultValue={new Date().toISOString().slice(0, 16)}
+                    sx={{ width: 250 }}
+                    InputLabelProps={{
+                        shrink: true,
+                    }}
+                    onChange={(e) => setDateTimeHandler(e)}
+                />
                 <Label>Available baking time slots</Label>
-                <Button buttonProps={{name: "Create order"}}></Button>
+                <BakingTimeSlotsList props={bakingTimeSlots} />
+                <Button variant="contained" onClick={createOrderHandler}>Create order</Button>
             </Panel>
         </Container>
     );

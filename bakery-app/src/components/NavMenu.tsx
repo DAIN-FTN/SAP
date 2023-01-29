@@ -1,7 +1,7 @@
 import React from "react";
 import { FC } from "react";
 import styled from "styled-components";
-import Button from "./Button";
+import Button from '@mui/material/Button';
 
 const Container = styled.div`
     display: flex;
@@ -15,8 +15,9 @@ const Container = styled.div`
 const NavMenu: FC = () => {
     return (
         <Container>
-            <Button buttonProps={{name: "Home Page"}} />
-            <Button buttonProps={{name: "Create New Order"}} />
+            <Button variant="contained" sx={{ backgroundColor: '#DC3F3F', margin: '8px' }}>Home Page</Button>
+            <Button variant="contained" sx={{ backgroundColor: '#DC3F3F', margin: '8px' }}>Create new order</Button>
+            
         </Container>
     );
 };
