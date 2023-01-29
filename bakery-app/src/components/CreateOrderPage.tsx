@@ -10,7 +10,6 @@ import { NewOrderRequest } from "../models/NewOrderRequest";
 import { BakingTimeSlot } from "../models/BakingTimeSlot";
 import BakingTimeSlotsList, { BakingTimeSlotsListProps } from "./BakingTimeSlotsList";
 import { DateTimePicker } from "@mui/x-date-pickers/DateTimePicker";
-import { stringify } from "querystring";
 import NewOrderProductsList from "./NewOrderProductsList";
 
 const Container = styled.div`
@@ -37,11 +36,6 @@ const SearchWrapper = styled.div`
     flex-direction: row;
 `;
 
-const SearchField = styled.input`
-    font-size: 24px;
-    width: 80%;
-`;
-
 const CreateOrderPage: FC = () => {
     const [productsOnStock, setProductsOnStock] = useState<ProductBasicInfo[] | []>([]);
     const [orderProducts, setOrderProducts] = useState<ProductBasicInfo[] | []>([]);
@@ -49,27 +43,6 @@ const CreateOrderPage: FC = () => {
     const [newOrderRequest, setNewOrderRequest] = useState<NewOrderRequest | null>(null);
 
     let productsForNewOrderRequest: ProductBasicInfo[] = [];
-    // let newOrderRequest: NewOrderRequest = {
-    //     products: productsForNewOrderRequest,
-    //     bakingProgramId: null,
-    // };
-    // let bakingTimeSlots: BakingTimeSlotsListProps = {
-    //     bakingTimeSlots: [],
-    // };
-
-    // let productsOnStock: AvailableProductsListProps = {
-    //     products: []
-    // };
-
-    // useEffect(() => {
-    //     console.log('fetchProductsBasicInfo() in CreateOrderPage');
-    //     fetchProductsBasicInfo("Croissant")
-    //         .then((products) => {
-    //             console.log('fetch finished for fetchProductsBasicInfo() in CreateOrderPage');
-    //             // productsOnStock = { products: products };
-    //             setProductsOnStock(products);
-    //         });
-    // }, []);
 
     const setDateTimeHandler = (e: any) => {
         let dateTime = new Date(e.target.value);

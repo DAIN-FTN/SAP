@@ -19,12 +19,16 @@ export async function fetchProductsBasicInfo(name: string): Promise<ProductBasic
 
 export async function fetchBakingTimeSlots(deliveryDateTime: Date, products: ProductBasicInfo[]): Promise<BakingTimeSlot[]> {
     const bakingTimeSlotRequest = {
-        shouldBeDoneAt: deliveryDateTime,
-        orderProducts: products.map((product) => ({
-            productId: product.id,
-            quantity: product.quantity,
-        }))
+        shouldBeDoneAt: deliveryDateTime.toISOString(),
+        // orderProducts: products.map((product) => ({
+        //     productId: product.id,
+        //     quantity: product.quantity,
+        // }))
+        orderProducts: [
+            { productId: "5cd54cb6-0df4-420f-96fd-f6e2cf6e2000", quantity: 1 }
+        ]
     };
+    console.log(bakingTimeSlotRequest);
 
     return await postData<BakingTimeSlot[]>(`/api/baking-programs/available`, bakingTimeSlotRequest);
 }
