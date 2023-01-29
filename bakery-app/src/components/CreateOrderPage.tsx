@@ -11,6 +11,7 @@ import { BakingTimeSlot } from "../models/BakingTimeSlot";
 import BakingTimeSlotsList, { BakingTimeSlotsListProps } from "./BakingTimeSlotsList";
 import { DateTimePicker } from "@mui/x-date-pickers/DateTimePicker";
 import { stringify } from "querystring";
+import NewOrderProductsList from "./NewOrderProductsList";
 
 const Container = styled.div`
     background-color: #e2e2e2;
@@ -43,13 +44,14 @@ const SearchField = styled.input`
 
 const CreateOrderPage: FC = () => {
     const [productsOnStock, setProductsOnStock] = useState<ProductBasicInfo[] | []>([]);
-    // const [newOrderRequest, setNewOrderRequest] = useState<NewOrderRequest | null>(null);
+    const [orderProducts, setOrderProducts] = useState<ProductBasicInfo[] | []>([]);
+    const [newOrderRequest, setNewOrderRequest] = useState<NewOrderRequest | null>(null);
 
     let productsForNewOrderRequest: ProductBasicInfo[] = [];
-    let newOrderRequest: NewOrderRequest = {
-        products: productsForNewOrderRequest,
-        bakingProgramId: null,
-    };
+    // let newOrderRequest: NewOrderRequest = {
+    //     products: productsForNewOrderRequest,
+    //     bakingProgramId: null,
+    // };
     let bakingTimeSlots: BakingTimeSlotsListProps = {
         bakingTimeSlots: [],
     };
@@ -105,9 +107,9 @@ const CreateOrderPage: FC = () => {
 
                 </SearchWrapper>
                 <Label>Products in stock</Label>
-                <AvailableProductsList props={{products: productsOnStock}} />
+                <AvailableProductsList props={{availableProducts: productsOnStock, orderProducts, setOrderProducts}} />
                 <Label>Products for the new order</Label>
-                {/* <AvailableProductsList props={{products: productsOnStock}} /> */}
+                <NewOrderProductsList props={{products: orderProducts}} />
             </Panel>
             <Panel>
                 <Label>Order delivery date and time</Label>

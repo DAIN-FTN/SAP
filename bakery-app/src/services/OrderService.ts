@@ -5,7 +5,16 @@ import { Order } from "../models/Order";
 import { ProductBasicInfo } from "../models/ProductBasicInfo";
 
 export async function fetchProductsBasicInfo(name: string): Promise<ProductBasicInfo[]> {
-    return await getData<ProductBasicInfo[]>(`/api/products/stock?name=${name}`);
+    try {
+        const data = await getData<any[]>(`/api/products/stock?name=${name}`);
+        return data.map((product) => ({
+            id: product.id,
+            name: product.name,
+            quantity: product.availableQuantity,
+        }));
+    } catch (error) {
+        return [] as ProductBasicInfo[];
+    }
 }
 
 export async function fetchBakingTimeSlots(deliveryDateTime: Date, products: ProductBasicInfo[]): Promise<BakingTimeSlot[]> {
