@@ -10,6 +10,7 @@ namespace SAP_API.Models
         public Guid Id { get; set; }
         public Product Product { get; set; }
         public Order Order { get; set; }
-        public int Quantity { get; set; }
+        public int ReservedQuantity { get; set; }
+        public StockLocation Location { get; set; }
     }
 }

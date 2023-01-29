@@ -10,7 +10,6 @@ namespace SAP_API.Services
     public interface IProductService
     {
 
-        public List<ProductStockDTO> GetProductStock(string name);
-        public void UpdateProductStock(ProductStockDTO productStock);
+        public List<ProductStockResponse> GetProductStock(string name);
     }
 }

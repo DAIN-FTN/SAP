@@ -18,9 +18,9 @@ namespace SAP_API.Controllers
         }
 
         [HttpGet("stock")]
-        public ActionResult<ProductStockDTO> GetProductStock([FromQuery] String name)
+        public ActionResult<ProductStockResponse> GetProductStock([FromQuery] String name)
         {
-            List<ProductStockDTO> response = _productService.GetProductStock(name);
+            List<ProductStockResponse> response = _productService.GetProductStock(name);
 
             if (response.Count == 0)
                 return NoContent();
