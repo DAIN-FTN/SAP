@@ -20,5 +20,13 @@ namespace SAP_API.Models
         public int RemainingOvenCapacity { get; set; }
 
         public List<BakingProgramProduct> Products { get; set; }
+
+        public void AddProductToProgram(BakingProgramProduct product)
+        {
+            Products.Add(product);
+            int productSize = product.Product.Size;
+            int productQuantity = product.Quantity;
+            RemainingOvenCapacity -= productSize * productQuantity;
+        }
     }
 }
