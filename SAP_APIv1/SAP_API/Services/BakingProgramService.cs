@@ -156,5 +156,15 @@ namespace SAP_API.Services
 
             }
         }
+
+        public void CreateBakingProgram()
+        {
+            throw new NotImplementedException();
+        }
+
+        public void UpdateBakingProgram(BakingProgram bakingProgram)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

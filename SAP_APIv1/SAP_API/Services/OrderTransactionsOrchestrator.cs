@@ -19,10 +19,9 @@
 
         public void OrchestrateOrderCreation()
         {
-            _orderService.CreateOrder();
+            _orderService.CreateOrder(null);
             _bakingProgramService.CreateBakingProgram();
             _bakingProgramService.UpdateBakingProgram(null);
-            _productService.UpdateProductStock(null);  
         }
     }
 }
