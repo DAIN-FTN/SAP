@@ -11,5 +11,6 @@ namespace SAP_API.Services
     {
 
         public List<ProductStockDTO> GetProductStock(string name);
+        public void UpdateProductStock(ProductStockDTO productStock);
     }
 }
