@@ -39,5 +39,10 @@ namespace SAP_API.Services
 
             return resultList;
         }
+
+        public void UpdateProductStock(ProductStockDTO productStock)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
