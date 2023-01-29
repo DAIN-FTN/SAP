@@ -2,10 +2,7 @@
 using SAP_API.Mappers;
 using SAP_API.Models;
 using SAP_API.Repositories;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace SAP_API.Services
 {
@@ -21,9 +18,9 @@ namespace SAP_API.Services
 
         }
 
-        public List<ProductStockDTO> GetProductStock(string name)
+        public List<ProductStockResponse> GetProductStock(string name)
         {
-            List<ProductStockDTO> resultList = new List<ProductStockDTO>();
+            List<ProductStockResponse> resultList = new List<ProductStockResponse>();
             List<Product> products = _productRepository.GetByName(name);
             foreach(Product prod in products)
             {
@@ -33,11 +30,12 @@ namespace SAP_API.Services
                 {
                     availableQuantity += stockedProd.Quantity - stockedProd.ReservedQuantity;
                 }
-                ProductStockDTO dto = ProductMapper.CreateProductStockDTO(prod, availableQuantity);
+                ProductStockResponse dto = ProductMapper.CreateProductStockDTO(prod, availableQuantity);
                 resultList.Add(dto);
             }
 
             return resultList;
         }
+
     }
 }

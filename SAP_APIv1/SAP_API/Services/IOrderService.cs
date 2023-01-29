@@ -1,5 +1,4 @@
 ﻿using SAP_API.DTOs;
-using SAP_API.Repositories;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,9 +6,8 @@ using System.Threading.Tasks;
 
 namespace SAP_API.Services
 {
-    public interface IProductService
+    public interface IOrderService
     {
-
-        public List<ProductStockResponse> GetProductStock(string name);
+        public bool CreateOrder(FindAvailableBakingProgramsRequest createDto);
     }
 }
