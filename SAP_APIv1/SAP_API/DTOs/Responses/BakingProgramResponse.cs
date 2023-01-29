@@ -12,7 +12,7 @@ namespace SAP_API.DTOs.Responses
         public int BakingTimeInMins { get; set; }
         public int BakingTempInC { get; set; }
         public DateTime BakingProgrammedAt { get; set; }
-        public DateTime BakingStartedAt { get; set; }
+        public DateTime? BakingStartedAt { get; set; }
         public string OvenCode { get; set; }
 
     }

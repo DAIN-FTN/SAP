@@ -1,4 +1,6 @@
-﻿namespace SAP_API.Services
+﻿using System;
+
+namespace SAP_API.Services
 {
     public class OrderTransactionsOrchestrator: IOrderCreationOrchestrator
     {
@@ -19,7 +21,7 @@
 
         public void OrchestrateOrderCreation()
         {
-            _orderService.CreateOrder(null);
+            _orderService.CreateOrder(DateTime.Now, null);
             _bakingProgramService.CreateBakingProgram();
             _bakingProgramService.UpdateBakingProgram(null);
         }
