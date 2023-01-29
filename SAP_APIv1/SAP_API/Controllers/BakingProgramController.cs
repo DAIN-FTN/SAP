@@ -29,7 +29,7 @@ namespace SAP_API.Controllers
             {
                 new BakingProgramResponse
                 {
-                    Id = new Guid("12345678-1234-1234-1234-123456789abc"),
+                    Id = Guid.NewGuid(),
                     Code = "Bake-0001",
                     CreatedAt = new DateTime(2022, 12, 31, 23, 59, 59),
                     Status = BakingPogramStatus.Created,
@@ -41,7 +41,7 @@ namespace SAP_API.Controllers
                 },
                 new BakingProgramResponse
                 {
-                    Id = new Guid("abcdefgh-abcd-abcd-abcd-abcdefghijkl"),
+                    Id = Guid.NewGuid(),
                     Code = "SisajGa-0002",
                     CreatedAt = new DateTime(2022, 12, 31, 23, 59, 59),
                     Status = BakingPogramStatus.Created,
