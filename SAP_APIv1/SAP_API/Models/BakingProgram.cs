@@ -16,7 +16,6 @@ namespace SAP_API.Models
         public DateTime BakingStartedAt { get; set; }
         public Oven Oven { get; set; }
         public User PreparedBy { get; set; }
-
         public int RemainingOvenCapacity { get; set; }
     }
 }

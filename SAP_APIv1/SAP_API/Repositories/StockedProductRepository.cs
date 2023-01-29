@@ -16,7 +16,8 @@ namespace SAP_API.Repositories
 
         public StockedProduct Create(StockedProduct entity)
         {
-            throw new NotImplementedException();
+            _stockedProducts.Add(entity);
+            return entity;
         }
 
         public bool Delete(Guid id)
@@ -54,8 +55,8 @@ namespace SAP_API.Repositories
                     ReservedQuantity = 10,
                     Product = new Product
                     {
-                     BakingTempInC = 120,
                      BakingTimeInMins= 30,
+                     BakingTempInC = 120,
                      Id= Guid.Parse("5cd54cb6-0df4-420f-96fd-f6e2cf6e2000"),
                      Name = "Chocolate Croissant",
                      Size = 4
