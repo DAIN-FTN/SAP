@@ -45,6 +45,7 @@ const SearchField = styled.input`
 const CreateOrderPage: FC = () => {
     const [productsOnStock, setProductsOnStock] = useState<ProductBasicInfo[] | []>([]);
     const [orderProducts, setOrderProducts] = useState<ProductBasicInfo[] | []>([]);
+    const [bakingTimeSlots, setBakingTimeSlots] = useState<BakingTimeSlot[] | []>([]);
     const [newOrderRequest, setNewOrderRequest] = useState<NewOrderRequest | null>(null);
 
     let productsForNewOrderRequest: ProductBasicInfo[] = [];
@@ -52,9 +53,9 @@ const CreateOrderPage: FC = () => {
     //     products: productsForNewOrderRequest,
     //     bakingProgramId: null,
     // };
-    let bakingTimeSlots: BakingTimeSlotsListProps = {
-        bakingTimeSlots: [],
-    };
+    // let bakingTimeSlots: BakingTimeSlotsListProps = {
+    //     bakingTimeSlots: [],
+    // };
 
     // let productsOnStock: AvailableProductsListProps = {
     //     products: []
@@ -73,7 +74,10 @@ const CreateOrderPage: FC = () => {
     const setDateTimeHandler = (e: any) => {
         let dateTime = new Date(e.target.value);
         console.log("setDateTimeHandler", dateTime);
-        fetchBakingTimeSlots(dateTime, productsForNewOrderRequest);
+        fetchBakingTimeSlots(dateTime, productsForNewOrderRequest).then((bakingTimeSlots) => {
+            console.log('fetch finished for fetchBakingTimeSlots() in CreateOrderPage');
+            setBakingTimeSlots(bakingTimeSlots);
+        });
     };
 
     const productNameSearchChangeHandler = (e: { target: { value: string; }; }) => {
@@ -124,7 +128,7 @@ const CreateOrderPage: FC = () => {
                     onChange={(e) => setDateTimeHandler(e)}
                 />
                 <Label>Available baking time slots</Label>
-                <BakingTimeSlotsList props={bakingTimeSlots} />
+                <BakingTimeSlotsList props={{bakingTimeSlots}} />
                 <Button variant="contained" onClick={createOrderHandler}>Create order</Button>
             </Panel>
         </Container>
