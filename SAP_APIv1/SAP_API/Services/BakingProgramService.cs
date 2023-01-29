@@ -103,16 +103,26 @@ namespace SAP_API.Services
 
                 if(productIndex < productCount)
                 {
-
+                   bool thereAreFreeTimeSlotsForNewPrograms = checkForFreeTimeSlotsForRemainingProducts(products, productIndex, key);
+                    if (!thereAreFreeTimeSlotsForNewPrograms)
+                    {
+                        resultList.Clear();
+                        return resultList;
+                    }
                 }
                 
-
 
             }
 
 
 
             return resultList;
+        }
+
+        private bool checkForFreeTimeSlotsForRemainingProducts(List<ProductQuantity> products, int productIndex, TimeAndTempKey key)
+        {
+
+            return false;
         }
 
         private void populateProductsWithSameTimeAndTempDictionary(Dictionary<TimeAndTempKey, List<ProductQuantity>> productsDict, List<OrderProductRequest> products)
