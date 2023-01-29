@@ -11,11 +11,13 @@ namespace SAP_API.Services
     {
         private readonly IProductRepository _productRepository;
         private readonly IBakingProgramRepository _bakingProgramRepository;
+        private readonly IOvenRepository _ovenRepository;
 
-        public BakingProgramService(IProductRepository productRepository, IBakingProgramRepository bakingProgramRepository)
+        public BakingProgramService(IProductRepository productRepository, IBakingProgramRepository bakingProgramRepository, IOvenRepository ovenRepository)
         {
             _productRepository = productRepository;
             _bakingProgramRepository = bakingProgramRepository;
+            _ovenRepository = ovenRepository;
         }
 
         internal class TimeAndTempKey
@@ -57,6 +59,8 @@ namespace SAP_API.Services
 
         public List<BakingProgramResponse> FindAvailableBakingPrograms(FindAvailableBakingProgramsRequest body)
         {
+            DateTime productsShouldBeDoneAtTime = body.ShouldBeDoneAt;
+
             Dictionary<TimeAndTempKey, List<ProductQuantity>> productsDict = new Dictionary<TimeAndTempKey, List<ProductQuantity>>();
             List<BakingProgramResponse> resultList = new List<BakingProgramResponse>();
             List<OrderProductRequest> orderProducts = body.OrderProducts;
@@ -103,7 +107,7 @@ namespace SAP_API.Services
 
                 if(productIndex < productCount)
                 {
-                   bool thereAreFreeTimeSlotsForNewPrograms = checkForFreeTimeSlotsForRemainingProducts(products, productIndex, key);
+                   bool thereAreFreeTimeSlotsForNewPrograms = checkForFreeTimeSlotsForRemainingProducts(products, key, productsShouldBeDoneAtTime);
                     if (!thereAreFreeTimeSlotsForNewPrograms)
                     {
                         resultList.Clear();
@@ -119,10 +123,65 @@ namespace SAP_API.Services
             return resultList;
         }
 
-        private bool checkForFreeTimeSlotsForRemainingProducts(List<ProductQuantity> products, int productIndex, TimeAndTempKey key)
+        private bool checkForFreeTimeSlotsForRemainingProducts(List<ProductQuantity> products, TimeAndTempKey key, DateTime productsShouldBeDoneAtTime)
         {
+            List<Oven> ovens = (List<Oven>)_ovenRepository.GetAll();
+            int numberOfMinsoffsetForBakingTime = 5;
+            int bakingTimeInMins = key.Time + numberOfMinsoffsetForBakingTime;
+            foreach(Oven o in ovens)
+            {
+                List<BakingProgram> bakingPrograms = _bakingProgramRepository.GetByOvenId(o.Id);
+                int numberOfSlots = findNumberOfAvailableTimeSlotsForOven(bakingPrograms, bakingTimeInMins, productsShouldBeDoneAtTime);
 
+            }
             return false;
+        }
+
+        private int findNumberOfAvailableTimeSlotsForOven(List<BakingProgram> bakingPrograms, int bakingTimeInMins, DateTime productShouldBeDoneAt)
+        {
+            DateTime startTimeForSlots = productShouldBeDoneAt.AddHours(-8);
+            DateTime endTimeForSlots = productShouldBeDoneAt.AddHours(-1);
+            int numberOfTimeSlots = 0;
+
+            int bakingProgramIndex = 0;
+            int bakingProgramsCount = bakingPrograms.Count;
+
+            if(bakingProgramsCount == 0)
+            {
+                int numberOfMinutesInAvailableTimeSlots = 7 * 3600;
+                numberOfTimeSlots = numberOfMinutesInAvailableTimeSlots / bakingTimeInMins;
+                return numberOfTimeSlots;
+            }
+
+            BakingProgram firtsBakingProgram = bakingPrograms[0];
+            DateTime FirstBpProgrammedAtTime = firtsBakingProgram.BakingProgrammedAt;
+            int numberOfMinutesBetweenTakenSlots = (int)FirstBpProgrammedAtTime.Subtract(startTimeForSlots).TotalMinutes;
+            numberOfTimeSlots += numberOfMinutesBetweenTakenSlots / bakingTimeInMins;
+
+            while (bakingProgramIndex < bakingProgramsCount - 1)
+            {
+                BakingProgram bp = bakingPrograms[bakingProgramIndex];
+                DateTime bpProgrammedAtTime = bp.BakingProgrammedAt;
+                if(isLastBakingProgram(bakingProgramIndex, bakingProgramsCount))
+                {
+                    numberOfMinutesBetweenTakenSlots = (int)endTimeForSlots.Subtract(bpProgrammedAtTime).TotalMinutes;
+                    numberOfTimeSlots += numberOfMinutesBetweenTakenSlots / bakingTimeInMins;
+                    return numberOfTimeSlots;
+                }
+                BakingProgram nextBp = bakingPrograms[bakingProgramIndex + 1];
+                DateTime nextBpProgrammedAtTime = nextBp.BakingProgrammedAt;
+                numberOfMinutesBetweenTakenSlots = (int)nextBpProgrammedAtTime.Subtract(bpProgrammedAtTime).TotalMinutes;
+                numberOfTimeSlots += numberOfMinutesBetweenTakenSlots / bakingTimeInMins;
+                bakingProgramIndex++;
+
+            }
+
+            return numberOfTimeSlots;
+        }
+
+        private bool isLastBakingProgram(int bakingProgramIndex, int bakingProgramsCount)
+        {
+            return bakingProgramIndex == bakingProgramsCount - 1;
         }
 
         private void populateProductsWithSameTimeAndTempDictionary(Dictionary<TimeAndTempKey, List<ProductQuantity>> productsDict, List<OrderProductRequest> products)

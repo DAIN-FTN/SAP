@@ -10,7 +10,7 @@ namespace SAP_API.Models
         public Guid Id { get; set; }
         public string Code { get; set; }
         public DateTime CreatedAt { get; set; }
-        public BakingPogramStatus Status { get; set; }
+        public BakingProgramStatus Status { get; set; }
         public int BakingTimeInMins { get; set; }
         public int BakingTempInC { get; set; }
         public DateTime BakingProgrammedAt { get; set; }
@@ -18,5 +18,7 @@ namespace SAP_API.Models
         public Oven Oven { get; set; }
         public User PreparedBy { get; set; }
         public int RemainingOvenCapacity { get; set; }
+
+        public List<BakingProgramProduct> Products { get; set; }
     }
 }

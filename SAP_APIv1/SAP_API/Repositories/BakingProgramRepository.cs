@@ -59,7 +59,7 @@ namespace SAP_API.Repositories
                 {
                     Id = new Guid("00000000-0000-0000-0000-000000000000"),
                     CreatedAt = new DateTime(2020, 1, 1, 12, 0, 0),
-                    Status = BakingPogramStatus.Created,
+                    Status = BakingProgramStatus.Created,
                     BakingTimeInMins = 30,
                     BakingTempInC = 120,
                     BakingProgrammedAt = new DateTime(2020, 1, 1, 12, 0, 0),
@@ -72,7 +72,7 @@ namespace SAP_API.Repositories
                 {
                     Id = new Guid("00000000-0000-0000-0000-000000000001"),
                     CreatedAt = new DateTime(2020, 2, 1, 12, 0, 0),
-                    Status = BakingPogramStatus.Created,
+                    Status = BakingProgramStatus.Created,
                     BakingTimeInMins = 30,
                     BakingTempInC = 140,
                     BakingProgrammedAt = new DateTime(2020, 2, 1, 12, 0, 0),
@@ -85,7 +85,7 @@ namespace SAP_API.Repositories
                 {
                     Id = new Guid("00000000-0000-0000-0000-000000000002"),
                     CreatedAt = new DateTime(2020, 3, 1, 12, 0, 0),
-                    Status = BakingPogramStatus.Created,
+                    Status = BakingProgramStatus.Created,
                     BakingTimeInMins = 120,
                     BakingTempInC = 190,
                     BakingProgrammedAt = new DateTime(2020, 3, 1, 12, 0, 0),
@@ -100,6 +100,11 @@ namespace SAP_API.Repositories
         public List<BakingProgram> GetByTempAndTime(int temp, int time)
         {
             return _bakingPrograms.FindAll(x => x.BakingTempInC == temp && x.BakingTimeInMins == time);
+        }
+
+        public List<BakingProgram> GetByOvenId(Guid ovenId)
+        {
+            return _bakingPrograms.FindAll(x => x.Oven.Id.Equals(ovenId));
         }
     }
 }
