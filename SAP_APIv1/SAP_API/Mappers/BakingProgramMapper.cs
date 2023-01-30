@@ -1,5 +1,6 @@
 ﻿using SAP_API.DTOs.Responses;
 using SAP_API.Models;
+using System;
 using System.Collections.Generic;
 
 namespace SAP_API.Mappers
@@ -12,7 +13,7 @@ namespace SAP_API.Mappers
                 Id = program.Id,
                 Code = program.Code,
                 CreatedAt = program.CreatedAt,
-                Status = program.Status,
+                Status = Enum.GetName(typeof(BakingProgramStatus), program.Status),
                 BakingTimeInMins = program.BakingTimeInMins,
                 BakingTempInC = program.BakingTempInC,
                 BakingProgrammedAt = program.BakingProgrammedAt,
