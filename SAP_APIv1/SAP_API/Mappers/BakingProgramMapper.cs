@@ -1,11 +1,12 @@
 ﻿using SAP_API.DTOs.Responses;
 using SAP_API.Models;
+using System.Collections.Generic;
 
 namespace SAP_API.Mappers
 {
     public class BakingProgramMapper
     {
-        public BakingProgramResponse CreateBakingProgramsResponse(BakingProgram program)
+        public static BakingProgramResponse CreateBakingProgramResponse(BakingProgram program)
         {
             return new BakingProgramResponse { 
                 Id = program.Id,
@@ -18,6 +19,17 @@ namespace SAP_API.Mappers
                 BakingStartedAt = program.BakingStartedAt,
                 OvenCode = program.Oven.Code
             };
+        }
+
+        public static List<BakingProgramResponse> CreateListOfBakingProgramResponse(List<BakingProgram> programs)
+        {
+            List<BakingProgramResponse> resultList = new List<BakingProgramResponse>();
+            foreach(BakingProgram program in programs)
+            {
+                BakingProgramResponse result = CreateBakingProgramResponse(program);
+                resultList.Add(result);
+            }
+            return resultList;
         }
     }
 }

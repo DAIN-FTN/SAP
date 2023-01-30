@@ -1,5 +1,6 @@
 ﻿using SAP_API.DTOs;
 using SAP_API.DTOs.Responses;
+using SAP_API.Mappers;
 using SAP_API.Models;
 using SAP_API.Repositories;
 using System;
@@ -144,7 +145,7 @@ namespace SAP_API.Services
 
         private List<BakingProgram> GetExsistingProgramsProductShouldBeArrangedInto(Dictionary<TimeAndTempGroup, List<OrderProduct>> groupedProductsDict)
         {
-            List<BakingProgram> programs = new List<BakingProgram>();
+            List<BakingProgram> programsProductsShouldBeArrangedTo = new List<BakingProgram>();
 
             IEnumerable<TimeAndTempGroup> bakingGroups = groupedProductsDict.Keys;
             foreach (TimeAndTempGroup group in bakingGroups)
@@ -152,11 +153,11 @@ namespace SAP_API.Services
                 List<BakingProgram> bakingProgramsFromGroup = GetExistingBakingProgramsFromGroup(group);
                 List<OrderProduct> productsFromGroup = groupedProductsDict[group];
 
-                ArrangeProductsToExsistingPrograms(bakingProgramsFromGroup, productsFromGroup);
+                ArrangeProductsToExsistingPrograms(bakingProgramsFromGroup, productsFromGroup, programsProductsShouldBeArrangedTo);
 
             }
 
-            return programs;
+            return programsProductsShouldBeArrangedTo;
         }
 
         private List<BakingProgram> GetExistingBakingProgramsFromGroup(TimeAndTempGroup group)
@@ -167,7 +168,7 @@ namespace SAP_API.Services
             return bakingPrograms;
         }
 
-        private void ArrangeProductsToExsistingPrograms(List<BakingProgram> bakingPrograms, List<OrderProduct> products)
+        private void ArrangeProductsToExsistingPrograms(List<BakingProgram> bakingPrograms, List<OrderProduct> products, List<BakingProgram> programsProductsShouldBeArrangedTo)
         {
             int currentProgramIndex = 0;
             int currentProductIndex = 0;
@@ -185,7 +186,7 @@ namespace SAP_API.Services
                         FinishArrangingCurrentProgram(bakingPrograms);
                         break;
                     }
-                    ArrangeProductToProgram(product, numberOfProductsThatCanBeArrangedToProgram, program);
+                    ArrangeProductToProgram(product, numberOfProductsThatCanBeArrangedToProgram, program, programsProductsShouldBeArrangedTo);
 
                     if (product.QuantityToBake == 0)
                     {
@@ -229,8 +230,9 @@ namespace SAP_API.Services
             products.RemoveAt(0);
         }
 
-        private void ArrangeProductToProgram(OrderProduct product, int numberOfProductsToArrange, BakingProgram program)
+        private void ArrangeProductToProgram(OrderProduct product, int numberOfProductsToArrange, BakingProgram program, List<BakingProgram> programsProductsShouldBeArrangedTo)
         {
+            programsProductsShouldBeArrangedTo.Remove(program);
             BakingProgramProduct programProduct = new BakingProgramProduct
             {
                 Id = new Guid(),
@@ -240,6 +242,7 @@ namespace SAP_API.Services
             };
             program.AddProductToProgram(programProduct);
             product.QuantityToBake -= numberOfProductsToArrange;
+            programsProductsShouldBeArrangedTo.Add(program);
         }
         #endregion
 
@@ -254,7 +257,7 @@ namespace SAP_API.Services
         /// <returns></returns>
         private List<BakingProgram> GetNewProgramsProductsShouldBeArrangedInto(Dictionary<TimeAndTempGroup, List<OrderProduct>> groupedProductsDict)
         {
-            List<BakingProgram> programs = new List<BakingProgram>();
+            List<BakingProgram> programsProductsShouldBeArrangedTo = new List<BakingProgram>();
             IEnumerable<TimeAndTempGroup> bakingGroups = groupedProductsDict.Keys;
 
             int longestBakingTimeInMins = GetLongestBakingTimeForUnarrangedProducts(groupedProductsDict);
@@ -263,10 +266,10 @@ namespace SAP_API.Services
             foreach (TimeAndTempGroup group in bakingGroups)
             {
                 List<OrderProduct> productsFromGroup = groupedProductsDict[group];
-                ArrangeProductsFromGroupToNewPrograms(bakingPrograms, productsFromGroup, group);
+                ArrangeProductsFromGroupToNewPrograms(bakingPrograms, productsFromGroup, group, programsProductsShouldBeArrangedTo);
 
             }
-            return programs;
+            return programsProductsShouldBeArrangedTo;
         }
 
         private int GetLongestBakingTimeForUnarrangedProducts(Dictionary<TimeAndTempGroup, List<OrderProduct>> groupedProductsDict)
@@ -392,7 +395,8 @@ namespace SAP_API.Services
                     Status = BakingProgramStatus.Pending,
                     RemainingOvenCapacity = oven.Capacity,
                     Oven = oven,
-                    BakingProgrammedAt = time
+                    BakingProgrammedAt = time,
+                    Products = new List<BakingProgramProduct>()
                 };
                 ovenPrograms.Add(newBakingProgram);
             }
@@ -400,7 +404,7 @@ namespace SAP_API.Services
         }
         #endregion getAvailableProgramsForOvens
 
-        private void ArrangeProductsFromGroupToNewPrograms(List<BakingProgram> bakingPrograms, List<OrderProduct> products, TimeAndTempGroup group)
+        private void ArrangeProductsFromGroupToNewPrograms(List<BakingProgram> bakingPrograms, List<OrderProduct> products, TimeAndTempGroup group, List<BakingProgram> programsProductsShouldBeArrangedTo)
         {
             int currentProgramIndex = 0;
             int currentProductIndex = 0;
@@ -418,7 +422,7 @@ namespace SAP_API.Services
                         FinishArrangingCurrentProgram(bakingPrograms);
                         break;
                     }
-                    ArrangeProductToNewProgram(product, numberOfProductsThatCanBeArrangedToProgram, program, group);
+                    ArrangeProductToNewProgram(product, numberOfProductsThatCanBeArrangedToProgram, program, group, programsProductsShouldBeArrangedTo);
 
                     if (product.QuantityToBake == 0)
                     {
@@ -430,10 +434,10 @@ namespace SAP_API.Services
             FinishArrangingProductsFromGroupToPrograms(bakingPrograms, group);
         }
 
-        private void ArrangeProductToNewProgram(OrderProduct product, int numberOfProductsToArrange, BakingProgram program, TimeAndTempGroup group)
+        private void ArrangeProductToNewProgram(OrderProduct product, int numberOfProductsToArrange, BakingProgram program, TimeAndTempGroup group, List<BakingProgram> programsProductsShouldBeArrangedTo)
         {
             program.SetTimeAndTemp(group);
-            ArrangeProductToProgram(product, numberOfProductsToArrange, program);
+            ArrangeProductToProgram(product, numberOfProductsToArrange, program, programsProductsShouldBeArrangedTo);
         }
 
         /// <summary>
@@ -480,9 +484,9 @@ namespace SAP_API.Services
 
         public List<BakingProgramResponse> FindAvailableBakingPrograms(FindAvailableBakingProgramsRequest body)
         {
-            List<BakingProgramResponse> resultList = new List<BakingProgramResponse>();
-            // TODO get response
-            // Tuple<bool, List<BakingProgram>> result = GetExsistingOrNewProgramsProductShouldBeArrangedInto(body.ShouldBeDoneAt, body.OrderProducts);
+            Tuple<bool, List<BakingProgram>> result = GetExsistingOrNewProgramsProductShouldBeArrangedInto(body.ShouldBeDoneAt, body.OrderProducts);
+            List<BakingProgram> listToMap = result.Item2;
+            List<BakingProgramResponse> resultList = BakingProgramMapper.CreateListOfBakingProgramResponse(listToMap);
             return resultList;
         }
     }

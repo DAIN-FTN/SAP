@@ -66,7 +66,8 @@ namespace SAP_API.Repositories
                     BakingStartedAt = new DateTime(2020, 1, 1, 12, 0, 0),
                     Oven = new Oven { Id = new Guid("00000000-0000-0000-0000-000000000001"), Code = "Oven 1" },
                     PreparedBy = new User { Id = new Guid("00000000-0000-0000-0000-000000000002"), Username = "John", Password = "Doe" },
-                    RemainingOvenCapacity = 10
+                    RemainingOvenCapacity = 10,
+                    Products = new List<BakingProgramProduct>()
                 },
                 new BakingProgram
                 {
@@ -79,7 +80,8 @@ namespace SAP_API.Repositories
                     BakingStartedAt = new DateTime(2020, 2, 1, 12, 30, 0),
                     Oven = new Oven { Id = new Guid("00000000-0000-0000-0000-000000000002"), Code = "Oven 2" },
                     PreparedBy = new User { Id = new Guid("00000000-0000-0000-0000-000000000003"), Username = "Jane", Password = "Doe" },
-                    RemainingOvenCapacity = 10
+                    RemainingOvenCapacity = 10,
+                    Products = new List<BakingProgramProduct>()
                 },
                 new BakingProgram
                 {
@@ -92,7 +94,8 @@ namespace SAP_API.Repositories
                     BakingStartedAt = new DateTime(2020, 3, 1, 12, 45, 0),
                     Oven = new Oven { Id = new Guid("00000000-0000-0000-0000-000000000003"), Code = "Oven 3" },
                     PreparedBy = new User { Id = new Guid("00000000-0000-0000-0000-000000000004"), Username = "Bob", Password = "Smith" },
-                    RemainingOvenCapacity = 10
+                    RemainingOvenCapacity = 10,
+                    Products = new List<BakingProgramProduct>()
                 }
             };
         }
