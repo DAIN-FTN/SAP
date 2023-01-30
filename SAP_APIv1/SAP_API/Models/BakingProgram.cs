@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SAP_API.Services;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -25,8 +26,14 @@ namespace SAP_API.Models
         {
             Products.Add(product);
             int productSize = product.Product.Size;
-            int productQuantity = product.Quantity;
+            int productQuantity = product.QuantityТoBake;
             RemainingOvenCapacity -= productSize * productQuantity;
+        }
+
+        internal void SetTimeAndTemp(BakingProgramService.TimeAndTempGroup group)
+        {
+            BakingTempInC = group.Temp;
+            BakingTimeInMins = group.Time;
         }
     }
 }
