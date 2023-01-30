@@ -57,17 +57,17 @@ namespace SAP_API.Services
 
         }
 
-        // TODO GetExsistingProgramsProductShouldBeArrangedInto and GetNewProgramsProductsShouldBeArrangedInto 
+        // TODO GetExistingProgramsProductShouldBeArrangedInto and GetNewProgramsProductsShouldBeArrangedInto 
         // should return programs with arranged products - this should be done in ArrangeProductsToPrograms
-        public Tuple<bool, List<BakingProgram>> GetExsistingOrNewProgramsProductShouldBeArrangedInto(DateTime timeOrderShouldBeDone, List<OrderProductRequest> orderProducts)
+        public Tuple<bool, List<BakingProgram>> GetExistingOrNewProgramsProductShouldBeArrangedInto(DateTime timeOrderShouldBeDone, List<OrderProductRequest> orderProducts)
         {
             List<BakingProgram> programsProductsShouldBeArrangedTo = new List<BakingProgram>();
 
             Dictionary<TimeAndTempGroup, List<OrderProduct>> productsGroupedByTempAndTimeDict = new Dictionary<TimeAndTempGroup, List<OrderProduct>>();
             GroupProductsByBakingTempAndTime(productsGroupedByTempAndTimeDict, orderProducts);
 
-            List<BakingProgram> exsistingPrograms = GetExsistingProgramsProductShouldBeArrangedInto(productsGroupedByTempAndTimeDict);
-            programsProductsShouldBeArrangedTo.AddRange(exsistingPrograms);
+            List<BakingProgram> existingPrograms = GetExistingProgramsProductShouldBeArrangedInto(productsGroupedByTempAndTimeDict);
+            programsProductsShouldBeArrangedTo.AddRange(existingPrograms);
 
             bool allProductsSuccessfullyArranged = !ThereAreProductsLeftForArranging(productsGroupedByTempAndTimeDict);
             if (allProductsSuccessfullyArranged)
@@ -140,10 +140,10 @@ namespace SAP_API.Services
             return false;
         }
 
-        #region arragingToExsistingPrograms
+        #region arragingToExistingPrograms
 
 
-        private List<BakingProgram> GetExsistingProgramsProductShouldBeArrangedInto(Dictionary<TimeAndTempGroup, List<OrderProduct>> groupedProductsDict)
+        private List<BakingProgram> GetExistingProgramsProductShouldBeArrangedInto(Dictionary<TimeAndTempGroup, List<OrderProduct>> groupedProductsDict)
         {
             List<BakingProgram> programsProductsShouldBeArrangedTo = new List<BakingProgram>();
 
@@ -153,7 +153,7 @@ namespace SAP_API.Services
                 List<BakingProgram> bakingProgramsFromGroup = GetExistingBakingProgramsFromGroup(group);
                 List<OrderProduct> productsFromGroup = groupedProductsDict[group];
 
-                ArrangeProductsToExsistingPrograms(bakingProgramsFromGroup, productsFromGroup, programsProductsShouldBeArrangedTo);
+                ArrangeProductsToExistingPrograms(bakingProgramsFromGroup, productsFromGroup, programsProductsShouldBeArrangedTo);
 
             }
 
@@ -168,7 +168,7 @@ namespace SAP_API.Services
             return bakingPrograms;
         }
 
-        private void ArrangeProductsToExsistingPrograms(List<BakingProgram> bakingPrograms, List<OrderProduct> products, List<BakingProgram> programsProductsShouldBeArrangedTo)
+        private void ArrangeProductsToExistingPrograms(List<BakingProgram> bakingPrograms, List<OrderProduct> products, List<BakingProgram> programsProductsShouldBeArrangedTo)
         {
             int currentProgramIndex = 0;
             int currentProductIndex = 0;
@@ -324,27 +324,27 @@ namespace SAP_API.Services
             DateTime startTimeForBaking = productsShouldBeDoneAtTime.AddHours(-8);
             DateTime endTimeForBaking = productsShouldBeDoneAtTime.AddHours(-1);
 
-            List<BakingProgram> exsistingBakingProgramsForOven = _bakingProgramRepository.GetByOvenId(oven.Id);
+            List<BakingProgram> existingBakingProgramsForOven = _bakingProgramRepository.GetByOvenId(oven.Id);
 
-            if (OvenIsAvailableForTheWholeTimePeriod(exsistingBakingProgramsForOven))
+            if (OvenIsAvailableForTheWholeTimePeriod(existingBakingProgramsForOven))
             {
                 List<DateTime> times = GetAvailableTimesForBakingBetweenStartAndEndTime(startTimeForBaking, endTimeForBaking, bakingTimeInMins);
                 availableTimes.AddRange(times);
                 return availableTimes;
             }
 
-            for (int i = 0; i < exsistingBakingProgramsForOven.Count; i++)
+            for (int i = 0; i < existingBakingProgramsForOven.Count; i++)
             {
-                BakingProgram currentProgram = exsistingBakingProgramsForOven[i];
+                BakingProgram currentProgram = existingBakingProgramsForOven[i];
                 DateTime currentProgramBakingEndTime = currentProgram.BakingProgrammedAt.AddMinutes(bakingTimeInMins);
-                if (CurrentProgramIsTheLatestProgram(currentProgram, exsistingBakingProgramsForOven))
+                if (CurrentProgramIsTheLatestProgram(currentProgram, existingBakingProgramsForOven))
                 {
                     List<DateTime> timesBetweenLatestProgramAndEndTime = GetAvailableTimesForBakingBetweenStartAndEndTime(currentProgramBakingEndTime, endTimeForBaking, bakingTimeInMins);
                     availableTimes.AddRange(timesBetweenLatestProgramAndEndTime);
                     continue;
                 }
 
-                BakingProgram adjecentProgram = exsistingBakingProgramsForOven[i + 1];
+                BakingProgram adjecentProgram = existingBakingProgramsForOven[i + 1];
                 DateTime adjecentProgramBakingStartTime = adjecentProgram.BakingProgrammedAt;
                 List<DateTime> timesBetweenAdjecentPrograms = GetAvailableTimesForBakingBetweenStartAndEndTime(currentProgramBakingEndTime, adjecentProgramBakingStartTime, bakingTimeInMins);
                 availableTimes.AddRange(timesBetweenAdjecentPrograms);
@@ -354,15 +354,15 @@ namespace SAP_API.Services
             return availableTimes;
         }
 
-        private bool OvenIsAvailableForTheWholeTimePeriod(List<BakingProgram> exsistingBakingProgramsForOven)
+        private bool OvenIsAvailableForTheWholeTimePeriod(List<BakingProgram> existingBakingProgramsForOven)
         {
-            return exsistingBakingProgramsForOven.Count == 0;
+            return existingBakingProgramsForOven.Count == 0;
         }
 
-        private bool CurrentProgramIsTheLatestProgram(BakingProgram currentProgram, List<BakingProgram> exsistingBakingProgramsForOven)
+        private bool CurrentProgramIsTheLatestProgram(BakingProgram currentProgram, List<BakingProgram> existingBakingProgramsForOven)
         {
-            int indexOfCurrentProgram = exsistingBakingProgramsForOven.IndexOf(currentProgram);
-            return indexOfCurrentProgram == exsistingBakingProgramsForOven.Count - 1;
+            int indexOfCurrentProgram = existingBakingProgramsForOven.IndexOf(currentProgram);
+            return indexOfCurrentProgram == existingBakingProgramsForOven.Count - 1;
         }
 
 
@@ -484,7 +484,7 @@ namespace SAP_API.Services
 
         public List<BakingProgramResponse> FindAvailableBakingPrograms(FindAvailableBakingProgramsRequest body)
         {
-            Tuple<bool, List<BakingProgram>> result = GetExsistingOrNewProgramsProductShouldBeArrangedInto(body.ShouldBeDoneAt, body.OrderProducts);
+            Tuple<bool, List<BakingProgram>> result = GetExistingOrNewProgramsProductShouldBeArrangedInto(body.ShouldBeDoneAt, body.OrderProducts);
             List<BakingProgram> listToMap = result.Item2;
             List<BakingProgramResponse> resultList = BakingProgramMapper.CreateListOfBakingProgramResponse(listToMap);
             return resultList;

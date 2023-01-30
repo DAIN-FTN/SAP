@@ -12,7 +12,7 @@ namespace SAP_API.Services
         public void CreateBakingProgram();
         public void UpdateBakingProgram(BakingProgram bakingProgram);
         public List<BakingProgramResponse> FindAvailableBakingPrograms(FindAvailableBakingProgramsRequest body);
-        public Tuple<bool, List<BakingProgram>> GetExsistingOrNewProgramsProductShouldBeArrangedInto(DateTime timeOrderShouldBeDone, List<OrderProductRequest> orderProducts);
+        public Tuple<bool, List<BakingProgram>> GetExistingOrNewProgramsProductShouldBeArrangedInto(DateTime timeOrderShouldBeDone, List<OrderProductRequest> orderProducts);
     }
 }
 
