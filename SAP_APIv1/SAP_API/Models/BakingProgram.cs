@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using static SAP_API.Services.ArrangingProductsToProgramsService;
 
 namespace SAP_API.Models
 {
@@ -30,7 +31,7 @@ namespace SAP_API.Models
             RemainingOvenCapacity -= productSize * productQuantity;
         }
 
-        internal void SetTimeAndTemp(BakingProgramService.TimeAndTempGroup group)
+        internal void SetTimeAndTemp(TimeAndTempGroup group)
         {
             BakingTempInC = group.Temp;
             BakingTimeInMins = group.Time;
