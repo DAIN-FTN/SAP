@@ -59,7 +59,7 @@ namespace SAP_API.Services
 
         // TODO GetExistingProgramsProductShouldBeArrangedInto and GetNewProgramsProductsShouldBeArrangedInto 
         // should return programs with arranged products - this should be done in ArrangeProductsToPrograms
-        public Tuple<bool, List<BakingProgram>> GetExistingOrNewProgramsProductShouldBeArrangedInto(DateTime timeOrderShouldBeDone, List<OrderProductRequest> orderProducts)
+        public ArrangingResult GetExistingOrNewProgramsProductShouldBeArrangedInto(DateTime timeOrderShouldBeDone, List<OrderProductRequest> orderProducts)
         {
             List<BakingProgram> programsProductsShouldBeArrangedTo = new List<BakingProgram>();
 
@@ -72,14 +72,21 @@ namespace SAP_API.Services
             bool allProductsSuccessfullyArranged = !ThereAreProductsLeftForArranging(productsGroupedByTempAndTimeDict);
             if (allProductsSuccessfullyArranged)
             {
-                return new Tuple<bool, List<BakingProgram>>(true, programsProductsShouldBeArrangedTo);
+                return new ArrangingResult { 
+                    BakingPrograms = programsProductsShouldBeArrangedTo,
+                    AllProductsCanBeSuccessfullyArranged = true
+                };
             }
 
             List<BakingProgram> newPrograms = GetNewProgramsProductsShouldBeArrangedInto(productsGroupedByTempAndTimeDict);
             programsProductsShouldBeArrangedTo.AddRange(newPrograms);
 
             allProductsSuccessfullyArranged = !ThereAreProductsLeftForArranging(productsGroupedByTempAndTimeDict);
-            return new Tuple<bool, List<BakingProgram>>(allProductsSuccessfullyArranged, programsProductsShouldBeArrangedTo);
+            return new ArrangingResult
+            {
+                BakingPrograms = programsProductsShouldBeArrangedTo,
+                AllProductsCanBeSuccessfullyArranged = allProductsSuccessfullyArranged
+            };
 
         }
 
@@ -281,12 +288,10 @@ namespace SAP_API.Services
                 List<OrderProduct> productsFromGroup = groupedProductsDict[group];
                 if (productsFromGroup.Count != 0)
                 {
-                    foreach (OrderProduct orderProduct in productsFromGroup)
-                    {
-                        int bakingTime = orderProduct.Product.BakingTimeInMins;
-                        if (longestBakingTime < bakingTime)
-                            longestBakingTime = bakingTime;
-                    }
+                    int bakingTimeForProducts = group.Time;
+                    if (longestBakingTime < bakingTimeForProducts)
+                        longestBakingTime = bakingTimeForProducts;
+
                 }
             }
 
@@ -484,8 +489,8 @@ namespace SAP_API.Services
 
         public List<BakingProgramResponse> FindAvailableBakingPrograms(FindAvailableBakingProgramsRequest body)
         {
-            Tuple<bool, List<BakingProgram>> result = GetExistingOrNewProgramsProductShouldBeArrangedInto(body.ShouldBeDoneAt, body.OrderProducts);
-            List<BakingProgram> listToMap = result.Item2;
+            ArrangingResult result = GetExistingOrNewProgramsProductShouldBeArrangedInto(body.ShouldBeDoneAt, body.OrderProducts);
+            List<BakingProgram> listToMap = result.BakingPrograms;
             List<BakingProgramResponse> resultList = BakingProgramMapper.CreateListOfBakingProgramResponse(listToMap);
             return resultList;
         }
