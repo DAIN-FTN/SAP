@@ -64,6 +64,7 @@ namespace SAP_API.Services
             _productRepository = productRepository;
         }
 
+        // TODO 8 and 1 should be in config
         public void SetTimeOrderShouldBeDone(DateTime timeOrderShouldBeDone)
         {
             this.timeOrderShouldBeDone = timeOrderShouldBeDone;
@@ -177,6 +178,7 @@ namespace SAP_API.Services
 
         #region arragingToExistingPrograms
 
+        //TODO: get programs between startBakingTime and endBakingTime
         private List<BakingProgram> GetExistingBakingProgramsFromGroup(TimeAndTempGroup group)
         {
             int temp = group.Temp;
@@ -313,8 +315,7 @@ namespace SAP_API.Services
             return availableBakingPrograms;
         }
 
-        // TODO productsShouldBeDoneAtTime should be param, 8 and 1 should be in config
-        // TODO pograms for oven should be sorted by BakingProgrammedAt and between startTimeForBaking and endTimeForBaking
+        // TODO programs for oven should be sorted by BakingProgrammedAt and between startTimeForBaking and endTimeForBaking
         private List<DateTime> GetAvailableTimesForBakingInOven(Oven oven, int bakingTimeInMins)
         {
             List<DateTime> availableTimes = new List<DateTime>();
