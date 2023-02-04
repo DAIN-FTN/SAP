@@ -26,5 +26,15 @@ namespace SAP_API.Models
         /// </summary>
         public int PreparedQuantity { get; set; }
         public StockLocation Location { get; set; }
+
+        public void GetReadyForPreparing(int quantityToBePrepared)
+        {
+            PreparedQuantity += quantityToBePrepared;
+        }
+
+        public int GetReservedQuantityLeftForPreparing()
+        {
+            return ReservedQuantity - PreparedQuantity;
+        }
     }
 }

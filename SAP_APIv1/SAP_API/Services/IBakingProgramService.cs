@@ -11,6 +11,7 @@ namespace SAP_API.Services
 
         public void CreateBakingProgram();
         public void UpdateBakingProgram(BakingProgram bakingProgram);
+        public StartPreparingResponse StartPreparingProgram(Guid id);
         public List<BakingProgramResponse> FindAvailableBakingPrograms(FindAvailableBakingProgramsRequest body);
         public ArrangingResult GetExistingOrNewProgramsProductShouldBeArrangedInto(DateTime timeOrderShouldBeDone, List<OrderProductRequest> orderProducts);
     }

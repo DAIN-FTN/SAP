@@ -1,5 +1,6 @@
 ﻿using SAP_API.DTOs;
 using SAP_API.DTOs.Responses;
+using SAP_API.DTOs.Responses.StartPreparing;
 using SAP_API.Mappers;
 using SAP_API.Models;
 using SAP_API.Repositories;
@@ -11,13 +12,15 @@ namespace SAP_API.Services
     public class BakingProgramService : IBakingProgramService
     {
         private readonly IBakingProgramRepository _bakingProgramRepository;
+        private readonly IOrderProductRepository _orderProductRepository;
 
         private readonly IArrangingProductsToProgramsService _arrangingService;
 
-        public BakingProgramService(IProductRepository productRepository, IBakingProgramRepository bakingProgramRepository, IOvenRepository ovenRepository, IArrangingProductsToProgramsService arrangingService)
+        public BakingProgramService(IProductRepository productRepository, IBakingProgramRepository bakingProgramRepository, IOvenRepository ovenRepository, IArrangingProductsToProgramsService arrangingService, IOrderProductRepository orderProductRepository)
         {
             _bakingProgramRepository = bakingProgramRepository;
             _arrangingService = arrangingService;
+            _orderProductRepository = orderProductRepository;
         }
 
 
@@ -52,22 +55,92 @@ namespace SAP_API.Services
 
         }
 
-
-
-        public void StartPreparingProgram(Guid id)
+        public StartPreparingResponse StartPreparingProgram(Guid id)
         {
             BakingProgram bakingProgram = _bakingProgramRepository.GetById(id);
-            List<BakingProgramProduct> productsFromOrders = bakingProgram.Products;
+            List<BakingProgramProduct> productsFromProgram = bakingProgram.Products;
+            Dictionary<Guid, List<StartPreparingProductFromOrderResponse>> productsToBePreparedFromLocationDict = new Dictionary<Guid, List<StartPreparingProductFromOrderResponse>>();
 
-            foreach(BakingProgramProduct productFromOrder in productsFromOrders)
+            foreach(BakingProgramProduct productFromProgram in productsFromProgram)
             {
-                Guid productId = productFromOrder.Product.Id;
-                Guid orderId = productFromOrder.Order.Id;
-                int quantity = productFromOrder.QuantityТoBake;
+                Guid productId = productFromProgram.Product.Id;
+                Guid orderId = productFromProgram.Order.Id;
+                int quantityToBePrepared = productFromProgram.QuantityТoBake;
+                List<OrderProduct> reservedProductQuantitesFromOrder = _orderProductRepository.GetByOrderIdAndProductId(orderId, productId);
+
+                AddProductsToLocationsFromWhichProductsShouldBePrepared(reservedProductQuantitesFromOrder, quantityToBePrepared, productsToBePreparedFromLocationDict);
             }
+
+            return CreateStartPreparingResponse(productsToBePreparedFromLocationDict, bakingProgram);
 
         }
 
+        private StartPreparingResponse CreateStartPreparingResponse(Dictionary<Guid, List<StartPreparingProductFromOrderResponse>> productsToBePreparedFromLocationDict, BakingProgram bakingProgram)
+        {
+            List<StartPreparingFromLocationResponse> preparingLocations = new List<StartPreparingFromLocationResponse>();
+            foreach (KeyValuePair<Guid, List<StartPreparingProductFromOrderResponse>> locationWithProducts in productsToBePreparedFromLocationDict)
+            {
+                Guid locationId = locationWithProducts.Key;
+                List<StartPreparingProductFromOrderResponse> products = locationWithProducts.Value;
+
+                StartPreparingFromLocationResponse preparingLocation = new StartPreparingFromLocationResponse
+                {
+                    LocationId = locationId,
+                    LocationCode = "",
+                    Products = products
+                };
+                preparingLocations.Add(preparingLocation);
+            }
+
+            StartPreparingResponse startPreparingResponse = new StartPreparingResponse
+            {
+                Id = bakingProgram.Id,
+                Code = bakingProgram.Code,
+                BakingProgrammedAt = bakingProgram.BakingProgrammedAt,
+                OvenId = bakingProgram.Oven.Id,
+                OvenCode = bakingProgram.Oven.Code,
+                Locations = preparingLocations
+            };
+
+            return startPreparingResponse;
+
+        }
+
+        private void AddProductsToLocationsFromWhichProductsShouldBePrepared(List<OrderProduct> reservedProductQuantitesFromOrder, int quantityToBePrepared, Dictionary<Guid, List<StartPreparingProductFromOrderResponse>> productsToBePreparedFromLocationDict)
+        {
+            foreach(OrderProduct reservedProduct in reservedProductQuantitesFromOrder)
+            {
+                int reservedQuantity = reservedProduct.GetReservedQuantityLeftForPreparing();
+                int quantityToPrepareFromLocation = Math.Min(reservedQuantity, quantityToBePrepared);
+                AddProductToLocationForPreparing(reservedProduct, productsToBePreparedFromLocationDict, quantityToPrepareFromLocation);
+
+                quantityToBePrepared -= quantityToPrepareFromLocation;
+                if (quantityToBePrepared == 0)
+                {
+                    break;
+                }
+            }
+        }
+
+
+        private void AddProductToLocationForPreparing(OrderProduct reservedProduct, Dictionary<Guid, List<StartPreparingProductFromOrderResponse>> productsToBePreparedFromLocationDict, int quantityToPrepareFromLocation)
+        {
+            Guid idOfLocationWhereProductIsReserved = reservedProduct.Location.Id;
+            if (!productsToBePreparedFromLocationDict.ContainsKey(idOfLocationWhereProductIsReserved))
+            {
+                productsToBePreparedFromLocationDict[idOfLocationWhereProductIsReserved] = new List<StartPreparingProductFromOrderResponse>();
+            }
+
+            StartPreparingProductFromOrderResponse productToBePrepared = new StartPreparingProductFromOrderResponse
+            {
+                ProductId = reservedProduct.Product.Id,
+                Name = reservedProduct.Product.Name,
+                OrderId = reservedProduct.Order.Id,
+                Quantity = quantityToPrepareFromLocation
+            };
+            productsToBePreparedFromLocationDict[idOfLocationWhereProductIsReserved].Add(productToBePrepared);
+
+        }
 
         public void CreateBakingProgram()
         {
