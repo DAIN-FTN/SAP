@@ -1,7 +1,8 @@
 ﻿namespace SAP_API.Models
 {
-    public enum BakingPogramStatus
+    public enum BakingProgramStatus
     {
+        Pending,
         Created,
         Preparing,
         Prepared,
