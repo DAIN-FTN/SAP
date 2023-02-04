@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using SAP_API.DTOs;
+using SAP_API.DTOs.Responses;
 using SAP_API.Services;
 using System;
 using System.Collections.Generic;
@@ -17,6 +18,18 @@ namespace SAP_API.Controllers
             _productService = productService;
         }
 
+
+        [HttpGet("{productId}")]
+        public ActionResult<ProductStockResponse> GetDetails(Guid productId)
+        {
+            ProductDetailsResponse response = _productService.GetProductDetails(productId);
+
+            if (response == null)
+                return NoContent();
+
+            return Ok(response);
+        }
+
         [HttpGet("stock")]
         public ActionResult<ProductStockResponse> GetProductStock([FromQuery] String name)
         {
@@ -27,5 +40,6 @@ namespace SAP_API.Controllers
 
             return Ok(response);
         }
+
     }
 }

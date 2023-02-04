@@ -1,7 +1,9 @@
 ﻿using SAP_API.DTOs;
+using SAP_API.DTOs.Responses;
 using SAP_API.Mappers;
 using SAP_API.Models;
 using SAP_API.Repositories;
+using System;
 using System.Collections.Generic;
 
 namespace SAP_API.Services
@@ -15,6 +17,15 @@ namespace SAP_API.Services
         {
             _productRepository = productRepository;
             _stockedProductRepository = stockedProductRepository;
+
+        }
+
+        public ProductDetailsResponse GetProductDetails(Guid id)
+        {
+            List<StockedProduct> stockDetails = _stockedProductRepository.GetByProductId(id);
+            Product productDetails = _productRepository.GetById(id);
+
+            return ProductMapper.CreateProductDetailsResponse(stockDetails, productDetails);
 
         }
 

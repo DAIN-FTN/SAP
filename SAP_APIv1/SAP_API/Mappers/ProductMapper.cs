@@ -1,4 +1,5 @@
 ﻿using SAP_API.DTOs;
+using SAP_API.DTOs.Responses;
 using SAP_API.Models;
 using System;
 using System.Collections.Generic;
@@ -18,5 +19,27 @@ namespace SAP_API.Mappers
                 AvailableQuantity = availableQuantity
             };
         }
+
+        public static ProductDetailsResponse CreateProductDetailsResponse(List<StockedProduct> stockDetails, Product productDetails)
+        {
+            List<StockOnLocationResponse> stockOnLocations = new List<StockOnLocationResponse>();
+
+            foreach (StockedProduct stock in stockDetails)
+            {
+                stockOnLocations.Add(StockedProductMapper.CreateStockOnLocationResponse(stock));
+            }
+
+            return new ProductDetailsResponse
+            {
+                Id = productDetails.Id,
+                Name = productDetails.Name,
+                BakingTimeInMins = productDetails.BakingTimeInMins,
+                BakingTempInC = productDetails.BakingTempInC,
+                Size = productDetails.Size,
+                LocationsWithStock = stockOnLocations
+            };
+        }
+
+        
     }
 }
