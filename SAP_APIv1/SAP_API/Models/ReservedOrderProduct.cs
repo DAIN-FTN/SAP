@@ -1,7 +1,7 @@
 ﻿using System;
 namespace SAP_API.Models
 {
-    public class OrderProduct: IEntity
+    public class ReservedOrderProduct: IEntity
     {
         public Guid Id { get; set; }
         public Product Product { get; set; }
@@ -25,7 +25,7 @@ namespace SAP_API.Models
         /// remaining 2 products from L1 and 5 products from L2.
         /// </summary>
         public int PreparedQuantity { get; set; }
-        public StockLocation Location { get; set; }
+        public StockLocation LocationWhereProductIsReserved { get; set; }
 
         public void GetReadyForPreparing(int quantityToBePrepared)
         {

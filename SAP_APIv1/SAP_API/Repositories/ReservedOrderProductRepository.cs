@@ -6,20 +6,20 @@ using System.Threading.Tasks;
 
 namespace SAP_API.Repositories
 {
-    public class OrderProductRepository : IOrderProductRepository
+    public class ReservedOrderProductRepository : IReservedOrderProductRepository
     {
-        private List<OrderProduct> _orderProducts = new List<OrderProduct>();
+        private List<ReservedOrderProduct> _orderProducts = new List<ReservedOrderProduct>();
 
-        public OrderProductRepository()
+        public ReservedOrderProductRepository()
         {
             SeedData();
         }
 
         private void SeedData()
         {
-            _orderProducts = new List<OrderProduct>
+            _orderProducts = new List<ReservedOrderProduct>
             {
-                new OrderProduct
+                new ReservedOrderProduct
                 {
                     Id = Guid.NewGuid(),
                     Product = new Product
@@ -39,13 +39,13 @@ namespace SAP_API.Repositories
                     },
                     ReservedQuantity = 5,
                     PreparedQuantity = 0,
-                    Location = new StockLocation
+                    LocationWhereProductIsReserved = new StockLocation
                     {
                         Id = new Guid("00000000-0000-0000-0000-000000000002"),
                         Code = "L2",
                         Capacity = 100
                     }
-                }, new OrderProduct
+                }, new ReservedOrderProduct
                 {
                     Id = Guid.NewGuid(),
                     Product = new Product
@@ -65,14 +65,14 @@ namespace SAP_API.Repositories
                     },
                     ReservedQuantity = 5,
                     PreparedQuantity = 0,
-                    Location = new StockLocation
+                    LocationWhereProductIsReserved = new StockLocation
                     {
                         Id =new Guid("00000000-0000-0000-0000-000000000001"),
                         Code = "L1",
                         Capacity = 200
                     }
                 }, 
-                new OrderProduct
+                new ReservedOrderProduct
                 {
                     Id = Guid.NewGuid(),
                     Product = new Product
@@ -92,14 +92,14 @@ namespace SAP_API.Repositories
                     },
                     ReservedQuantity = 5,
                     PreparedQuantity = 0,
-                    Location = new StockLocation
+                    LocationWhereProductIsReserved = new StockLocation
                     {
                         Id =new Guid("00000000-0000-0000-0000-000000000001"),
                         Code = "L1",
                         Capacity = 200
                     }
                 },
-                new OrderProduct
+                new ReservedOrderProduct
                 {
                     Id = Guid.NewGuid(),
                     Product =  new Product
@@ -119,14 +119,14 @@ namespace SAP_API.Repositories
                     },
                     ReservedQuantity = 5,
                     PreparedQuantity = 0,
-                    Location = new StockLocation
+                    LocationWhereProductIsReserved = new StockLocation
                     {
                         Id = new Guid("00000000-0000-0000-0000-000000000002"),
                         Code = "L2",
                         Capacity = 100
                     }
                 },
-                new OrderProduct
+                new ReservedOrderProduct
                 {
                     Id = Guid.NewGuid(),
                     Product =  new Product
@@ -146,7 +146,7 @@ namespace SAP_API.Repositories
                     },
                     ReservedQuantity = 5,
                     PreparedQuantity = 0,
-                    Location = new StockLocation
+                    LocationWhereProductIsReserved = new StockLocation
                     {
                         Id =new Guid("00000000-0000-0000-0000-000000000001"),
                         Code = "L1",
@@ -156,7 +156,7 @@ namespace SAP_API.Repositories
             };
         }
 
-        public List<OrderProduct> GetByOrderIdAndProductId(Guid orderId, Guid productId)
+        public List<ReservedOrderProduct> GetByOrderIdAndProductId(Guid orderId, Guid productId)
         {
             return _orderProducts.FindAll(x => x.Order.Id == orderId && x.Product.Id == productId);
         }

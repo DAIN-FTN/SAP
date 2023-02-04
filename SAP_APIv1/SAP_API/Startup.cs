@@ -26,7 +26,8 @@ namespace SAP_API
             services.AddScoped<IBakingProgramRepository, BakingProgramRepository>();
             services.AddScoped<IOvenRepository, OvenRepository>();
             services.AddTransient<IArrangingProductsToProgramsService, ArrangingProductsToProgramsService>();
-            services.AddScoped<IOrderProductRepository, OrderProductRepository>();
+            services.AddScoped<IReservedOrderProductRepository, ReservedOrderProductRepository>();
+            services.AddScoped<IStartPreparingService, StartPreparingService>();
         }
 
 

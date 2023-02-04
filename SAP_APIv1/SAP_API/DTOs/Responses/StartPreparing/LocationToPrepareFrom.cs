@@ -4,10 +4,10 @@ using System.Collections.Generic;
 
 namespace SAP_API.DTOs.Responses
 {
-    public class StartPreparingFromLocationResponse
+    public class LocationToPrepareFrom
     {
         public Guid LocationId { get; set; }
         public string LocationCode { get; set; }
-        public List<StartPreparingProductFromOrderResponse> Products { get; set; }
+        public List<ProductToPrepare> Products { get; set; }
     }
 }

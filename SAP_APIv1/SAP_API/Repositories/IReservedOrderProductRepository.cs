@@ -6,8 +6,8 @@ using System.Threading.Tasks;
 
 namespace SAP_API.Repositories
 {
-    public interface IOrderProductRepository
+    public interface IReservedOrderProductRepository
     {
-        public List<OrderProduct> GetByOrderIdAndProductId(Guid orderId, Guid productId);
+        public List<ReservedOrderProduct> GetByOrderIdAndProductId(Guid orderId, Guid productId);
     }
 }

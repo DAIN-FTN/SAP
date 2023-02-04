@@ -3,7 +3,7 @@
 
 namespace SAP_API.DTOs.Responses.StartPreparing
 {
-    public class StartPreparingProductFromOrderResponse
+    public class ProductToPrepare
     {
         public Guid ProductId { get; set; }
         public string Name { get; set; }
