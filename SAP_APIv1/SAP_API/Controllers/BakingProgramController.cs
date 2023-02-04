@@ -5,9 +5,6 @@ using SAP_API.Models;
 using SAP_API.Services;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
 namespace SAP_API.Controllers
 {
     [ApiController]
@@ -58,5 +55,12 @@ namespace SAP_API.Controllers
             //    return NoContent();
             //return Ok(response);
         }
+
+        [HttpGet("start-preparing/{bakingProgramId}")]
+        public ActionResult<StartPreparingResponse> StartPreparing(Guid bakingProgramId)
+        {
+            return Ok();
+        }
+
     }
 }
