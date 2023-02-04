@@ -51,7 +51,23 @@ namespace SAP_API.Services
             };
 
         }
-      
+
+
+
+        public void StartPreparingProgram(Guid id)
+        {
+            BakingProgram bakingProgram = _bakingProgramRepository.GetById(id);
+            List<BakingProgramProduct> productsFromOrders = bakingProgram.Products;
+
+            foreach(BakingProgramProduct productFromOrder in productsFromOrders)
+            {
+                Guid productId = productFromOrder.Product.Id;
+                Guid orderId = productFromOrder.Order.Id;
+                int quantity = productFromOrder.QuantityТoBake;
+            }
+
+        }
+
 
         public void CreateBakingProgram()
         {
