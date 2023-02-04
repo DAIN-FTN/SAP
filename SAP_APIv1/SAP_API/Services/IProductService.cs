@@ -13,5 +13,6 @@ namespace SAP_API.Services
 
         public List<ProductStockResponse> GetProductStock(string name);
         public ProductDetailsResponse GetProductDetails(Guid id);
+        public List<ProductResponse> GetAll(string name);
     }
 }

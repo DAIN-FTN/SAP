@@ -40,6 +40,25 @@ namespace SAP_API.Mappers
             };
         }
 
+        public static ProductResponse CreateProductResponse(Product product)
+        {
+            return new ProductResponse
+            {
+                Id = product.Id,
+                Name = product.Name
+            };
+        }
+
+        public static List<ProductResponse> CreateListOfProductResponse(List<Product> products)
+        {
+            List<ProductResponse> response = new List<ProductResponse>();
+            foreach (Product product in products)
+            {
+                response.Add(CreateProductResponse(product));
+            }
+
+            return response;
+        }
         
     }
 }

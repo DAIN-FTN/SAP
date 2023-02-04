@@ -18,6 +18,15 @@ namespace SAP_API.Controllers
             _productService = productService;
         }
 
+        [HttpGet]
+        public ActionResult<List<ProductResponse>> GetAll([FromQuery] string name)
+        {
+            List<ProductResponse> response = _productService.GetAll(name);
+            if (response == null || response.Count == 0)
+                return NoContent();
+            return Ok(response);
+        }
+
 
         [HttpGet("{productId}")]
         public ActionResult<ProductStockResponse> GetDetails(Guid productId)

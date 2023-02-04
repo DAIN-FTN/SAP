@@ -20,6 +20,22 @@ namespace SAP_API.Services
 
         }
 
+        public List<ProductResponse> GetAll(string name)
+        {
+            List<Product> products;
+
+            if (String.IsNullOrEmpty(name))
+            {
+                products = (List<Product>)_productRepository.GetAll();
+                return ProductMapper.CreateListOfProductResponse(products);
+            }
+
+            products = (List<Product>)_productRepository.GetByName(name);
+            return ProductMapper.CreateListOfProductResponse(products);
+
+
+        }
+
         public ProductDetailsResponse GetProductDetails(Guid id)
         {
             List<StockedProduct> stockDetails = _stockedProductRepository.GetByProductId(id);
