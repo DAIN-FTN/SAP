@@ -1,6 +1,5 @@
 ﻿using SAP_API.DTOs;
 using SAP_API.DTOs.Responses;
-using SAP_API.DTOs.Responses.StartPreparing;
 using SAP_API.Mappers;
 using SAP_API.Models;
 using SAP_API.Repositories;
@@ -12,7 +11,6 @@ namespace SAP_API.Services
     public class BakingProgramService : IBakingProgramService
     {
         private readonly IBakingProgramRepository _bakingProgramRepository;
-
         private readonly IArrangingProductsToProgramsService _arrangingService;
         private readonly IStartPreparingService _startPreparingService;
 
@@ -59,17 +57,9 @@ namespace SAP_API.Services
         public StartPreparingResponse GetDataForPreparing(Guid id)
         {
             BakingProgram bakingProgram = _bakingProgramRepository.GetById(id);
-            List<BakingProgramProduct> productsFromProgram = bakingProgram.Products;
+            _startPreparingService.SetProgramToPrepare(bakingProgram);
 
-            foreach(BakingProgramProduct productFromProgram in productsFromProgram)
-            {
-                Guid productToBePreparedId = productFromProgram.Product.Id;
-                Guid orderInWhichProductWasOrderedId = productFromProgram.Order.Id;
-                int quantityToBePrepared = productFromProgram.QuantityТoBake;
-                List<ReservedOrderProduct> reservedProductQuantitiesOnLocations = _startPreparingService.GetInfoAboutReservedProductFromOrder(orderInWhichProductWasOrderedId, productToBePreparedId);
-
-                _startPreparingService.GroupProductsToBePreparedByLocation(reservedProductQuantitiesOnLocations, quantityToBePrepared);
-            }
+            _startPreparingService.UseReservedProductsFromOrdersForPreparing();
 
             return _startPreparingService.CreateStartPreparingResponse(bakingProgram);
 

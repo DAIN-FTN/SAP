@@ -12,28 +12,44 @@ namespace SAP_API.Services
     public class StartPreparingService: IStartPreparingService
     {
         private readonly IReservedOrderProductRepository _reservedOrderProductRepository;
-        Dictionary<Guid, List<ProductToPrepare>> productsToBePreparedGroupedByLocationDict = new Dictionary<Guid, List<ProductToPrepare>>();
+        Dictionary<Guid, List<ProductToPrepareResponse>> productsToBePreparedGroupedByLocationDict = new Dictionary<Guid, List<ProductToPrepareResponse>>();
+        private BakingProgram bakingProgramToPrepare;
+
 
 
         public StartPreparingService(IReservedOrderProductRepository reservedOrderProductRepository)
         {
             _reservedOrderProductRepository = reservedOrderProductRepository;
         }
-
-        public List<ReservedOrderProduct> GetInfoAboutReservedProductFromOrder(Guid orderId, Guid productId)
+        public void SetProgramToPrepare(BakingProgram bakingProgram)
         {
-            return _reservedOrderProductRepository.GetByOrderIdAndProductId(orderId, productId);
+            bakingProgramToPrepare = bakingProgram;
+        }
+
+        public void UseReservedProductsFromOrdersForPreparing()
+        {
+            List<BakingProgramProduct> productsFromProgram = bakingProgramToPrepare.Products;
+
+            foreach (BakingProgramProduct productFromProgram in productsFromProgram)
+            {
+                Guid productToBePreparedId = productFromProgram.Product.Id;
+                Guid orderInWhichProductWasOrderedId = productFromProgram.Order.Id;
+                int quantityToBePrepared = productFromProgram.QuantityТoBake;
+                List<ReservedOrderProduct> reservedProductQuantitiesOnLocations = GetInfoAboutReservedProductFromOrder(orderInWhichProductWasOrderedId, productToBePreparedId);
+
+                GroupProductsToBePreparedByLocation(reservedProductQuantitiesOnLocations, quantityToBePrepared);
+            }
         }
 
         public StartPreparingResponse CreateStartPreparingResponse(BakingProgram bakingProgram)
         {
-            List<LocationToPrepareFrom> preparingLocations = new List<LocationToPrepareFrom>();
-            foreach (KeyValuePair<Guid, List<ProductToPrepare>> locationWithProducts in productsToBePreparedGroupedByLocationDict)
+            List<LocationToPrepareFromResponse> preparingLocations = new List<LocationToPrepareFromResponse>();
+            foreach (KeyValuePair<Guid, List<ProductToPrepareResponse>> locationWithProducts in productsToBePreparedGroupedByLocationDict)
             {
                 Guid locationId = locationWithProducts.Key;
-                List<ProductToPrepare> products = locationWithProducts.Value;
+                List<ProductToPrepareResponse> products = locationWithProducts.Value;
 
-                LocationToPrepareFrom preparingLocation = new LocationToPrepareFrom
+                LocationToPrepareFromResponse preparingLocation = new LocationToPrepareFromResponse
                 {
                     LocationId = locationId,
                     LocationCode = "",
@@ -56,7 +72,12 @@ namespace SAP_API.Services
 
         }
 
-        public void GroupProductsToBePreparedByLocation(List<ReservedOrderProduct> reservedProductQuantitiesOnLocations, int quantityToBePrepared)
+        private List<ReservedOrderProduct> GetInfoAboutReservedProductFromOrder(Guid orderId, Guid productId)
+        {
+            return _reservedOrderProductRepository.GetByOrderIdAndProductId(orderId, productId);
+        }
+
+        private void GroupProductsToBePreparedByLocation(List<ReservedOrderProduct> reservedProductQuantitiesOnLocations, int quantityToBePrepared)
         {
             foreach (ReservedOrderProduct productReservedOnLocation in reservedProductQuantitiesOnLocations)
             {
@@ -72,16 +93,15 @@ namespace SAP_API.Services
             }
         }
 
-
         private void GroupProductToLocationForPreparing(ReservedOrderProduct productReservedOnLocation, int quantityToPrepareFromLocation)
         {
             Guid locationWhereProductIsReservedId = productReservedOnLocation.LocationWhereProductIsReserved.Id;
             if (!productsToBePreparedGroupedByLocationDict.ContainsKey(locationWhereProductIsReservedId))
             {
-                productsToBePreparedGroupedByLocationDict[locationWhereProductIsReservedId] = new List<ProductToPrepare>();
+                productsToBePreparedGroupedByLocationDict[locationWhereProductIsReservedId] = new List<ProductToPrepareResponse>();
             }
 
-            ProductToPrepare productToBePrepared = new ProductToPrepare
+            ProductToPrepareResponse productToBePrepared = new ProductToPrepareResponse
             {
                 ProductId = productReservedOnLocation.Product.Id,
                 Name = productReservedOnLocation.Product.Name,

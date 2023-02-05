@@ -12,7 +12,7 @@ namespace SAP_API.DTOs.Responses
         public DateTime BakingProgrammedAt { get; set; }
         public Guid OvenId { get; set; }
         public string OvenCode { get; set; }
-        public List<LocationToPrepareFrom> Locations { get; set; }
+        public List<LocationToPrepareFromResponse> Locations { get; set; }
 
     }
 }

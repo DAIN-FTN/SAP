@@ -9,9 +9,11 @@ namespace SAP_API.Services
 {
     public interface IStartPreparingService
     {
-        public List<ReservedOrderProduct> GetInfoAboutReservedProductFromOrder(Guid orderId, Guid productId);
+        public void SetProgramToPrepare(BakingProgram bakingProgram);
 
+        public void UseReservedProductsFromOrdersForPreparing();
         public StartPreparingResponse CreateStartPreparingResponse(BakingProgram bakingProgram);
-        public void GroupProductsToBePreparedByLocation(List<ReservedOrderProduct> reservedProductQuantitiesOnLocations, int quantityToBePrepared);
+
+
     }
 }
