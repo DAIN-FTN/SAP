@@ -1,5 +1,6 @@
 ﻿using SAP_API.DTOs;
 using SAP_API.DTOs.Responses;
+using SAP_API.Mappers;
 using SAP_API.Models;
 using SAP_API.Repositories;
 using System;
@@ -9,153 +10,48 @@ namespace SAP_API.Services
 {
     public class BakingProgramService : IBakingProgramService
     {
-        private readonly IProductRepository _productRepository;
         private readonly IBakingProgramRepository _bakingProgramRepository;
 
-        public BakingProgramService(IProductRepository productRepository, IBakingProgramRepository bakingProgramRepository)
+        private readonly IArrangingProductsToProgramsService _arrangingService;
+
+        public BakingProgramService(IProductRepository productRepository, IBakingProgramRepository bakingProgramRepository, IOvenRepository ovenRepository, IArrangingProductsToProgramsService arrangingService)
         {
-            _productRepository = productRepository;
             _bakingProgramRepository = bakingProgramRepository;
+            _arrangingService = arrangingService;
         }
 
-        internal class TimeAndTempKey
+
+        public ArrangingResult GetExistingOrNewProgramsProductShouldBeArrangedInto(DateTime timeOrderShouldBeDone, List<OrderProductRequest> orderProducts)
         {
-            public string Key { get; }
-            public int Temp { get; set; }
-            public int Time { get; set; }
+            List<BakingProgram> programsProductsShouldBeArrangedTo = new List<BakingProgram>();
 
+            _arrangingService.SetTimeOrderShouldBeDone(timeOrderShouldBeDone);
+            _arrangingService.PrepareProductsForArranging(orderProducts);
 
-            public TimeAndTempKey(int temp, int time)
+            List<BakingProgram> existingPrograms = _arrangingService.GetExistingProgramsProductShouldBeArrangedInto();
+            programsProductsShouldBeArrangedTo.AddRange(existingPrograms);
+
+            bool allProductsSuccessfullyArranged = !_arrangingService.ThereAreProductsLeftForArranging();
+            if (allProductsSuccessfullyArranged)
             {
-                Key = temp + "_" + time;
-                Temp = temp;
-                Time = time;
-
+                return new ArrangingResult { 
+                    BakingPrograms = programsProductsShouldBeArrangedTo,
+                    AllProductsCanBeSuccessfullyArranged = true
+                };
             }
 
-            public override bool Equals(object obj)
+            List<BakingProgram> newPrograms = _arrangingService.GetNewProgramsProductsShouldBeArrangedInto();
+            programsProductsShouldBeArrangedTo.AddRange(newPrograms);
+
+            allProductsSuccessfullyArranged = !_arrangingService.ThereAreProductsLeftForArranging();
+            return new ArrangingResult
             {
-                if (obj is TimeAndTempKey)
-                    return ((TimeAndTempKey)obj).Key.Equals(this.Key);
-                return false;
-            }
-
-            public override int GetHashCode()
-            {
-                return this.Key.GetHashCode();
-            }
+                BakingPrograms = programsProductsShouldBeArrangedTo,
+                AllProductsCanBeSuccessfullyArranged = allProductsSuccessfullyArranged
+            };
 
         }
-
-        internal class ProductQuantity
-        {
-            public Product Product {get; set;}
-            public int Quantity { get; set; }
-
-
-        }
-
-        public List<BakingProgramResponse> FindAvailableBakingPrograms(FindAvailableBakingProgramsRequest body)
-        {
-            Dictionary<TimeAndTempKey, List<ProductQuantity>> productsDict = new Dictionary<TimeAndTempKey, List<ProductQuantity>>();
-            List<BakingProgramResponse> resultList = new List<BakingProgramResponse>();
-            List<OrderProductRequest> orderProducts = body.OrderProducts;
-
-            populateProductsWithSameTimeAndTempDictionary(productsDict, orderProducts);
-
-            IEnumerable<TimeAndTempKey> keys = productsDict.Keys;
-            foreach(TimeAndTempKey key in keys)
-            {
-                int temp = key.Temp;
-                int time = key.Time;
-                List<ProductQuantity> products = productsDict[key];
-                List<BakingProgram> bakingPrograms = _bakingProgramRepository.GetByTempAndTime(temp, time);
-                int bakingProgramIndex = 0;
-                int bakingProgramsCount = bakingPrograms.Count;
-                int productIndex = 0;
-                int productCount = products.Count;
-
-                while(bakingProgramIndex < bakingProgramsCount && productIndex < productCount)
-                {
-                    BakingProgram program = bakingPrograms[bakingProgramIndex];
-                    int remainingCapacity = program.RemainingOvenCapacity;
-                    while(remainingCapacity > 0 && productIndex < productCount)
-                    {
-                        ProductQuantity product = products[productIndex];
-                        int size = product.Product.Size;
-                        int quantity = product.Quantity;
-                        int numberOfProductsFittingInOven = remainingCapacity / size;
-                        int numberOfProductsForOven = Math.Min(quantity, numberOfProductsFittingInOven);
-                        if(numberOfProductsForOven == 0)
-                        {
-                            bakingProgramIndex++;
-                            break;
-                        }
-                        remainingCapacity -= size * numberOfProductsForOven;
-                        product.Quantity -= numberOfProductsForOven;
-                        if(product.Quantity == 0)
-                        {
-                            productIndex++;
-                        }
-
-                    }
-                }
-
-                if(productIndex < productCount)
-                {
-                   bool thereAreFreeTimeSlotsForNewPrograms = checkForFreeTimeSlotsForRemainingProducts(products, productIndex, key);
-                    if (!thereAreFreeTimeSlotsForNewPrograms)
-                    {
-                        resultList.Clear();
-                        return resultList;
-                    }
-                }
-                
-
-            }
-
-
-
-            return resultList;
-        }
-
-        private bool checkForFreeTimeSlotsForRemainingProducts(List<ProductQuantity> products, int productIndex, TimeAndTempKey key)
-        {
-
-            return false;
-        }
-
-        private void populateProductsWithSameTimeAndTempDictionary(Dictionary<TimeAndTempKey, List<ProductQuantity>> productsDict, List<OrderProductRequest> products)
-        {
-            foreach (OrderProductRequest product in products)
-            {
-                Guid productId = product.ProductId;
-                int quantity = product.Quantity;
-                Product productDetails = _productRepository.GetById(productId);
-                int temp = productDetails.BakingTempInC;
-                int time = productDetails.BakingTimeInMins;
-                TimeAndTempKey key = new TimeAndTempKey(temp, time);
-
-                if (productsDict.ContainsKey(key))
-                    productsDict[key].Add(new ProductQuantity 
-                    { 
-                        Product = productDetails,
-                        Quantity = quantity
-                    });
-                else
-                {
-                    List<ProductQuantity> productsWithSameBakingTimeAndTemp = new List<ProductQuantity>();
-                    productsWithSameBakingTimeAndTemp.Add(new ProductQuantity
-                    {
-                        Product = productDetails,
-                        Quantity = quantity
-                    });
-                    productsDict.Add(key, productsWithSameBakingTimeAndTemp);
-                }
-
-
-            }
-        }
+      
 
         public void CreateBakingProgram()
         {
@@ -165,6 +61,14 @@ namespace SAP_API.Services
         public void UpdateBakingProgram(BakingProgram bakingProgram)
         {
             throw new NotImplementedException();
+        }
+
+        public List<BakingProgramResponse> FindAvailableBakingPrograms(FindAvailableBakingProgramsRequest body)
+        {
+            ArrangingResult result = GetExistingOrNewProgramsProductShouldBeArrangedInto(body.ShouldBeDoneAt, body.OrderProducts);
+            List<BakingProgram> listToMap = result.BakingPrograms;
+            List<BakingProgramResponse> resultList = BakingProgramMapper.CreateListOfBakingProgramResponse(listToMap);
+            return resultList;
         }
     }
 }

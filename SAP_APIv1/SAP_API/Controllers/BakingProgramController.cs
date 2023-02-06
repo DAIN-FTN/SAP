@@ -25,14 +25,14 @@ namespace SAP_API.Controllers
         public ActionResult<List<BakingProgramResponse>> FindAvailableBakingPrograms([FromBody] FindAvailableBakingProgramsRequest body)
         {
            
-            return new List<BakingProgramResponse>
+           /*return new List<BakingProgramResponse>
             {
                 new BakingProgramResponse
                 {
                     Id = Guid.NewGuid(),
                     Code = "Bake-0001",
                     CreatedAt = new DateTime(2022, 12, 31, 23, 59, 59),
-                    Status = BakingPogramStatus.Created,
+                    Status = "Created",
                     BakingTimeInMins = 60,
                     BakingTempInC = 180,
                     BakingProgrammedAt = new DateTime(2023, 1, 1, 0, 0, 0),
@@ -44,19 +44,21 @@ namespace SAP_API.Controllers
                     Id = Guid.NewGuid(),
                     Code = "SisajGa-0002",
                     CreatedAt = new DateTime(2022, 12, 31, 23, 59, 59),
-                    Status = BakingPogramStatus.Created,
+                    Status = "Created",
                     BakingTimeInMins = 120,
                     BakingTempInC = 200,
                     BakingProgrammedAt = new DateTime(2023, 1, 1, 0, 0, 0),
                     BakingStartedAt = null,
                     OvenCode = "Oven-B"
                 }
-            };
+            };*/
 
-            //List<BakingProgramResponse> response = _bakingProgramService.FindAvailableBakingPrograms(body);
-            //if (response.Count == 0)
-            //    return NoContent();
-            //return Ok(response);
+            
+            List<BakingProgramResponse> response = _bakingProgramService.FindAvailableBakingPrograms(body);
+            if (response.Count == 0)
+                return NoContent();
+            return Ok(response);
+            
         }
     }
 }

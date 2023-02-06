@@ -36,6 +36,5 @@ namespace SAP_API.Services
 
             return resultList;
         }
-
     }
 }

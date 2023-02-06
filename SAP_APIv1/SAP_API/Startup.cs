@@ -32,7 +32,10 @@ namespace SAP_API
                                       .AllowAnyMethod();
                                   });
             });
+            services.AddTransient<IArrangingProductsToProgramsService, ArrangingProductsToProgramsService>();
         }
+
+
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -43,17 +46,13 @@ namespace SAP_API
             {
                 app.UseDeveloperExceptionPage();
             }
-            app.UseCors(MyAllowSpecificOrigins);
 
             app.UseRouting();
-            app.UseCors(MyAllowSpecificOrigins);
 
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
             });
-            app.UseCors(MyAllowSpecificOrigins);
-
         }
     }
 }
