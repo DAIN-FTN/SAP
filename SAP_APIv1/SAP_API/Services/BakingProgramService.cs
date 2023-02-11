@@ -108,5 +108,40 @@ namespace SAP_API.Services
             //TODO saveChanges
 
         }
+
+        //TODO test
+        public bool CheckIfBakingProgramIsNextForPreparing(Guid bakingProgramId)
+        {
+            BakingProgram bakingProgram = _bakingProgramRepository.GetById(bakingProgramId);
+            
+            DateTime bakingProgrammedAtTime = bakingProgram.BakingProgrammedAt;
+            DateTime timeNow = DateTime.Now;
+            int numberOfMinutesBeforeProgrammedTimePreparingIsAllowed = 25;
+            DateTime earliestTimeToStartPreparing = timeNow.AddMinutes(-numberOfMinutesBeforeProgrammedTimePreparingIsAllowed);
+
+            if (bakingProgrammedAtTime < earliestTimeToStartPreparing)
+                return false;
+
+            List<BakingProgram> bakingProgramsThatShouldBePrepared = _bakingProgramRepository.GetProgramsWithBakingProgrammedAtBetweenDateTimes(earliestTimeToStartPreparing, timeNow);
+            if (bakingProgramsThatShouldBePrepared.Count == 0)
+                return false;
+
+            SortBakingProgramsForPreparingByProgrammedAtTime(bakingProgramsThatShouldBePrepared);
+
+            Guid ovenId = bakingProgram.Oven.Id;
+            List<BakingProgram> programsProgrammedForOven = bakingProgramsThatShouldBePrepared.FindAll(bp => bp.Oven.Id == ovenId);
+            if (programsProgrammedForOven.Count == 0)
+                return false;
+
+            BakingProgram bakingProgramThatShouldBeNextPreparedForOven = programsProgrammedForOven[0];
+            return bakingProgramThatShouldBeNextPreparedForOven.Id == bakingProgramId;
+        }
+
+        private void SortBakingProgramsForPreparingByProgrammedAtTime(List<BakingProgram> bakingProgramsThatShouldBePrepared)
+        {
+            bakingProgramsThatShouldBePrepared.Sort((bp1, bp2) => bp1.BakingProgrammedAt.CompareTo(bp2.BakingProgrammedAt));
+        }
+
+
     }
 }

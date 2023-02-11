@@ -130,5 +130,9 @@ namespace SAP_API.Services
 
         }
 
+        public bool CheckIfBakingProgramIsNextForPreparing(Guid bakingProgramId)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

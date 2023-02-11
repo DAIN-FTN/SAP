@@ -13,6 +13,7 @@ namespace SAP_API.Services
 
         public void UseReservedProductsFromOrdersForPreparing();
         public StartPreparingResponse CreateStartPreparingResponse(BakingProgram bakingProgram);
+        public bool CheckIfBakingProgramIsNextForPreparing(Guid bakingProgramId);
 
 
     }

@@ -192,5 +192,10 @@ namespace SAP_API.Repositories
         {
             return _bakingPrograms.FindAll(x => x.Oven.Id.Equals(ovenId));
         }
+
+        public List<BakingProgram> GetProgramsWithBakingProgrammedAtBetweenDateTimes(DateTime startTime, DateTime endTime)
+        {
+            return _bakingPrograms.FindAll(x => x.BakingProgrammedAt > startTime && x.BakingProgrammedAt < endTime);
+        }
     }
 }
