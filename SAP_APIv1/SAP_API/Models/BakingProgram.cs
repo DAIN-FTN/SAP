@@ -36,5 +36,10 @@ namespace SAP_API.Models
             BakingTempInC = group.Temp;
             BakingTimeInMins = group.Time;
         }
+
+        internal void StartPreparing()
+        {
+            Status = BakingProgramStatus.Preparing;
+        }
     }
 }

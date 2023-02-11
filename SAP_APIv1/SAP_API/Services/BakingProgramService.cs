@@ -59,7 +59,11 @@ namespace SAP_API.Services
             BakingProgram bakingProgram = _bakingProgramRepository.GetById(id);
             _startPreparingService.SetProgramToPrepare(bakingProgram);
 
-            _startPreparingService.UseReservedProductsFromOrdersForPreparing();
+            if (bakingProgram.Status.Equals(BakingProgramStatus.Created))
+            {
+                _startPreparingService.UseReservedProductsFromOrdersForPreparing();
+                bakingProgram.StartPreparing();
+            }
 
             return _startPreparingService.CreateStartPreparingResponse(bakingProgram);
 

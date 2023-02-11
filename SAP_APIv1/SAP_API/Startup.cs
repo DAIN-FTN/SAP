@@ -21,13 +21,14 @@ namespace SAP_API
             services.AddControllers();
             services.AddScoped<IProductService, ProductService>();
             services.AddScoped<IBakingProgramService, BakingProgramService>();
-            services.AddScoped<IProductRepository, ProductRepository>();
-            services.AddScoped<IStockedProductRepository, StockedProductRepository>();
-            services.AddScoped<IBakingProgramRepository, BakingProgramRepository>();
-            services.AddScoped<IOvenRepository, OvenRepository>();
+            services.AddSingleton<IProductRepository, ProductRepository>();
+            services.AddSingleton<IStockedProductRepository, StockedProductRepository>();
+            services.AddSingleton<IBakingProgramRepository, BakingProgramRepository>();
+            services.AddSingleton<IOvenRepository, OvenRepository>();
             services.AddTransient<IArrangingProductsToProgramsService, ArrangingProductsToProgramsService>();
-            services.AddScoped<IReservedOrderProductRepository, ReservedOrderProductRepository>();
+            services.AddSingleton<IReservedOrderProductRepository, ReservedOrderProductRepository>();
             services.AddScoped<IStartPreparingService, StartPreparingService>();
+            services.AddSingleton<IProductToPrepareRepository, ProductToPrepareRepository>();
         }
 
 
