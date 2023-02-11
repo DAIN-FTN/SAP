@@ -29,9 +29,9 @@ namespace SAP_API
             services.AddSingleton<IReservedOrderProductRepository, ReservedOrderProductRepository>();
             services.AddScoped<IStartPreparingService, StartPreparingService>();
             services.AddSingleton<IProductToPrepareRepository, ProductToPrepareRepository>();
+            services.AddScoped<IStockedProductService, StockedProductService>();
+            services.AddSingleton<IStockLocationRepository, StockLocationRepository>();
         }
-
-
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

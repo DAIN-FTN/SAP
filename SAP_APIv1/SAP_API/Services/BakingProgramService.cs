@@ -13,13 +13,17 @@ namespace SAP_API.Services
         private readonly IBakingProgramRepository _bakingProgramRepository;
         private readonly IArrangingProductsToProgramsService _arrangingService;
         private readonly IStartPreparingService _startPreparingService;
+        private readonly IStockedProductService _stockedProductService;
+        private readonly IProductToPrepareRepository _productToPrepareRepository;
 
 
-        public BakingProgramService(IBakingProgramRepository bakingProgramRepository, IArrangingProductsToProgramsService arrangingService, IStartPreparingService startPreparingService)
+        public BakingProgramService(IBakingProgramRepository bakingProgramRepository, IArrangingProductsToProgramsService arrangingService, IStartPreparingService startPreparingService, IStockedProductService stockedProductService, IProductToPrepareRepository productToPrepareRepository)
         {
             _bakingProgramRepository = bakingProgramRepository;
             _arrangingService = arrangingService;
             _startPreparingService = startPreparingService;
+            _stockedProductService = stockedProductService;
+            _productToPrepareRepository = productToPrepareRepository;
         }
 
 
@@ -85,6 +89,24 @@ namespace SAP_API.Services
             List<BakingProgram> listToMap = result.BakingPrograms;
             List<BakingProgramResponse> resultList = BakingProgramMapper.CreateListOfBakingProgramResponse(listToMap);
             return resultList;
+        }
+
+        public void FinishPreparing(Guid bakingProgramId)
+        {
+            List<ProductToPrepare> productsToPrepare = _productToPrepareRepository.GetByBakingProgramId(bakingProgramId);
+            foreach(ProductToPrepare productToPrepare in productsToPrepare)
+            {
+                Guid locationForStockChange = productToPrepare.LocationToPrepareFrom.Id;
+                Guid productForStockChange = productToPrepare.Product.Id;
+                int quantityToSubstract = productToPrepare.QuantityToPrepare;
+                _stockedProductService.ChangeStockOnLocationForProduct(locationForStockChange, productForStockChange, quantityToSubstract);
+                
+            }
+
+            BakingProgram bakingProgram = _bakingProgramRepository.GetById(bakingProgramId);
+            bakingProgram.FinishPreparing();
+            //TODO saveChanges
+
         }
     }
 }

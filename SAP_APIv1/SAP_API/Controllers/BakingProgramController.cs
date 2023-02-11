@@ -61,8 +61,16 @@ namespace SAP_API.Controllers
         [HttpGet("start-preparing/{bakingProgramId}")]
         public ActionResult<StartPreparingResponse> StartPreparing(Guid bakingProgramId)
         {
+            //TODO check if proram is next for preparing
             StartPreparingResponse response = _bakingProgramService.GetDataForPreparing(bakingProgramId);
             return Ok(response);
+        }
+
+        [HttpGet("finish-preparing/{bakingProgramId}")]
+        public ActionResult<StartPreparingResponse> FinishPreparing(Guid bakingProgramId)
+        {
+            _bakingProgramService.FinishPreparing(bakingProgramId);
+            return Ok();
         }
 
     }
