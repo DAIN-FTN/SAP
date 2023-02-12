@@ -18,8 +18,14 @@ namespace SAP_API.Controllers
             _bakingProgramService = bakingProgramService;
         }
 
+        [HttpGet]
+        public ActionResult<AllBakingProgramsResponse> GetAll()
+        {
+            return Ok(_bakingProgramService.GetBakingProgramsForUser());
+        }
+
         [HttpPost("available")]
-        public ActionResult<List<BakingProgramResponse>> FindAvailableBakingPrograms([FromBody] FindAvailableBakingProgramsRequest body)
+        public ActionResult<List<AvailableBakingProgramResponse>> FindAvailableBakingPrograms([FromBody] FindAvailableBakingProgramsRequest body)
         {
            
            /*return new List<BakingProgramResponse>
@@ -51,7 +57,7 @@ namespace SAP_API.Controllers
             };*/
 
             
-            List<BakingProgramResponse> response = _bakingProgramService.FindAvailableBakingPrograms(body);
+            List<AvailableBakingProgramResponse> response = _bakingProgramService.FindAvailableBakingPrograms(body);
             if (response.Count == 0)
                 return NoContent();
             return Ok(response);

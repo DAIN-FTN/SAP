@@ -7,9 +7,9 @@ namespace SAP_API.Mappers
 {
     public class BakingProgramMapper
     {
-        public static BakingProgramResponse CreateBakingProgramResponse(BakingProgram program)
+        public static AvailableBakingProgramResponse CreateAvailableBakingProgramResponse(BakingProgram program)
         {
-            return new BakingProgramResponse { 
+            return new AvailableBakingProgramResponse { 
                 Id = program.Id,
                 Code = program.Code,
                 CreatedAt = program.CreatedAt,
@@ -22,15 +22,79 @@ namespace SAP_API.Mappers
             };
         }
 
-        public static List<BakingProgramResponse> CreateListOfBakingProgramResponse(List<BakingProgram> programs)
+        public static List<AvailableBakingProgramResponse> CreateListOfAvailableBakingProgramResponse(List<BakingProgram> programs)
         {
-            List<BakingProgramResponse> resultList = new List<BakingProgramResponse>();
+            List<AvailableBakingProgramResponse> resultList = new List<AvailableBakingProgramResponse>();
             foreach(BakingProgram program in programs)
             {
-                BakingProgramResponse result = CreateBakingProgramResponse(program);
+                AvailableBakingProgramResponse result = CreateAvailableBakingProgramResponse(program);
                 resultList.Add(result);
             }
             return resultList;
+        }
+
+        public static AllBakingProgramsResponse CreateAllBakingProgramsResponse(List<BakingProgram> bakingPrograms, BakingProgram programUserIsPreparing)
+        {
+            List<BakingProgram> programsToPrepare = bakingPrograms.FindAll(bp => bp.Status.Equals(BakingProgramStatus.Created));
+            List<BakingProgram> preparedPrograms = bakingPrograms.FindAll(bp => bp.Status.Equals(BakingProgramStatus.Prepared));
+            List<BakingProgram> programsBaking = bakingPrograms.FindAll(bp => bp.Status.Equals(BakingProgramStatus.Baking));
+            List<BakingProgram> programsDone = bakingPrograms.FindAll(bp => bp.Status.Equals(BakingProgramStatus.Done));
+
+
+            List<BakingProgramResponse> programsToPrepareResponse = CreateListOfBakingProgramResponses(programsToPrepare);
+            List<BakingProgramResponse> preparedProgramsResponse = CreateListOfBakingProgramResponses(preparedPrograms);
+            List<BakingProgramResponse> programsBakingResponse = CreateListOfBakingProgramResponses(programsBaking);
+            List<BakingProgramResponse> programsDoneResponse = CreateListOfBakingProgramResponses(programsDone);
+
+            AllBakingProgramsResponse response = new AllBakingProgramsResponse
+            {
+                PrepareForOven = programsToPrepareResponse,
+                PreparingAndPrepared = preparedProgramsResponse,
+                PreparingInProgress = null,
+                Baking = programsBakingResponse,
+                Done = programsDoneResponse
+            };
+
+            if (programUserIsPreparing == null)
+                return response;
+
+            BakingProgramResponse programUserIsPreparingResponse = CreateBakingProgramResponse(programUserIsPreparing);
+            response.PreparingAndPrepared.Add(programUserIsPreparingResponse);
+
+            return response;
+        }
+
+        private static List<BakingProgramResponse> CreateListOfBakingProgramResponses(List<BakingProgram> programs)
+        {
+            List<BakingProgramResponse> programsResponse = new List<BakingProgramResponse>();
+            foreach (BakingProgram program in programs)
+            {
+                programsResponse.Add(CreateBakingProgramResponse(program));
+            }
+            return programsResponse;
+        }
+
+        private static BakingProgramResponse CreateBakingProgramResponse(BakingProgram program)
+        {
+
+            DateTime canBePreparedAt = program.GetTimeProgramCanBePreparedAt();
+            DateTime canBeBakedAt = program.GetTimeProgramCanBeBakedAt();
+
+            return new BakingProgramResponse
+            {
+                Id = program.Id,
+                Code = program.Code,
+                CreatedAt = program.CreatedAt,
+                Status = Enum.GetName(typeof(BakingProgramStatus), program.Status),
+                BakingTimeInMins = program.BakingTimeInMins,
+                BakingTempInC = program.BakingTempInC,
+                BakingProgrammedAt = program.BakingProgrammedAt,
+                CanBePreparedAt = canBePreparedAt,
+                CanBeBakedAt = canBeBakedAt,
+                BakingStartedAt = program.BakingStartedAt,
+                OvenId = program.Oven.Id,
+                OvenCode = program.Oven.Code
+            };
         }
     }
 }

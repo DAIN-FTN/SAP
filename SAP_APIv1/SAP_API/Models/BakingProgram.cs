@@ -16,7 +16,7 @@ namespace SAP_API.Models
         public int BakingTimeInMins { get; set; }
         public int BakingTempInC { get; set; }
         public DateTime BakingProgrammedAt { get; set; }
-        public DateTime BakingStartedAt { get; set; }
+        public DateTime? BakingStartedAt { get; set; }
         public Oven Oven { get; set; }
         public User PreparedBy { get; set; }
         public int RemainingOvenCapacity { get; set; }
@@ -53,6 +53,17 @@ namespace SAP_API.Models
         {
             Status = BakingProgramStatus.Created;
             PreparedBy = null;
+        }
+
+        //TODO minutes as params
+        internal DateTime GetTimeProgramCanBePreparedAt()
+        {
+            return BakingProgrammedAt.AddMinutes(-25);
+        }
+
+        internal DateTime GetTimeProgramCanBeBakedAt()
+        {
+            return BakingProgrammedAt.AddMinutes(-5);
         }
     }
 }

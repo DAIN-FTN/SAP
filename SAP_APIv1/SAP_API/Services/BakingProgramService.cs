@@ -88,11 +88,11 @@ namespace SAP_API.Services
             throw new NotImplementedException();
         }
 
-        public List<BakingProgramResponse> FindAvailableBakingPrograms(FindAvailableBakingProgramsRequest body)
+        public List<AvailableBakingProgramResponse> FindAvailableBakingPrograms(FindAvailableBakingProgramsRequest body)
         {
             ArrangingResult result = GetExistingOrNewProgramsProductShouldBeArrangedInto(body.ShouldBeDoneAt, body.OrderProducts);
             List<BakingProgram> listToMap = result.BakingPrograms;
-            List<BakingProgramResponse> resultList = BakingProgramMapper.CreateListOfBakingProgramResponse(listToMap);
+            List<AvailableBakingProgramResponse> resultList = BakingProgramMapper.CreateListOfAvailableBakingProgramResponse(listToMap);
             return resultList;
         }
 
@@ -151,6 +151,33 @@ namespace SAP_API.Services
         {
             BakingProgram bakingProgram = _bakingProgramRepository.GetById(bakingProgramId);
             bakingProgram.CancellPreparing();
+        }
+
+        //TODO user from req
+        public AllBakingProgramsResponse GetBakingProgramsForUser()
+        {
+            User user = new User
+            {
+                Id = new Guid("00000000-0000-0000-0000-000000000001"),
+                Username = "Natalija",
+                Password = "pass123"
+            };
+
+            DateTime timeNow = DateTime.Now;
+            DateTime startTime = timeNow.AddDays(-1);
+            DateTime endTime = timeNow.AddHours(4);
+            List<BakingProgram> bakingPrograms = _bakingProgramRepository.GetProgramsWithBakingProgrammedAtBetweenDateTimes(startTime, endTime);
+            List<BakingProgram> programsUserIsPreparing = bakingPrograms.FindAll(bp => bp.Status.Equals(BakingProgramStatus.Preparing) && bp.PreparedBy.Id == user.Id);
+
+            if(programsUserIsPreparing.Count == 0)
+                return BakingProgramMapper.CreateAllBakingProgramsResponse(bakingPrograms, null);
+
+            BakingProgram programUserIsPreparing = programsUserIsPreparing[0];
+            AllBakingProgramsResponse response = BakingProgramMapper.CreateAllBakingProgramsResponse(bakingPrograms, programUserIsPreparing);
+            StartPreparingResponse preparingInProgressResponse = GetDataForPreparing(programUserIsPreparing.Id);
+            response.PreparingInProgress = preparingInProgressResponse;
+            return response;
+
         }
     }
 }
