@@ -29,6 +29,11 @@ namespace SAP_API.Services
 
         public void UseReservedProductsFromOrdersForPreparing()
         {
+
+            bool programHadPreparingStatus = CheckIfBakingProgramHadPreparingStatus();
+            if (programHadPreparingStatus)
+                return;
+
             List<BakingProgramProduct> productsFromProgram = bakingProgramToPrepare.Products;
 
             foreach (BakingProgramProduct productFromProgram in productsFromProgram)
@@ -41,10 +46,22 @@ namespace SAP_API.Services
                 CreateProductsToPrepare(reservedProductQuantitiesOnLocations, quantityToBePrepared);
             }
         }
-
-        public StartPreparingResponse CreateStartPreparingResponse(BakingProgram bakingProgram)
+        /// <summary>
+        /// Checks if there are already products to prepare records for a program.
+        /// If program was chosen by some user to be prepared, status is changed to prepared 
+        /// and products to prepare are recorded. If the user then cancells preparing, products
+        /// to prepare record stay recorded, but program has a created status.
+        /// </summary>
+        /// <returns>true if program was previously in prepared status</returns>
+        private bool CheckIfBakingProgramHadPreparingStatus()
         {
-            List<ProductToPrepare> productsToPrepare = _productToPrepareRepository.GetByBakingProgramId(bakingProgram.Id);
+            List<ProductToPrepare> productsToPrepare = _productToPrepareRepository.GetByBakingProgramId(bakingProgramToPrepare.Id);
+            return productsToPrepare.Count != 0;
+        }
+
+        public StartPreparingResponse CreateStartPreparingResponse()
+        {
+            List<ProductToPrepare> productsToPrepare = _productToPrepareRepository.GetByBakingProgramId(bakingProgramToPrepare.Id);
             GroupProductsByLocation(productsToPrepare);
 
             List<LocationToPrepareFromResponse> preparingLocations = new List<LocationToPrepareFromResponse>();
@@ -68,11 +85,11 @@ namespace SAP_API.Services
 
             StartPreparingResponse startPreparingResponse = new StartPreparingResponse
             {
-                Id = bakingProgram.Id,
-                Code = bakingProgram.Code,
-                BakingProgrammedAt = bakingProgram.BakingProgrammedAt,
-                OvenId = bakingProgram.Oven.Id,
-                OvenCode = bakingProgram.Oven.Code,
+                Id = bakingProgramToPrepare.Id,
+                Code = bakingProgramToPrepare.Code,
+                BakingProgrammedAt = bakingProgramToPrepare.BakingProgrammedAt,
+                OvenId = bakingProgramToPrepare.Oven.Id,
+                OvenCode = bakingProgramToPrepare.Oven.Code,
                 Locations = preparingLocations
             };
 
@@ -126,13 +143,10 @@ namespace SAP_API.Services
                 QuantityToPrepare = quantityToPrepareFromLocation
             };
 
+            //TODO SaveChanges
              _productToPrepareRepository.Create(productToPrepare);
 
         }
 
-        public bool CheckIfBakingProgramIsNextForPreparing(Guid bakingProgramId)
-        {
-            throw new NotImplementedException();
-        }
     }
 }

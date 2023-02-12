@@ -58,6 +58,7 @@ namespace SAP_API.Services
 
         }
 
+        //TODO get user from request
         public StartPreparingResponse GetDataForPreparing(Guid id)
         {
             BakingProgram bakingProgram = _bakingProgramRepository.GetById(id);
@@ -66,10 +67,14 @@ namespace SAP_API.Services
             if (bakingProgram.Status.Equals(BakingProgramStatus.Created))
             {
                 _startPreparingService.UseReservedProductsFromOrdersForPreparing();
-                bakingProgram.StartPreparing();
+                bakingProgram.StartPreparing(new User { 
+                    Id = new Guid("00000000-0000-0000-0000-000000000001"),
+                    Username = "Natalija",
+                    Password = "pass123"
+                });
             }
 
-            return _startPreparingService.CreateStartPreparingResponse(bakingProgram);
+            return _startPreparingService.CreateStartPreparingResponse();
 
         }
 
@@ -142,6 +147,10 @@ namespace SAP_API.Services
             bakingProgramsThatShouldBePrepared.Sort((bp1, bp2) => bp1.BakingProgrammedAt.CompareTo(bp2.BakingProgrammedAt));
         }
 
-
+        public void CancellPreparing(Guid bakingProgramId)
+        {
+            BakingProgram bakingProgram = _bakingProgramRepository.GetById(bakingProgramId);
+            bakingProgram.CancellPreparing();
+        }
     }
 }

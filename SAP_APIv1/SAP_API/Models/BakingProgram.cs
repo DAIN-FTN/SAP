@@ -38,14 +38,21 @@ namespace SAP_API.Models
         }
 
         //TODO PreparedBy
-        internal void StartPreparing()
+        internal void StartPreparing(User user)
         {
             Status = BakingProgramStatus.Preparing;
+            PreparedBy = user;
         }
 
         internal void FinishPreparing()
         {
             Status = BakingProgramStatus.Prepared;
+        }
+
+        internal void CancellPreparing()
+        {
+            Status = BakingProgramStatus.Created;
+            PreparedBy = null;
         }
     }
 }
