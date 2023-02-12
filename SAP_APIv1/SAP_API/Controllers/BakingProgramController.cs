@@ -71,6 +71,7 @@ namespace SAP_API.Controllers
            bool isNextForPreparing = _bakingProgramService.CheckIfBakingProgramIsNextForPreparing(bakingProgramId);
            /*if (!isNextForPreparing)
                 return Ok("Program is not next for preparing");*/
+
             StartPreparingResponse response = _bakingProgramService.GetDataForPreparing(bakingProgramId);
             return Ok(response);
         }
@@ -86,6 +87,17 @@ namespace SAP_API.Controllers
         public ActionResult<StartPreparingResponse> FinishPreparing(Guid bakingProgramId)
         {
             _bakingProgramService.FinishPreparing(bakingProgramId);
+            return Ok();
+        }
+
+        [HttpPut("start-baking/{bakingProgramId}")]
+        public ActionResult StartBaking(Guid bakingProgramId)
+        {
+            bool isNextForBaking = _bakingProgramService.CheckIfProgramIsNextForBaking(bakingProgramId);
+            if(!isNextForBaking)
+                return Ok("Program is not next for baking, or oven is occupied by other program");
+
+            _bakingProgramService.StartBaking(bakingProgramId);
             return Ok();
         }
 

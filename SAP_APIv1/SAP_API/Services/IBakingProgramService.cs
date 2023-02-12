@@ -18,6 +18,8 @@ namespace SAP_API.Services
         public List<AvailableBakingProgramResponse> FindAvailableBakingPrograms(FindAvailableBakingProgramsRequest body);
         public ArrangingResult GetExistingOrNewProgramsProductShouldBeArrangedInto(DateTime timeOrderShouldBeDone, List<OrderProductRequest> orderProducts);
         public AllBakingProgramsResponse GetBakingProgramsForUser();
+        bool CheckIfProgramIsNextForBaking(Guid bakingProgramId);
+        void StartBaking(Guid bakingProgramId);
     }
 }
 

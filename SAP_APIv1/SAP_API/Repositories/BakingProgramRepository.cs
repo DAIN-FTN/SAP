@@ -118,7 +118,7 @@ namespace SAP_API.Repositories
                     Status = BakingProgramStatus.Created,
                     BakingTimeInMins = 30,
                     BakingTempInC = 140,
-                    BakingProgrammedAt =  new DateTime(2023, 2, 12, 12, 25, 0),
+                    BakingProgrammedAt =  new DateTime(2023, 2, 12, 13, 25, 0),
                     BakingStartedAt = null,
                     Oven = new Oven { Id = new Guid("00000000-0000-0000-0000-000000000002"), Code = "Oven 2" },
                     PreparedBy = new User { Id = new Guid("00000000-0000-0000-0000-000000000003"), Username = "Jane", Password = "Doe" },
@@ -175,7 +175,7 @@ namespace SAP_API.Repositories
                     BakingTempInC = 190,
                     BakingProgrammedAt = new DateTime(2023, 2, 12, 11, 0, 0),
                     BakingStartedAt = new DateTime(2023, 12, 2, 11, 5, 0),
-                    Oven = new Oven { Id = new Guid("00000000-0000-0000-0000-000000000003"), Code = "Oven 3" },
+                    Oven = new Oven { Id = new Guid("00000000-0000-0000-0000-000000000001"), Code = "Oven 1" },
                     PreparedBy = new User { Id = new Guid("00000000-0000-0000-0000-000000000004"), Username = "Bob", Password = "Smith" },
                     RemainingOvenCapacity = 10,
                     Products = new List<BakingProgramProduct>()

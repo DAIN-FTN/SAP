@@ -1,8 +1,5 @@
-﻿using SAP_API.Services;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using static SAP_API.Services.ArrangingProductsToProgramsService;
 
 namespace SAP_API.Models
@@ -64,6 +61,12 @@ namespace SAP_API.Models
         internal DateTime GetTimeProgramCanBeBakedAt()
         {
             return BakingProgrammedAt.AddMinutes(-5);
+        }
+
+        internal void StartBaking()
+        {
+            Status = BakingProgramStatus.Baking;
+            BakingStartedAt = DateTime.Now;
         }
     }
 }
