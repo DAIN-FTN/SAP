@@ -60,35 +60,41 @@ namespace SAP_API.Repositories
                 Id = Guid.NewGuid(),
                 ShouldBeDoneAt = DateTime.Now,
                 Status = OrderStatus.Created,
-                Customer = new Customer { Email = "jd@gmail.com", FullName = "Johm", Telephone = "+381691025544" }
+                Customer = new Customer { Email = "jd@gmail.com", FullName = "Johm", Telephone = "+381691025544" },
+                Products = new List<ReservedOrderProduct>(),
             });
             _orders.Add(new Order
             {
                 Id = Guid.NewGuid(),
                 ShouldBeDoneAt = DateTime.Now.AddDays(1),
                 Status = OrderStatus.Cancelled,
-                Customer = new Customer { Email = "jd@gmail.com", FullName = "Johm", Telephone = "+381691025544" }
+                Customer = new Customer { Email = "jd@gmail.com", FullName = "Johm", Telephone = "+381691025544" },
+                Products = new List<ReservedOrderProduct>()
             });
             _orders.Add(new Order
             {
                 Id = Guid.NewGuid(),
                 ShouldBeDoneAt = DateTime.Now.AddDays(2),
                 Status = OrderStatus.Cancelled,
-                Customer = new Customer { Email = "jd@gmail.com", FullName = "Johm", Telephone = "+381691025544" }
+                Customer = new Customer { Email = "jd@gmail.com", FullName = "Johm", Telephone = "+381691025544" },
+                Products = new List<ReservedOrderProduct>(),
             });
             _orders.Add(new Order
             {
                 Id = Guid.NewGuid(),
                 ShouldBeDoneAt = DateTime.Now.AddDays(3),
                 Status = OrderStatus.Cancelled,
-                Customer = new Customer { Email = "jd@gmail.com", FullName = "Johm", Telephone = "+381691025544" }
+                Customer = new Customer { Email = "jd@gmail.com", FullName = "Johm", Telephone = "+381691025544" },
+                Products = new List<ReservedOrderProduct>()
+
             });
             _orders.Add(new Order
             {
                 Id = Guid.NewGuid(),
                 ShouldBeDoneAt = DateTime.Now.AddDays(4),
                 Status = OrderStatus.Confirmed,
-                Customer = new Customer { Email = "jd@gmail.com", FullName = "Johm", Telephone = "+381691025544" }
+                Customer = new Customer { Email = "jd@gmail.com", FullName = "Johm", Telephone = "+381691025544" },
+                Products = new List<ReservedOrderProduct>()
             });
         }
     }

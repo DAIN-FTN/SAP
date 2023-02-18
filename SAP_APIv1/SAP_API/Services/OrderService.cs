@@ -1,9 +1,11 @@
-﻿using SAP_API.Models;
+﻿using SAP_API.DTOs.Requests;
+using SAP_API.Models;
 using SAP_API.Repositories;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using static SAP_API.Services.ArrangingProductsToProgramsService;
 
 namespace SAP_API.Services
 {
@@ -11,24 +13,42 @@ namespace SAP_API.Services
     {
 
         private readonly IOrderRepository _orderRepository;
+        private readonly  IProductRepository _productRepository;
 
-        public OrderService(IOrderRepository orderRepository)
+        public OrderService(IOrderRepository orderRepository, IProductRepository productRepository)
         {
             _orderRepository = orderRepository;
+            _productRepository = productRepository;
         }
 
-        public Order CreateOrder(DateTime shouldBeDoneAt, Customer customer, List<OrderProduct> orderProducts)
+        public Order CreateOrder(CreateOrderRequest createOrderRequest)
         {
-            Order order = new Order() 
+            List<ReservedOrderProduct> orderProducts = new List<ReservedOrderProduct>();
+
+            foreach (var productRequest in createOrderRequest.Products)
             {
-                   Customer = customer,
-                   Id= Guid.NewGuid(),
-                   ShouldBeDoneAt = shouldBeDoneAt,
-                   Status = OrderStatus.Created,
-                   Products = orderProducts,
-                   
+                Product product = _productRepository.GetById(productRequest.ProductId);
+                orderProducts.Add(new ReservedOrderProduct
+                {
+                    Product = product,
+                    Id = Guid.NewGuid(),
+                    ReservedQuantity = productRequest.Quantity,
+                });
+            }
+
+       
+
+            Order order = new Order
+            {
+                Customer = createOrderRequest.Customer,
+                Id = Guid.NewGuid(),
+                ShouldBeDoneAt = createOrderRequest.ShouldBeDoneAt,
+                Status = OrderStatus.Created,
+                Products = orderProducts,
             };
             
+            createOrderRequest.Products
+
             return _orderRepository.Create(order);
         }
     }

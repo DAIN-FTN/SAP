@@ -8,6 +8,6 @@ namespace SAP_API.DTOs.Requests
     {
         public DateTime ShouldBeDoneAt { get; set; }
         public Customer Customer { get; set; }
-        public List<OrderProductRequest> OrderProducts { get; set; }
+        public List<OrderProductRequest> Products { get; set; }
     }
 }

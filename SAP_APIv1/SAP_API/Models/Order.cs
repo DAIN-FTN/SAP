@@ -9,6 +9,6 @@ namespace SAP_API.Models
         public DateTime ShouldBeDoneAt { get; set; }
         public OrderStatus Status { get; set; }
         public Customer Customer { get; set; }
-        public List<OrderProduct> Products { get; set; }
+        public List<ReservedOrderProduct> Products { get; set; } 
     }
 }

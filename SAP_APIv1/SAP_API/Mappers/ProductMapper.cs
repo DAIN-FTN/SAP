@@ -18,5 +18,16 @@ namespace SAP_API.Mappers
                 AvailableQuantity = availableQuantity
             };
         }
+        
+        public static ReservedOrderProduct OrderProductRequestToReservedOrderProduct(OrderProductRequest orderProductRequest, Order order, Product product)
+        {
+            return new ReservedOrderProduct
+            {
+                Id = Guid.NewGuid(),
+                Order = order,
+                Product = product,
+                ReservedQuantity = orderProductRequest.Quantity
+            };
+        }
     }
 }
