@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace SAP_API.Models
 {
@@ -11,5 +9,6 @@ namespace SAP_API.Models
         public DateTime ShouldBeDoneAt { get; set; }
         public OrderStatus Status { get; set; }
         public Customer Customer { get; set; }
+        public List<OrderProduct> Products { get; set; }
     }
 }

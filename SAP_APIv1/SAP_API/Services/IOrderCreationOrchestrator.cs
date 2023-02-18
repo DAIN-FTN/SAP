@@ -1,7 +1,9 @@
-﻿namespace SAP_API.Services
+﻿using SAP_API.DTOs.Requests;
+
+namespace SAP_API.Services
 {
     public interface IOrderCreationOrchestrator
     {
-        public void OrchestrateOrderCreation();
+        public void OrchestrateOrderCreation(CreateOrderRequest orderCreationRequest);
     }
 }

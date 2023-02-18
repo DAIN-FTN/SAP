@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SAP_API.DTOs.Requests;
+using System;
 
 namespace SAP_API.Services
 {
@@ -19,11 +20,15 @@ namespace SAP_API.Services
             _productService = productService;
         }
 
-        public void OrchestrateOrderCreation()
+        //TODO: implement rollback
+        public void OrchestrateOrderCreation(CreateOrderRequest orderCreationRequest)
         {
-            _orderService.CreateOrder(DateTime.Now, null);
-            _bakingProgramService.CreateBakingProgram();
-            _bakingProgramService.UpdateBakingProgram(null);
+            _orderService.CreateOrder(orderCreationRequest.ShouldBeDoneAt, orderCreationRequest.Customer, orderCreationRequest.OrderProducts);
+
+
+
+            _bakingProgramService.ArrangeProductsIntoNewOrExistingPrograms();
+
         }
     }
 }

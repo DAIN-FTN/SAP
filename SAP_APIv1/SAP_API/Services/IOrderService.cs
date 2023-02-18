@@ -9,6 +9,6 @@ namespace SAP_API.Services
 {
     public interface IOrderService
     {
-        public bool CreateOrder(DateTime shouldBeDoneAt, Customer customer);
+        public Order CreateOrder(DateTime shouldBeDoneAt, Customer customer, List<OrderProduct> orderProducts );
     }
 }

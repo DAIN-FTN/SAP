@@ -5,7 +5,7 @@ using System.Linq;
 
 namespace SAP_API.Repositories
 {
-    public class OrderRepository : IRepository<Order>
+    public class OrderRepository : IOrderRepository
     {
         private readonly List<Order> _orders = new List<Order>();
 
