@@ -1,5 +1,7 @@
-﻿using SAP_API.DTOs.Responses;
+﻿using SAP_API.DTOs.Requests;
+using SAP_API.DTOs.Responses;
 using SAP_API.Models;
+using SAP_API.Services;
 using System;
 using System.Collections.Generic;
 
@@ -22,15 +24,22 @@ namespace SAP_API.Mappers
             };
         }
 
-        public static List<AvailableBakingProgramResponse> CreateListOfAvailableBakingProgramResponse(List<BakingProgram> programs)
+        public static AvailableProgramsResponse CreateAvailableProgramResponse(ArrangingResult arragingResult)
         {
+            List<BakingProgram> programs = arragingResult.BakingPrograms;
             List<AvailableBakingProgramResponse> resultList = new List<AvailableBakingProgramResponse>();
             foreach(BakingProgram program in programs)
             {
                 AvailableBakingProgramResponse result = CreateAvailableBakingProgramResponse(program);
                 resultList.Add(result);
             }
-            return resultList;
+
+            return new AvailableProgramsResponse
+            {
+                BakingPrograms = resultList,
+                AllProductsCanBeSuccessfullyArranged = arragingResult.AllProductsCanBeSuccessfullyArranged,
+                IsThereEnoughStockedProducts = arragingResult.IsThereEnoughStockedProducts
+            };
         }
 
         public static AllBakingProgramsResponse CreateAllBakingProgramsResponse(List<BakingProgram> bakingPrograms, BakingProgram programUserIsPreparing)

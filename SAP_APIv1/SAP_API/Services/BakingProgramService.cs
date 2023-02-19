@@ -1,4 +1,5 @@
 ﻿using SAP_API.DTOs;
+using SAP_API.DTOs.Requests;
 using SAP_API.DTOs.Responses;
 using SAP_API.Mappers;
 using SAP_API.Models;
@@ -29,6 +30,9 @@ namespace SAP_API.Services
 
         public ArrangingResult GetExistingOrNewProgramsProductShouldBeArrangedInto(DateTime timeOrderShouldBeDone, List<OrderProductRequest> orderProducts)
         {
+
+            bool thereIsEnoughStock = _stockedProductService.IsThereEnoughStockForProducts(orderProducts);
+
             List<BakingProgram> programsProductsShouldBeArrangedTo = new List<BakingProgram>();
 
             _arrangingService.SetTimeOrderShouldBeDone(timeOrderShouldBeDone);
@@ -42,7 +46,8 @@ namespace SAP_API.Services
             {
                 return new ArrangingResult {
                     BakingPrograms = programsProductsShouldBeArrangedTo,
-                    AllProductsCanBeSuccessfullyArranged = true
+                    AllProductsCanBeSuccessfullyArranged = true,
+                    IsThereEnoughStockedProducts = thereIsEnoughStock
                 };
             }
 
@@ -53,7 +58,8 @@ namespace SAP_API.Services
             return new ArrangingResult
             {
                 BakingPrograms = programsProductsShouldBeArrangedTo,
-                AllProductsCanBeSuccessfullyArranged = allProductsSuccessfullyArranged
+                AllProductsCanBeSuccessfullyArranged = allProductsSuccessfullyArranged,
+                IsThereEnoughStockedProducts = thereIsEnoughStock
             };
 
         }
@@ -87,12 +93,11 @@ namespace SAP_API.Services
             throw new NotImplementedException();
         }
 
-        public List<AvailableBakingProgramResponse> FindAvailableBakingPrograms(FindAvailableBakingProgramsRequest body)
+        public AvailableProgramsResponse FindAvailableBakingPrograms(FindAvailableBakingProgramsRequest body)
         {
             ArrangingResult result = GetExistingOrNewProgramsProductShouldBeArrangedInto((DateTime)body.ShouldBeDoneAt, body.OrderProducts);
-            List<BakingProgram> listToMap = result.BakingPrograms;
-            List<AvailableBakingProgramResponse> resultList = BakingProgramMapper.CreateListOfAvailableBakingProgramResponse(listToMap);
-            return resultList;
+            AvailableProgramsResponse resultResponse = BakingProgramMapper.CreateAvailableProgramResponse(result);
+            return resultResponse;
         }
 
         public void FinishPreparing(BakingProgram bakingProgram)

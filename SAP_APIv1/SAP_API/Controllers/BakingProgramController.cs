@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using SAP_API.DTOs;
+using SAP_API.DTOs.Requests;
 using SAP_API.DTOs.Responses;
 using SAP_API.Exceptions;
 using SAP_API.Models;
@@ -41,10 +42,7 @@ namespace SAP_API.Controllers
         {
             try
             {
-                //TODO: if !AllProductsCanBeSuccessfullyArranged in service 
-                List<AvailableBakingProgramResponse> response = _bakingProgramService.FindAvailableBakingPrograms(body);
-                if (response.Count == 0)
-                    return NoContent();
+                AvailableProgramsResponse response = _bakingProgramService.FindAvailableBakingPrograms(body);
                 return Ok(response);
             }
             catch (Exception ex)

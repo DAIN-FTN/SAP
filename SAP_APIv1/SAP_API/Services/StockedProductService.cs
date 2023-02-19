@@ -1,4 +1,5 @@
-﻿using SAP_API.Models;
+﻿using SAP_API.DTOs;
+using SAP_API.Models;
 using SAP_API.Repositories;
 using System;
 using System.Collections.Generic;
@@ -22,6 +23,34 @@ namespace SAP_API.Services
             stockedProduct.Quantity -= quantityToSubstract;
             stockedProduct.ReservedQuantity -= quantityToSubstract;
             //TODO saveChanges
+        }
+
+        public bool IsThereEnoughStockForProducts(List<OrderProductRequest> orderProducts)
+        {
+            foreach(OrderProductRequest orderProduct in orderProducts)
+            {
+                Guid productId = (Guid)orderProduct.ProductId;
+                int quantity = (int)orderProduct.Quantity;
+
+                if (!ThereIsEnoughStockForProduct(productId, quantity))
+                    return false;
+            }
+            return true;
+        }
+
+        private bool ThereIsEnoughStockForProduct(Guid productId, int quantityToBake)
+        {
+            List<StockedProduct> stockedProducts = _stockedProductRepository.GetByProductId(productId);
+            foreach(StockedProduct stockedProduct in stockedProducts)
+            {
+                int onHandQuantity = stockedProduct.Quantity - stockedProduct.ReservedQuantity;
+                quantityToBake -= onHandQuantity;
+
+                if (quantityToBake <= 0)
+                    return true;
+            }
+
+            return quantityToBake <= 0;
         }
     }
 }
