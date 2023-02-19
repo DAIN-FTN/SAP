@@ -68,6 +68,17 @@ namespace SAP_API.Models
         {
             Status = BakingProgramStatus.Baking;
             BakingStartedAt = DateTime.Now;
+            BakingEndsAt = BakingStartedAt?.AddMinutes(BakingTimeInMins);
+        }
+
+        internal bool IsBakingDone()
+        {
+            return BakingEndsAt != null && DateTime.Compare((DateTime)BakingEndsAt, DateTime.Now) <= 0;
+        }
+
+        internal void FinishBaking()
+        {
+            Status = BakingProgramStatus.Done;
         }
     }
 }

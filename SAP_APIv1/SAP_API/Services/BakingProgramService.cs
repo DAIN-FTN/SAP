@@ -167,7 +167,11 @@ namespace SAP_API.Services
             DateTime timeNow = DateTime.Now;
             DateTime startTime = timeNow.AddDays(-1);
             DateTime endTime = timeNow.AddHours(4);
+            
             List<BakingProgram> bakingPrograms = _bakingProgramRepository.GetProgramsWithBakingProgrammedAtBetweenDateTimes(startTime, endTime);
+            List<BakingProgramStatus> statusesToExclude = new List<BakingProgramStatus> { BakingProgramStatus.Cancelled, BakingProgramStatus.Finished };
+            ExcludeProgramsWithStatuses(bakingPrograms, statusesToExclude);
+            ChangeStatusToDoneIfBakingIsDone(bakingPrograms);
             List<BakingProgram> programsUserIsPreparing = bakingPrograms.FindAll(bp => bp.Status.Equals(BakingProgramStatus.Preparing) && bp.PreparedBy.Id == user.Id);
 
             if (programsUserIsPreparing.Count == 0)
@@ -180,6 +184,27 @@ namespace SAP_API.Services
             return response;
 
         }
+
+        private void ExcludeProgramsWithStatuses(List<BakingProgram> bakingPrograms, List<BakingProgramStatus> statusesToExclude)
+        {
+            foreach(BakingProgramStatus status in statusesToExclude)
+            {
+                bakingPrograms.RemoveAll(bp => bp.Status.Equals(status));
+            }
+        }
+
+        private void ChangeStatusToDoneIfBakingIsDone(List<BakingProgram> bakingPrograms)
+        {
+            List<BakingProgram> programsWithBakingStatus = bakingPrograms.FindAll(bp => bp.Status.Equals(BakingProgramStatus.Baking));
+            foreach(BakingProgram program in programsWithBakingStatus)
+            {  
+                if(program.IsBakingDone())
+                {
+                    program.FinishBaking();
+                }
+            }
+        }
+
 
         public bool CheckIfProgramIsNextForBaking(Guid bakingProgramId)
         {
