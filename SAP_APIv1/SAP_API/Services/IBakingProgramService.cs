@@ -11,16 +11,17 @@ namespace SAP_API.Services
 
         public void CreateBakingProgram();
         public void UpdateBakingProgram(BakingProgram bakingProgram);
-        public StartPreparingResponse GetDataForPreparing(Guid id);
-        public bool CheckIfProgramIsNextForPreparing(Guid bakingProgramId);
-        public void CancellPreparing(Guid bakingProgramId);
-        public void FinishPreparing(Guid id);
+        public StartPreparingResponse GetDataForPreparing(BakingProgram bakingProgram);
+        public bool CheckIfProgramIsNextForPreparing(BakingProgram bakingProgram);
+        public void CancellPreparing(BakingProgram bakingProgram);
+        public void FinishPreparing(BakingProgram bakingProgram);
         public List<AvailableBakingProgramResponse> FindAvailableBakingPrograms(FindAvailableBakingProgramsRequest body);
         public ArrangingResult GetExistingOrNewProgramsProductShouldBeArrangedInto(DateTime timeOrderShouldBeDone, List<OrderProductRequest> orderProducts);
         public AllBakingProgramsResponse GetBakingProgramsForUser();
-        bool CheckIfProgramIsNextForBaking(Guid bakingProgramId);
-        void StartBaking(Guid bakingProgramId);
+        bool CheckIfProgramIsNextForBaking(BakingProgram bakingProgram);
+        void StartBaking(BakingProgram bakingProgram);
         bool CheckIfUserIsAlreadyPreparingAnotherProgram();
+        BakingProgram GetById(Guid bakingProgramId);
     }
 }
 

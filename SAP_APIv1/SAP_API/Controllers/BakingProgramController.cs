@@ -4,6 +4,7 @@ using Microsoft.Extensions.Options;
 using SAP_API.DTOs;
 using SAP_API.DTOs.Responses;
 using SAP_API.Exceptions;
+using SAP_API.Models;
 using SAP_API.Services;
 using System;
 using System.Collections.Generic;
@@ -58,6 +59,10 @@ namespace SAP_API.Controllers
         {
             try
             {
+                BakingProgram bakingProgram = _bakingProgramService.GetById(bakingProgramId);
+                if (bakingProgram == null)
+                    return NotFound();
+
                 bool userIsAlreadyPreparingAnotherProgram = _bakingProgramService.CheckIfUserIsAlreadyPreparingAnotherProgram();
                 if (userIsAlreadyPreparingAnotherProgram)
                 {
@@ -65,14 +70,14 @@ namespace SAP_API.Controllers
                     return apiBehaviorOptions.Value.InvalidModelStateResponseFactory(ControllerContext);
                 }
 
-                bool isNextForPreparing = _bakingProgramService.CheckIfProgramIsNextForPreparing(bakingProgramId);
+                bool isNextForPreparing = _bakingProgramService.CheckIfProgramIsNextForPreparing(bakingProgram);
                 if (!isNextForPreparing)
                 {
                     ModelState.AddModelError("ErrorToDisplay", "The program is not next for preparing.");
                     return apiBehaviorOptions.Value.InvalidModelStateResponseFactory(ControllerContext);
                 }
 
-                StartPreparingResponse response = _bakingProgramService.GetDataForPreparing(bakingProgramId);
+                StartPreparingResponse response = _bakingProgramService.GetDataForPreparing(bakingProgram);
                 return Ok(response);
 
             }
@@ -93,7 +98,11 @@ namespace SAP_API.Controllers
         {
             try
             {
-                _bakingProgramService.CancellPreparing(bakingProgramId);
+                BakingProgram bakingProgram = _bakingProgramService.GetById(bakingProgramId);
+                if (bakingProgram == null)
+                    return NotFound();
+
+                _bakingProgramService.CancellPreparing(bakingProgram);
                 return Ok();
             }
             catch (BadProgramStatusException statusEx)
@@ -113,7 +122,11 @@ namespace SAP_API.Controllers
         {
             try
             {
-                _bakingProgramService.FinishPreparing(bakingProgramId);
+                BakingProgram bakingProgram = _bakingProgramService.GetById(bakingProgramId);
+                if (bakingProgram == null)
+                    return NotFound();
+
+                _bakingProgramService.FinishPreparing(bakingProgram);
                 return Ok();
             }
              catch (BadProgramStatusException statusEx)
@@ -132,13 +145,18 @@ namespace SAP_API.Controllers
         {
             try
             {
-                bool isNextForBaking = _bakingProgramService.CheckIfProgramIsNextForBaking(bakingProgramId);
+                BakingProgram bakingProgram = _bakingProgramService.GetById(bakingProgramId);
+                if (bakingProgram == null)
+                    return NotFound();
+
+                bool isNextForBaking = _bakingProgramService.CheckIfProgramIsNextForBaking(bakingProgram);
                 if (!isNextForBaking)
                 {
                     ModelState.AddModelError("ErrorToDisplay", "Program is not next for baking, or oven is occupied by other program");
                     return apiBehaviorOptions.Value.InvalidModelStateResponseFactory(ControllerContext);
                 }
-                _bakingProgramService.StartBaking(bakingProgramId);
+
+                _bakingProgramService.StartBaking(bakingProgram);
                 return Ok();
             }   
            catch (BadProgramStatusException statusEx)
