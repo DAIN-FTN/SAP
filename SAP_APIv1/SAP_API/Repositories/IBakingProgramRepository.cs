@@ -8,5 +8,6 @@ namespace SAP_API.Repositories
     {
         public List<BakingProgram> GetByTempAndTime(int temp, int time);
         public List<BakingProgram> GetByOvenId(Guid ovenId);
+        public List<BakingProgram> GetProgramsWithBakingProgrammedAtBetweenDateTimes(DateTime startTime, DateTime endTime);
     }
 }

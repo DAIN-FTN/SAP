@@ -1,8 +1,9 @@
-﻿using System;
+﻿using SAP_API.Models;
+using System;
 
 namespace SAP_API.DTOs.Responses
 {
-    public class BakingProgramResponse
+    public class AvailableBakingProgramResponse
     {
         public Guid Id { get; set; }
         public string Code { get; set; }
@@ -11,10 +12,7 @@ namespace SAP_API.DTOs.Responses
         public int BakingTimeInMins { get; set; }
         public int BakingTempInC { get; set; }
         public DateTime BakingProgrammedAt { get; set; }
-        public DateTime CanBePreparedAt { get; set; }
-        public DateTime CanBeBakedAt { get; set; }
         public DateTime? BakingStartedAt { get; set; }
-        public Guid OvenId { get; set; }
         public string OvenCode { get; set; }
 
     }

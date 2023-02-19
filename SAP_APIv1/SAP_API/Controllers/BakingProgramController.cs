@@ -5,10 +5,6 @@ using SAP_API.Models;
 using SAP_API.Services;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
-
 namespace SAP_API.Controllers
 {
     [ApiController]
@@ -22,8 +18,15 @@ namespace SAP_API.Controllers
             _bakingProgramService = bakingProgramService;
         }
 
+        [HttpGet]
+        public ActionResult<AllBakingProgramsResponse> GetAll()
+        {
+            return Ok(_bakingProgramService.GetBakingProgramsForUser());
+            //TODO: check if program with Baking status should have status Done
+        }
+
         [HttpPost("available")]
-        public ActionResult<List<BakingProgramResponse>> FindAvailableBakingPrograms([FromBody] FindAvailableBakingProgramsRequest body)
+        public ActionResult<List<AvailableBakingProgramResponse>> FindAvailableBakingPrograms([FromBody] FindAvailableBakingProgramsRequest body)
         {
            
            /*return new List<BakingProgramResponse>
@@ -55,11 +58,49 @@ namespace SAP_API.Controllers
             };*/
 
             
-            List<BakingProgramResponse> response = _bakingProgramService.FindAvailableBakingPrograms(body);
+            List<AvailableBakingProgramResponse> response = _bakingProgramService.FindAvailableBakingPrograms(body);
             if (response.Count == 0)
                 return NoContent();
             return Ok(response);
             
         }
+
+        [HttpGet("start-preparing/{bakingProgramId}")]
+        public ActionResult<StartPreparingResponse> StartPreparing(Guid bakingProgramId)
+        {
+            //TODO check if proram is next for preparing & if program is already being prepared by other user
+           bool isNextForPreparing = _bakingProgramService.CheckIfBakingProgramIsNextForPreparing(bakingProgramId);
+           /*if (!isNextForPreparing)
+                return Ok("Program is not next for preparing");*/
+
+            StartPreparingResponse response = _bakingProgramService.GetDataForPreparing(bakingProgramId);
+            return Ok(response);
+        }
+
+        [HttpPut("cancell-preparing/{bakingProgramId}")]
+        public ActionResult CancellPreparing(Guid bakingProgramId)
+        {
+            _bakingProgramService.CancellPreparing(bakingProgramId);
+            return Ok();
+        }
+
+        [HttpPut("finish-preparing/{bakingProgramId}")]
+        public ActionResult<StartPreparingResponse> FinishPreparing(Guid bakingProgramId)
+        {
+            _bakingProgramService.FinishPreparing(bakingProgramId);
+            return Ok();
+        }
+
+        [HttpPut("start-baking/{bakingProgramId}")]
+        public ActionResult StartBaking(Guid bakingProgramId)
+        {
+            bool isNextForBaking = _bakingProgramService.CheckIfProgramIsNextForBaking(bakingProgramId);
+            if(!isNextForBaking)
+                return Ok("Program is not next for baking, or oven is occupied by other program");
+
+            _bakingProgramService.StartBaking(bakingProgramId);
+            return Ok();
+        }
+
     }
 }
