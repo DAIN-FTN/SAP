@@ -22,6 +22,7 @@ namespace SAP_API.Controllers
         public ActionResult<AllBakingProgramsResponse> GetAll()
         {
             return Ok(_bakingProgramService.GetBakingProgramsForUser());
+            //TODO: check if program with Baking status should have status Done
         }
 
         [HttpPost("available")]
