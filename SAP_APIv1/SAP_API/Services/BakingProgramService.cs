@@ -78,14 +78,15 @@ namespace SAP_API.Services
 
         }
 
-        public void CreateBakingProgram()
+        public void CreateBakingProgram(BakingProgram bakingProgram)
         {
-            throw new NotImplementedException();
+            bakingProgram.Status = BakingProgramStatus.Created;
+            _bakingProgramRepository.Create(bakingProgram);
         }
 
         public void UpdateBakingProgram(BakingProgram bakingProgram)
         {
-            throw new NotImplementedException();
+           _bakingProgramRepository.Update(bakingProgram); 
         }
 
         public List<AvailableBakingProgramResponse> FindAvailableBakingPrograms(FindAvailableBakingProgramsRequest body)

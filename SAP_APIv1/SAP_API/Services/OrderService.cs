@@ -36,18 +36,14 @@ namespace SAP_API.Services
                 });
             }
 
-       
-
             Order order = new Order
             {
                 Customer = createOrderRequest.Customer,
-                Id = Guid.NewGuid(),
                 ShouldBeDoneAt = createOrderRequest.ShouldBeDoneAt,
                 Status = OrderStatus.Created,
                 Products = orderProducts,
             };
             
-            createOrderRequest.Products
 
             return _orderRepository.Create(order);
         }

@@ -10,5 +10,7 @@ namespace SAP_API.Services
     {
         public List<BakingProgram> BakingPrograms { get; set; }
         public bool AllProductsCanBeSuccessfullyArranged { get; set; }
+
+        public bool IsThereEnoughStockedProducts { get; set; }
     }
 }

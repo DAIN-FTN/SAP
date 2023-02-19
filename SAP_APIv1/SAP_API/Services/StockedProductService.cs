@@ -23,5 +23,25 @@ namespace SAP_API.Services
             stockedProduct.ReservedQuantity -= quantityToSubstract;
             //TODO saveChanges
         }
+
+        public void reserveStockedProduct(Guid productId, int quantityToReserve)
+        {
+            /*
+                1. Get stocked products
+                2. We already checked if there is enough stock so next thing is to acctualy reserve this
+                3. OrdeProduct should probably have a list of Locations where it is stored 
+                4. If there is an issue we should roll this back [maybe]
+                4. 
+             */
+           List<StockedProduct> stockedProducts = _stockedProductRepository.GetByProductId(productId);
+
+            foreach (var stockedProduct in stockedProducts)
+            {
+                if(stockedProduct.ReservedQuantity >= quantityToReserve)
+                {
+                }
+            }
+
+        }
     }
 }

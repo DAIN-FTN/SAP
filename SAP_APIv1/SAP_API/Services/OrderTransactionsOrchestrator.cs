@@ -1,6 +1,9 @@
 ﻿using SAP_API.DTOs.Requests;
+using SAP_API.DTOs.Responses;
+using SAP_API.Mappers;
 using SAP_API.Models;
 using System;
+using System.Collections.Generic;
 
 namespace SAP_API.Services
 {
@@ -8,33 +11,64 @@ namespace SAP_API.Services
     {
         private readonly IOrderService _orderService;
         private readonly IBakingProgramService _bakingProgramService;
-        private readonly IProductService _productService;
+        private readonly IStockedProductService _stockedProductService;
 
         public OrderTransactionsOrchestrator(
             IOrderService orderService,
             IBakingProgramService bakingProgramService,
-            IProductService productService
+            IStockedProductService stockedProductService
             )
         {
             _orderService = orderService;
             _bakingProgramService = bakingProgramService;
-            _productService = productService;
+            _stockedProductService = stockedProductService;
         }
 
         //TODO: implement rollback
-        public void OrchestrateOrderCreation(CreateOrderRequest orderCreationRequest)
+        public CreateOrderResponse OrchestrateOrderCreation(CreateOrderRequest orderCreationRequest)
         {
-            /*
-                1. create order
-                2. 
-             */
+
+            ArrangingResult arrangingResult = _bakingProgramService.GetExistingOrNewProgramsProductShouldBeArrangedInto(orderCreationRequest.ShouldBeDoneAt, orderCreationRequest.Products);
+
+
+            if(arrangingResult.AllProductsCanBeSuccessfullyArranged == false)
+            {
+                throw new Exception();
+            }
+
+            if(arrangingResult.IsThereEnoughStockedProducts == false)
+            {
+                throw new Exception();
+            }
+
+            foreach (var bakingProgram in arrangingResult.BakingPrograms)
+            {
+                if (bakingProgram.Status == BakingProgramStatus.Pending)
+                {
+                    _bakingProgramService.CreateBakingProgram(bakingProgram);
+                }
+                else
+                {
+                    _bakingProgramService.UpdateBakingProgram(bakingProgram);
+                }
+            }
 
             Order order = _orderService.CreateOrder(orderCreationRequest);
 
+            try
+            {
+                foreach (var product in order.Products)
+                {
+                    _stockedProductService.reserveStockedProduct(product.Id, product.ReservedQuantity);
+                }
+            }
+            catch (Exception)
+            {
 
-
-            //_bakingProgramService.ArrangeProductsIntoNewOrExistingPrograms();
-
+                throw;
+            }
+            
+            return OrderMapper.OrderToOrderResponse(order);
         }
     }
 }
