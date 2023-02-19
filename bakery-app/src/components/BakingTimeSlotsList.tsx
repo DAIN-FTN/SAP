@@ -1,4 +1,4 @@
-import { FC } from "react";
+import { FC, useState } from "react";
 import { BakingTimeSlot } from "../models/BakingTimeSlot";
 import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
@@ -6,12 +6,15 @@ import ListItemButton from "@mui/material/ListItemButton";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
 import RadioButtonUncheckedIcon from '@mui/icons-material/RadioButtonUnchecked';
+import RadioButtonCheckedIcon from '@mui/icons-material/RadioButtonChecked';
 
 export interface BakingTimeSlotsListProps {
     bakingTimeSlots: BakingTimeSlot[];
 }
 
 const BakingTimeSlotsList: FC<{ props: BakingTimeSlotsListProps }> = ({ props }) => {
+    const [selectedTimeSlotId, setSelectedTimeSlotId] = useState<string | null>(null);
+
     console.log('props.bakingTimeSlots', props.bakingTimeSlots)
     if (props.bakingTimeSlots.length === 0)
         return (
@@ -39,16 +42,11 @@ const BakingTimeSlotsList: FC<{ props: BakingTimeSlotsListProps }> = ({ props })
         // </FormControl>
         <List>
             {props.bakingTimeSlots.map((bakingTimeSlot) => (
-                // <FormControlLabel
-                //     key={bakingTimeSlot.id}
-                //     value={bakingTimeSlot.id}
-                //     control={<Radio />}
-                //     label={bakingTimeSlot.bakingProgrammedAt.toISOString()}
-                // />
-                <ListItem disablePadding>
+                <ListItem disablePadding key={bakingTimeSlot.id}
+                    onClick={() => setSelectedTimeSlotId(bakingTimeSlot.id)}>
                     <ListItemButton>
                         <ListItemIcon>
-                            <RadioButtonUncheckedIcon />
+                            {selectedTimeSlotId === bakingTimeSlot.id ? <RadioButtonCheckedIcon /> : <RadioButtonUncheckedIcon />}
                         </ListItemIcon>
                         <ListItemText
                             primary={bakingTimeSlot.bakingProgrammedAt?.toLocaleDateString("en-US")}
@@ -56,14 +54,6 @@ const BakingTimeSlotsList: FC<{ props: BakingTimeSlotsListProps }> = ({ props })
                     </ListItemButton>
                 </ListItem>
             ))}
-            <ListItem disablePadding>
-                <ListItemButton>
-                    <ListItemIcon>
-                        <RadioButtonUncheckedIcon />
-                    </ListItemIcon>
-                    <ListItemText primary="Inbox" />
-                </ListItemButton>
-            </ListItem>
         </List>
     );
 };

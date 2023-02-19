@@ -1,12 +1,12 @@
 export interface BakingTimeSlot {
     id: string;
     code: string | null;
-    createdAt: Date | null;
+    createdAt: Date
     status: BakingProgramStatus | null;
     bakingTimeInMinutes: number | null;
     bakingTempInC: number | null;
     bakingProgrammedAt: Date
-    bakingStartedAt: Date | null;
+    bakingStartedAt: Date
     ovenCode: string | null;
 }
 

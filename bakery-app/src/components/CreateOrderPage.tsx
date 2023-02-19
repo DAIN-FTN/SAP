@@ -42,12 +42,10 @@ const CreateOrderPage: FC = () => {
     const [bakingTimeSlots, setBakingTimeSlots] = useState<BakingTimeSlot[] | []>([]);
     const [newOrderRequest, setNewOrderRequest] = useState<NewOrderRequest | null>(null);
 
-    let productsForNewOrderRequest: ProductBasicInfo[] = [];
-
     const setDateTimeHandler = (e: any) => {
         let dateTime = new Date(e.target.value);
         console.log("setDateTimeHandler", dateTime);
-        fetchBakingTimeSlots(dateTime, productsForNewOrderRequest).then((bakingTimeSlots) => {
+        fetchBakingTimeSlots(dateTime, orderProducts).then((bakingTimeSlots) => {
             console.log('fetch finished for fetchBakingTimeSlots() in CreateOrderPage');
             setBakingTimeSlots(bakingTimeSlots);
         });

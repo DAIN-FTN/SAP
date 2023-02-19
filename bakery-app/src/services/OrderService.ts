@@ -27,7 +27,14 @@ export async function fetchBakingTimeSlots(deliveryDateTime: Date, products: Pro
     };
     console.log(bakingTimeSlotRequest);
 
-    return await postData<BakingTimeSlot[]>(`/api/baking-programs/available`, bakingTimeSlotRequest);
+    const temp = await postData<BakingTimeSlot[]>(`/api/baking-programs/available`, bakingTimeSlotRequest);
+
+    return temp.map((bakingTimeSlot) => ({
+        ...bakingTimeSlot,
+        bakingStartedAt: new Date(bakingTimeSlot.bakingStartedAt),
+        bakingProgrammedAt: new Date(bakingTimeSlot.bakingProgrammedAt),
+        createdAt: new Date(bakingTimeSlot.createdAt)
+    }));
 }
 
 export async function createNewOrder(name: string, newOrderRequest: NewOrderRequest): Promise<Order> {
