@@ -90,7 +90,7 @@ namespace SAP_API.Services
 
         public List<AvailableBakingProgramResponse> FindAvailableBakingPrograms(FindAvailableBakingProgramsRequest body)
         {
-            ArrangingResult result = GetExistingOrNewProgramsProductShouldBeArrangedInto(body.ShouldBeDoneAt, body.OrderProducts);
+            ArrangingResult result = GetExistingOrNewProgramsProductShouldBeArrangedInto((DateTime)body.ShouldBeDoneAt, body.OrderProducts);
             List<BakingProgram> listToMap = result.BakingPrograms;
             List<AvailableBakingProgramResponse> resultList = BakingProgramMapper.CreateListOfAvailableBakingProgramResponse(listToMap);
             return resultList;
@@ -115,7 +115,7 @@ namespace SAP_API.Services
         }
 
         //TODO test
-        public bool CheckIfBakingProgramIsNextForPreparing(Guid bakingProgramId)
+        public bool CheckIfProgramIsNextForPreparing(Guid bakingProgramId)
         {
             BakingProgram bakingProgram = _bakingProgramRepository.GetById(bakingProgramId);
 
@@ -230,6 +230,9 @@ namespace SAP_API.Services
                 return false;
 
             List<BakingProgram> preparedProgramsForOven = programsProgrammedForOven.FindAll(bp => bp.Status.Equals(BakingProgramStatus.Prepared));
+            if (preparedProgramsForOven.Count == 0)
+                return false;
+
             BakingProgram bakingProgramThatShouldBeNextBaked = preparedProgramsForOven[0];
             return bakingProgramThatShouldBeNextBaked.Id == bakingProgramId && OvenIsNotOccupiedByOtherProgram(ovenId);
         }
@@ -250,6 +253,23 @@ namespace SAP_API.Services
             BakingProgram bakingProgram = _bakingProgramRepository.GetById(bakingProgramId);
             bakingProgram.StartBaking();
             //TODO save changes
+        }
+
+        public bool CheckIfUserIsAlreadyPreparingAnotherProgram()
+        {
+            User user = new User
+            {
+                Id = new Guid("00000000-0000-0000-0000-000000000001"),
+                Username = "Natalija",
+                Password = "pass123"
+            };
+
+            DateTime timeNow = DateTime.Now;
+            DateTime startTime = timeNow.AddDays(-1);
+            DateTime endTime = timeNow.AddHours(4);
+            List<BakingProgram> bakingPrograms = _bakingProgramRepository.GetProgramsWithBakingProgrammedAtBetweenDateTimes(startTime, endTime);
+            List<BakingProgram> programsBeingPreparedByUser = bakingPrograms.FindAll(bp => bp.Status.Equals(BakingProgramStatus.Preparing) && bp.PreparedBy.Id.Equals(user.Id));
+            return programsBeingPreparedByUser.Count > 0;
         }
     }
 }

@@ -12,7 +12,7 @@ namespace SAP_API.Services
         public void CreateBakingProgram();
         public void UpdateBakingProgram(BakingProgram bakingProgram);
         public StartPreparingResponse GetDataForPreparing(Guid id);
-        public bool CheckIfBakingProgramIsNextForPreparing(Guid bakingProgramId);
+        public bool CheckIfProgramIsNextForPreparing(Guid bakingProgramId);
         public void CancellPreparing(Guid bakingProgramId);
         public void FinishPreparing(Guid id);
         public List<AvailableBakingProgramResponse> FindAvailableBakingPrograms(FindAvailableBakingProgramsRequest body);
@@ -20,6 +20,7 @@ namespace SAP_API.Services
         public AllBakingProgramsResponse GetBakingProgramsForUser();
         bool CheckIfProgramIsNextForBaking(Guid bakingProgramId);
         void StartBaking(Guid bakingProgramId);
+        bool CheckIfUserIsAlreadyPreparingAnotherProgram();
     }
 }
 

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SAP_API.Exceptions;
+using System;
 using System.Collections.Generic;
 using static SAP_API.Services.ArrangingProductsToProgramsService;
 
@@ -38,17 +39,38 @@ namespace SAP_API.Models
         //TODO PreparedBy
         internal void StartPreparing(User user)
         {
+            if (!Status.Equals(BakingProgramStatus.Created))
+            {
+                string message = CreateUnableToTransitionErrorMessage(BakingProgramStatus.Preparing);
+                throw new BadProgramStatusException(message);
+            }
+                
             Status = BakingProgramStatus.Preparing;
             PreparedBy = user;
         }
 
+        private string CreateUnableToTransitionErrorMessage(BakingProgramStatus statusToTransitionTo)
+        {
+            return "Cannot transition to status " + Enum.GetName(typeof(BakingProgramStatus), statusToTransitionTo) + " from status " + Enum.GetName(typeof(BakingProgramStatus), Status);
+        }
+
         internal void FinishPreparing()
         {
+            if (!Status.Equals(BakingProgramStatus.Preparing))
+            {
+                string message = CreateUnableToTransitionErrorMessage(BakingProgramStatus.Prepared);
+                throw new BadProgramStatusException(message);
+            }
             Status = BakingProgramStatus.Prepared;
         }
 
         internal void CancellPreparing()
         {
+            if (!Status.Equals(BakingProgramStatus.Preparing))
+            {
+                string message = CreateUnableToTransitionErrorMessage(BakingProgramStatus.Created);
+                throw new BadProgramStatusException(message);
+            }
             Status = BakingProgramStatus.Created;
             PreparedBy = null;
         }
@@ -66,6 +88,11 @@ namespace SAP_API.Models
 
         internal void StartBaking()
         {
+            if (!Status.Equals(BakingProgramStatus.Prepared))
+            {
+                string message = CreateUnableToTransitionErrorMessage(BakingProgramStatus.Baking);
+                throw new BadProgramStatusException(message);
+            }
             Status = BakingProgramStatus.Baking;
             BakingStartedAt = DateTime.Now;
             BakingEndsAt = BakingStartedAt?.AddMinutes(BakingTimeInMins);
@@ -78,6 +105,11 @@ namespace SAP_API.Models
 
         internal void FinishBaking()
         {
+            if (!Status.Equals(BakingProgramStatus.Baking))
+            {
+                string message = CreateUnableToTransitionErrorMessage(BakingProgramStatus.Done);
+                throw new BadProgramStatusException(message);
+            }
             Status = BakingProgramStatus.Done;
         }
     }
