@@ -1,13 +1,14 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
 using SAP_API.DTOs;
+using SAP_API.DTOs.Requests;
 using SAP_API.DTOs.Responses;
+using SAP_API.Exceptions;
 using SAP_API.Models;
 using SAP_API.Services;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
 namespace SAP_API.Controllers
 {
     [ApiController]
@@ -21,44 +22,151 @@ namespace SAP_API.Controllers
             _bakingProgramService = bakingProgramService;
         }
 
-        [HttpPost("available")]
-        public ActionResult<List<BakingProgramResponse>> FindAvailableBakingPrograms([FromBody] FindAvailableBakingProgramsRequest body)
+        [HttpGet]
+        public IActionResult GetAll()
         {
-           
-           /*return new List<BakingProgramResponse>
+            try
             {
-                new BakingProgramResponse
-                {
-                    Id = new Guid("00000000-0000-0000-0000-000000000000"),
-                    Code = "Bake-0001",
-                    CreatedAt = new DateTime(2022, 12, 31, 23, 59, 59),
-                    Status = "Created",
-                    BakingTimeInMins = 60,
-                    BakingTempInC = 180,
-                    BakingProgrammedAt = new DateTime(2023, 1, 1, 0, 0, 0),
-                    BakingStartedAt = null,
-                    OvenCode = "Oven-A"
-                },
-                new BakingProgramResponse
-                {
-                    Id = new Guid("00000000-0000-0000-0000-000000000001"),
-                    Code = "SisajGa-0002",
-                    CreatedAt = new DateTime(2022, 12, 31, 23, 59, 59),
-                    Status = "Created",
-                    BakingTimeInMins = 120,
-                    BakingTempInC = 200,
-                    BakingProgrammedAt = new DateTime(2023, 1, 1, 0, 0, 0),
-                    BakingStartedAt = null,
-                    OvenCode = "Oven-B"
-                }
-            };*/
-
-            
-            List<BakingProgramResponse> response = _bakingProgramService.FindAvailableBakingPrograms(body);
-            if (response.Count == 0)
-                return NoContent();
-            return Ok(response);
+                AllBakingProgramsResponse response = _bakingProgramService.GetBakingProgramsForUser();
+                return Ok(response);
+            }
+            catch(Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+            }
             
         }
+
+        [HttpPost("available")]
+        public IActionResult FindAvailableBakingPrograms([FromBody] FindAvailableBakingProgramsRequest body)
+        {
+            try
+            {
+                AvailableProgramsResponse response = _bakingProgramService.FindAvailableBakingPrograms(body);
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+            }
+            
+        }
+
+        [HttpGet("start-preparing/{bakingProgramId}")]
+        public IActionResult StartPreparing(Guid bakingProgramId, [FromServices] IOptions<ApiBehaviorOptions> apiBehaviorOptions)
+        {
+            try
+            {
+                BakingProgram bakingProgram = _bakingProgramService.GetById(bakingProgramId);
+                if (bakingProgram == null)
+                    return NotFound();
+
+                bool userIsAlreadyPreparingAnotherProgram = _bakingProgramService.CheckIfUserIsAlreadyPreparingAnotherProgram();
+                if (userIsAlreadyPreparingAnotherProgram)
+                {
+                    ModelState.AddModelError("ErrorToDisplay", "There are programs that should be finished preparing.");
+                    return apiBehaviorOptions.Value.InvalidModelStateResponseFactory(ControllerContext);
+                }
+
+                bool isNextForPreparing = _bakingProgramService.CheckIfProgramIsNextForPreparing(bakingProgram);
+                if (!isNextForPreparing)
+                {
+                    ModelState.AddModelError("ErrorToDisplay", "The program is not next for preparing.");
+                    return apiBehaviorOptions.Value.InvalidModelStateResponseFactory(ControllerContext);
+                }
+
+                StartPreparingResponse response = _bakingProgramService.GetDataForPreparing(bakingProgram);
+                return Ok(response);
+
+            }
+            catch (BadProgramStatusException statusEx)
+            {
+                ModelState.AddModelError("ErrorToDisplay", statusEx.Message);
+                return apiBehaviorOptions.Value.InvalidModelStateResponseFactory(ControllerContext);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+            }
+          
+        }
+
+        [HttpPut("cancell-preparing/{bakingProgramId}")]
+        public IActionResult CancellPreparing(Guid bakingProgramId, [FromServices] IOptions<ApiBehaviorOptions> apiBehaviorOptions)
+        {
+            try
+            {
+                BakingProgram bakingProgram = _bakingProgramService.GetById(bakingProgramId);
+                if (bakingProgram == null)
+                    return NotFound();
+
+                _bakingProgramService.CancellPreparing(bakingProgram);
+                return Ok();
+            }
+            catch (BadProgramStatusException statusEx)
+            {
+                ModelState.AddModelError("ErrorToDisplay", statusEx.Message);
+                return apiBehaviorOptions.Value.InvalidModelStateResponseFactory(ControllerContext);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+            }
+
+        }
+
+        [HttpPut("finish-preparing/{bakingProgramId}")]
+        public IActionResult FinishPreparing(Guid bakingProgramId, [FromServices] IOptions<ApiBehaviorOptions> apiBehaviorOptions)
+        {
+            try
+            {
+                BakingProgram bakingProgram = _bakingProgramService.GetById(bakingProgramId);
+                if (bakingProgram == null)
+                    return NotFound();
+
+                _bakingProgramService.FinishPreparing(bakingProgram);
+                return Ok();
+            }
+             catch (BadProgramStatusException statusEx)
+            {
+                ModelState.AddModelError("ErrorToDisplay", statusEx.Message);
+                return apiBehaviorOptions.Value.InvalidModelStateResponseFactory(ControllerContext);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+            }
+        }
+
+        [HttpPut("start-baking/{bakingProgramId}")]
+        public IActionResult StartBaking(Guid bakingProgramId, [FromServices] IOptions<ApiBehaviorOptions> apiBehaviorOptions)
+        {
+            try
+            {
+                BakingProgram bakingProgram = _bakingProgramService.GetById(bakingProgramId);
+                if (bakingProgram == null)
+                    return NotFound();
+
+                bool isNextForBaking = _bakingProgramService.CheckIfProgramIsNextForBaking(bakingProgram);
+                if (!isNextForBaking)
+                {
+                    ModelState.AddModelError("ErrorToDisplay", "Program is not next for baking, or oven is occupied by other program");
+                    return apiBehaviorOptions.Value.InvalidModelStateResponseFactory(ControllerContext);
+                }
+
+                _bakingProgramService.StartBaking(bakingProgram);
+                return Ok();
+            }   
+           catch (BadProgramStatusException statusEx)
+            {
+                ModelState.AddModelError("ErrorToDisplay", statusEx.Message);
+                return apiBehaviorOptions.Value.InvalidModelStateResponseFactory(ControllerContext);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+            }
+        }
+
     }
 }

@@ -62,12 +62,55 @@ namespace SAP_API.Repositories
                     Status = BakingProgramStatus.Created,
                     BakingTimeInMins = 30,
                     BakingTempInC = 120,
-                    BakingProgrammedAt = new DateTime(2020, 1, 1, 12, 0, 0),
-                    BakingStartedAt = new DateTime(2020, 1, 1, 12, 0, 0),
+                    BakingProgrammedAt = DateTime.Now,
+                    BakingStartedAt = null,
+                    BakingEndsAt = null,
                     Oven = new Oven { Id = new Guid("00000000-0000-0000-0000-000000000001"), Code = "Oven 1" },
                     PreparedBy = new User { Id = new Guid("00000000-0000-0000-0000-000000000002"), Username = "John", Password = "Doe" },
                     RemainingOvenCapacity = 10,
                     Products = new List<BakingProgramProduct>()
+                    {
+                        new BakingProgramProduct
+                        {
+                            Id = Guid.NewGuid(),
+                             Product = new Product
+                            {
+                                BakingTempInC = 120,
+                                BakingTimeInMins = 30,
+                                Id = Guid.Parse("5cd54cb6-0df4-420f-96fd-f6e2cf6e2000"),
+                                Name = "Chocolate Croissant",
+                                Size = 2
+                            },
+                            Order = new Order
+                            {
+                                Id = new Guid("00000000-0000-0000-0000-000000000000"),
+                                ShouldBeDoneAt = new DateTime(2023, 2, 4, 12, 0, 0),
+                                Status = OrderStatus.Confirmed,
+                                Customer = new Customer()
+                            },
+                            QuantityТoBake = 6
+                        },
+                        new BakingProgramProduct
+                        {
+                            Id = Guid.NewGuid(),
+                            Product =  new Product
+                            {
+                                BakingTempInC = 120,
+                                BakingTimeInMins= 30,
+                                Id= Guid.Parse("d174996a-63e4-4b6b-b322-fdf235d91444"),
+                                Name = "Pizza",
+                                Size = 6
+                            },
+                            Order = new Order
+                            {
+                                Id = new Guid("00000000-0000-0000-0000-000000000000"),
+                                ShouldBeDoneAt = new DateTime(2023, 2, 4, 12, 0, 0),
+                                Status = OrderStatus.Confirmed,
+                                Customer = new Customer()
+                            },
+                            QuantityТoBake = 4
+                        }
+                    }
                 },
                 new BakingProgram
                 {
@@ -76,23 +119,66 @@ namespace SAP_API.Repositories
                     Status = BakingProgramStatus.Created,
                     BakingTimeInMins = 30,
                     BakingTempInC = 140,
-                    BakingProgrammedAt = new DateTime(2020, 2, 1, 12, 0, 0),
-                    BakingStartedAt = new DateTime(2020, 2, 1, 12, 30, 0),
+                    BakingProgrammedAt =  DateTime.Now,
+                    BakingStartedAt = null,
+                    BakingEndsAt = null,
                     Oven = new Oven { Id = new Guid("00000000-0000-0000-0000-000000000002"), Code = "Oven 2" },
                     PreparedBy = new User { Id = new Guid("00000000-0000-0000-0000-000000000003"), Username = "Jane", Password = "Doe" },
                     RemainingOvenCapacity = 10,
-                    Products = new List<BakingProgramProduct>()
+                    Products = new List<BakingProgramProduct>() {
+                        new BakingProgramProduct
+                        {
+                            Id = Guid.NewGuid(),
+                             Product = new Product
+                            {
+                                BakingTempInC = 120,
+                                BakingTimeInMins = 30,
+                                Id = Guid.Parse("5cd54cb6-0df4-420f-96fd-f6e2cf6e2000"),
+                                Name = "Chocolate Croissant",
+                                Size = 2
+                            },
+                            Order = new Order
+                            {
+                                Id = new Guid("00000000-0000-0000-0000-000000000000"),
+                                ShouldBeDoneAt = new DateTime(2023, 2, 4, 12, 0, 0),
+                                Status = OrderStatus.Confirmed,
+                                Customer = new Customer()
+                            },
+                            QuantityТoBake = 4
+                        },
+                        new BakingProgramProduct
+                        {
+                            Id = Guid.NewGuid(),
+                            Product =  new Product
+                            {
+                                BakingTempInC = 120,
+                                BakingTimeInMins= 30,
+                                Id= Guid.Parse("d174996a-63e4-4b6b-b322-fdf235d91444"),
+                                Name = "Pizza",
+                                Size = 6
+                            },
+                            Order = new Order
+                            {
+                                Id = new Guid("00000000-0000-0000-0000-000000000000"),
+                                ShouldBeDoneAt = new DateTime(2023, 2, 4, 12, 0, 0),
+                                Status = OrderStatus.Confirmed,
+                                Customer = new Customer()
+                            },
+                            QuantityТoBake = 6
+                        }
+                    }
                 },
                 new BakingProgram
                 {
                     Id = new Guid("00000000-0000-0000-0000-000000000002"),
                     CreatedAt = new DateTime(2020, 3, 1, 12, 0, 0),
-                    Status = BakingProgramStatus.Created,
-                    BakingTimeInMins = 120,
+                    Status = BakingProgramStatus.Done,
+                    BakingTimeInMins = 12,
                     BakingTempInC = 190,
-                    BakingProgrammedAt = new DateTime(2020, 3, 1, 12, 0, 0),
-                    BakingStartedAt = new DateTime(2020, 3, 1, 12, 45, 0),
-                    Oven = new Oven { Id = new Guid("00000000-0000-0000-0000-000000000003"), Code = "Oven 3" },
+                    BakingProgrammedAt = DateTime.Now,
+                    BakingStartedAt = new DateTime(2023, 12, 2, 11, 5, 0),
+                    BakingEndsAt = new DateTime(2023, 12, 2, 11, 17, 0),
+                    Oven = new Oven { Id = new Guid("00000000-0000-0000-0000-000000000001"), Code = "Oven 1" },
                     PreparedBy = new User { Id = new Guid("00000000-0000-0000-0000-000000000004"), Username = "Bob", Password = "Smith" },
                     RemainingOvenCapacity = 10,
                     Products = new List<BakingProgramProduct>()
@@ -108,6 +194,11 @@ namespace SAP_API.Repositories
         public List<BakingProgram> GetByOvenId(Guid ovenId)
         {
             return _bakingPrograms.FindAll(x => x.Oven.Id.Equals(ovenId));
+        }
+
+        public List<BakingProgram> GetProgramsWithBakingProgrammedAtBetweenDateTimes(DateTime startTime, DateTime endTime)
+        {
+            return _bakingPrograms.FindAll(x => DateTime.Compare(startTime, x.BakingProgrammedAt) <= 0 && DateTime.Compare(endTime, x.BakingProgrammedAt) >= 0);
         }
     }
 }

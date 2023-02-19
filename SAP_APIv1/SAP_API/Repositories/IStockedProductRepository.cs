@@ -9,5 +9,7 @@ namespace SAP_API.Repositories
     public interface IStockedProductRepository: IRepository<StockedProduct>
     {
         public List<StockedProduct> GetByProductId(Guid productId);
+        public StockedProduct GetByLocationAndProduct(Guid locationId, Guid productId);
+
     }
 }

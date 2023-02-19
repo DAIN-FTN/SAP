@@ -14,6 +14,7 @@ namespace SAP_API.Repositories
             SeedData();
         }
 
+
         public StockedProduct Create(StockedProduct entity)
         {
             _stockedProducts.Add(entity);
@@ -44,6 +45,12 @@ namespace SAP_API.Repositories
         {
             throw new NotImplementedException();
         }
+
+        public StockedProduct GetByLocationAndProduct(Guid locationId, Guid productId)
+        {
+            return _stockedProducts.FirstOrDefault(x => x.Location.Id == locationId && x.Product.Id == productId);
+        }
+
         private void SeedData()
         {
             _stockedProducts = new List<StockedProduct>
@@ -61,7 +68,12 @@ namespace SAP_API.Repositories
                         Name = "Chocolate Croissant",
                         Size = 4
                     },
-                    Location = new StockLocation()
+                    Location = new StockLocation
+                    {
+                        Id = new Guid("00000000-0000-0000-0000-000000000002"),
+                        Code = "L2",
+                        Capacity = 100
+                    }
                 },
                 new StockedProduct
                 {
@@ -76,7 +88,12 @@ namespace SAP_API.Repositories
                         Name = "Vanilla Croissant",
                         Size = 4
                     },
-                    Location = new StockLocation()
+                    Location = new StockLocation
+                    {
+                        Id = new Guid("00000000-0000-0000-0000-000000000002"),
+                        Code = "L2",
+                        Capacity = 100
+                    }
                 },
                 new StockedProduct
                 {
@@ -91,7 +108,12 @@ namespace SAP_API.Repositories
                         Name = "Chocolate Croissant",
                         Size = 4
                     },
-                    Location = new StockLocation()
+                    Location = new StockLocation
+                    {
+                        Id = new Guid("00000000-0000-0000-0000-000000000001"),
+                        Code = "L1",
+                        Capacity = 200
+                    }
                 },
                 new StockedProduct
                 {
@@ -106,7 +128,12 @@ namespace SAP_API.Repositories
                         Name = "Pizza",
                         Size = 6
                     },
-                    Location = new StockLocation()
+                    Location = new StockLocation
+                    {
+                        Id = new Guid("00000000-0000-0000-0000-000000000001"),
+                        Code = "L1",
+                        Capacity = 200
+                    }
                 },                
                 new StockedProduct
                 {
@@ -121,7 +148,12 @@ namespace SAP_API.Repositories
                         Name = "Pizza",
                         Size = 6
                     },
-                    Location = new StockLocation()
+                    Location = new StockLocation
+                    {
+                        Id = new Guid("00000000-0000-0000-0000-000000000002"),
+                        Code = "L2",
+                        Capacity = 100
+                    }
                 },
                 new StockedProduct
                 {
@@ -136,7 +168,12 @@ namespace SAP_API.Repositories
                          Name = "Bagguete",
                          Size = 6
                     },
-                    Location = new StockLocation()
+                    Location = new StockLocation
+                    {
+                        Id = new Guid("00000000-0000-0000-0000-000000000002"),
+                        Code = "L2",
+                        Capacity = 100
+                    }
                 }
             };
         }

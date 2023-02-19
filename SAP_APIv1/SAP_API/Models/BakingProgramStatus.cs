@@ -8,6 +8,7 @@
         Prepared,
         Baking,
         Done,
-        Cancelled
+        Cancelled,
+        Finished
     }
 }

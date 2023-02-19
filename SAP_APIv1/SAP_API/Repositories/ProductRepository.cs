@@ -75,8 +75,8 @@ namespace SAP_API.Repositories
                 },
                 new Product
                 {
-                    BakingTempInC = 150,
-                    BakingTimeInMins= 60,
+                    BakingTempInC = 120,
+                    BakingTimeInMins= 30,
                     Id= Guid.Parse("d174996a-63e4-4b6b-b322-fdf235d91444"),
                     Name = "Pizza",
                     Size = 6
