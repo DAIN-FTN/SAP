@@ -27,9 +27,7 @@ namespace SAP_API.Services
         //TODO: implement rollback
         public CreateOrderResponse OrchestrateOrderCreation(CreateOrderRequest orderCreationRequest)
         {
-
             ArrangingResult arrangingResult = _bakingProgramService.GetExistingOrNewProgramsProductShouldBeArrangedInto(orderCreationRequest.ShouldBeDoneAt, orderCreationRequest.Products);
-
 
             if(arrangingResult.AllProductsCanBeSuccessfullyArranged == false)
             {
@@ -41,34 +39,30 @@ namespace SAP_API.Services
                 throw new Exception();
             }
 
-            foreach (var bakingProgram in arrangingResult.BakingPrograms)
-            {
-                if (bakingProgram.Status == BakingProgramStatus.Pending)
-                {
-                    _bakingProgramService.CreateBakingProgram(bakingProgram);
-                }
-                else
-                {
-                    _bakingProgramService.UpdateBakingProgram(bakingProgram);
-                }
-            }
-
-            Order order = _orderService.CreateOrder(orderCreationRequest);
-
             try
             {
-                foreach (var product in order.Products)
+                foreach (var bakingProgram in arrangingResult.BakingPrograms)
                 {
-                    _stockedProductService.reserveStockedProduct(product.Id, product.ReservedQuantity);
+                    if (bakingProgram.Status == BakingProgramStatus.Pending)
+                    {
+                        _bakingProgramService.CreateBakingProgram(bakingProgram);
+                    }
+                    else
+                    {
+                        _bakingProgramService.UpdateBakingProgram(bakingProgram);
+                    }
                 }
+
+                _stockedProductService.reserveStockedProducts(orderCreationRequest.Products);
+
+                Order order = _orderService.CreateOrder(orderCreationRequest);
+
+                return OrderMapper.OrderToOrderResponse(order);
             }
             catch (Exception)
             {
-
-                throw;
+                throw new Exception();
             }
-            
-            return OrderMapper.OrderToOrderResponse(order);
         }
     }
 }
