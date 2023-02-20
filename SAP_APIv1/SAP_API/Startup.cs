@@ -43,7 +43,6 @@ namespace SAP_API
 
             app.UseRouting();
 
-            app.UseCors(routes => routes)
 
             app.UseEndpoints(endpoints =>
             {

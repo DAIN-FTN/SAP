@@ -53,21 +53,35 @@ namespace SAP_API.Services
             return quantityToBake <= 0;
         }
 
-        public void reserveStockedProduct(Guid productId, int quantityToReserve)
+        public void reserveStockedProducts(List<OrderProductRequest> orderProducts)
         {
-            /*
-                1. Get stocked products
-                2. We already checked if there is enough stock so next thing is to acctualy reserve this
-                3. OrdeProduct should probably have a list of Locations where it is stored 
-                4. If there is an issue we should roll this back [maybe]
-                4. 
-             */
-           List<StockedProduct> stockedProducts = _stockedProductRepository.GetByProductId(productId);
-
-            foreach (var stockedProduct in stockedProducts)
+            if(this.IsThereEnoughStockForProducts(orderProducts) == false)
             {
-                if(stockedProduct.ReservedQuantity >= quantityToReserve)
+                throw new Exception("There is not enough products in stock for given order products");
+            }
+
+            foreach (OrderProductRequest orderProduct in orderProducts)
+            {
+                int quantityToReserve = orderProduct.Quantity.Value;
+                List<StockedProduct> stockedProducts = _stockedProductRepository.GetByProductId(orderProduct.ProductId.Value);
+
+                foreach (var stockedProduct in stockedProducts)
                 {
+                    if(quantityToReserve == 0) break;
+
+                    if (stockedProduct.GetAvailableQuantity() == 0) continue;
+                    
+                    if (stockedProduct.GetAvailableQuantity() >= quantityToReserve)
+                    {
+                        stockedProduct.ReservedQuantity += quantityToReserve;
+                        quantityToReserve= 0;
+                    } else
+                    {
+                        //reserve anything that remains
+                        quantityToReserve -= stockedProduct.GetAvailableQuantity();
+                        stockedProduct.ReservedQuantity += stockedProduct.GetAvailableQuantity();
+                    }
+                    _stockedProductRepository.Update(stockedProduct);
                 }
             }
 

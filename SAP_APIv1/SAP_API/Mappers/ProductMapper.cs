@@ -68,7 +68,8 @@ namespace SAP_API.Mappers
                 Id = Guid.NewGuid(),
                 Order = order,
                 Product = product,
-                ReservedQuantity = orderProductRequest.Quantity
+                //TODO: check if this cast can be handled differently int? -> int
+                ReservedQuantity = (int)orderProductRequest.Quantity
             };
         }
     }

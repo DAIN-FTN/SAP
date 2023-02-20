@@ -12,5 +12,8 @@ namespace SAP_API.Models
         public StockLocation Location { get; set; }
         public int Quantity { get; set; }
         public int ReservedQuantity { get; set; }
+
+        public int GetAvailableQuantity() { return Quantity - ReservedQuantity; }
+
     }
 }
