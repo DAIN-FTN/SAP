@@ -1,9 +1,8 @@
 ﻿using SAP_API.DTOs;
-using SAP_API.Repositories;
+using SAP_API.DTOs.Responses;
+using SAP_API.Models;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace SAP_API.Services
 {
@@ -11,5 +10,8 @@ namespace SAP_API.Services
     {
 
         public List<ProductStockResponse> GetProductStock(string name);
+        public ProductDetailsResponse GetProductDetails(Guid id);
+        public List<ProductResponse> GetAll(string name);
+        public Product GetById(Guid productId);
     }
 }

@@ -140,11 +140,11 @@ namespace SAP_API.Services
         {
             foreach (OrderProductRequest product in orderProducts)
             {
-                Guid productId = product.ProductId;
+                Guid productId = (Guid)product.ProductId;
                 Product productDetails = _productRepository.GetById(productId);
                 TimeAndTempGroup group = GetTempAndTimeBakingGroupForProduct(productDetails);
 
-                int quantityFromOrder = product.Quantity;
+                int quantityFromOrder = (int)product.Quantity;
                 OrderProduct productFromOrder = new OrderProduct
                 {
                     Product = productDetails,

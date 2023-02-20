@@ -3,6 +3,7 @@ using SAP_API.DTOs;
 using SAP_API.DTOs.Responses;
 using System.Collections.Generic;
 using System;
+using SAP_API.DTOs.Requests;
 
 namespace SAP_API.Services
 {
@@ -11,15 +12,17 @@ namespace SAP_API.Services
 
         public void CreateBakingProgram(BakingProgram bakingProgram);
         public void UpdateBakingProgram(BakingProgram bakingProgram);
-        public StartPreparingResponse GetDataForPreparing(Guid id);
-        public bool CheckIfBakingProgramIsNextForPreparing(Guid bakingProgramId);
-        public void CancellPreparing(Guid bakingProgramId);
-        public void FinishPreparing(Guid id);
-        public List<AvailableBakingProgramResponse> FindAvailableBakingPrograms(FindAvailableBakingProgramsRequest body);
+        public StartPreparingResponse GetDataForPreparing(BakingProgram bakingProgram);
+        public bool CheckIfProgramIsNextForPreparing(BakingProgram bakingProgram);
+        public void CancellPreparing(BakingProgram bakingProgram);
+        public void FinishPreparing(BakingProgram bakingProgram);
+        public AvailableProgramsResponse FindAvailableBakingPrograms(FindAvailableBakingProgramsRequest body);
         public ArrangingResult GetExistingOrNewProgramsProductShouldBeArrangedInto(DateTime timeOrderShouldBeDone, List<OrderProductRequest> orderProducts);
         public AllBakingProgramsResponse GetBakingProgramsForUser();
-        bool CheckIfProgramIsNextForBaking(Guid bakingProgramId);
-        void StartBaking(Guid bakingProgramId);
+        bool CheckIfProgramIsNextForBaking(BakingProgram bakingProgram);
+        void StartBaking(BakingProgram bakingProgram);
+        bool CheckIfUserIsAlreadyPreparingAnotherProgram();
+        BakingProgram GetById(Guid bakingProgramId);
     }
 }
 
