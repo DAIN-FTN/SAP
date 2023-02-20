@@ -4,6 +4,7 @@ using SAP_API.Mappers;
 using SAP_API.Models;
 using System;
 using System.Collections.Generic;
+using System.Transactions;
 
 namespace SAP_API.Services
 {
@@ -31,6 +32,7 @@ namespace SAP_API.Services
 
             if(arrangingResult.AllProductsCanBeSuccessfullyArranged == false)
             {
+                //TODO: add custom Exception classes
                 throw new Exception();
             }
 
@@ -39,6 +41,7 @@ namespace SAP_API.Services
                 throw new Exception();
             }
 
+            using (var scope = new TransactionScope())
             try
             {
                 foreach (var bakingProgram in arrangingResult.BakingPrograms)
@@ -57,11 +60,14 @@ namespace SAP_API.Services
 
                 Order order = _orderService.CreateOrder(orderCreationRequest);
 
+                scope.Complete();
+
                 return OrderMapper.OrderToOrderResponse(order);
             }
-            catch (Exception)
+            catch (Exception exception)
             {
-                throw new Exception();
+                //rollback is automatically handled
+                throw exception;
             }
         }
     }
