@@ -12,7 +12,6 @@ namespace SAP_API.Mappers
             return new CreateOrderResponse
             {
                 Id= order.Id,
-                Status  = order.Status, 
             };
         }
     }

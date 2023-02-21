@@ -4,6 +4,7 @@ using Microsoft.Extensions.Options;
 using SAP_API.DTOs;
 using SAP_API.DTOs.Requests;
 using SAP_API.DTOs.Responses;
+using SAP_API.Exceptions;
 using SAP_API.Services;
 using System;
 using System.Collections.Generic;
@@ -16,9 +17,9 @@ namespace SAP_API.Controllers
     [Route("api/orders")]
     public class OrderController: ControllerBase
     {
-        private readonly IOrderCreationOrchestrator _orderCreationOrchestrator;
+        private readonly IOrderTransactionsOrchestrator _orderCreationOrchestrator;
 
-        public OrderController(IOrderCreationOrchestrator orderCreationOrchestrator)
+        public OrderController(IOrderTransactionsOrchestrator orderCreationOrchestrator)
         {
             _orderCreationOrchestrator = orderCreationOrchestrator;
         }
@@ -31,10 +32,14 @@ namespace SAP_API.Controllers
                 CreateOrderResponse response = _orderCreationOrchestrator.OrchestrateOrderCreation(body);
                 return Ok(response);
             }
-            catch (Exception ex)
+            catch(OrderCreationException ex)
             {
                 ModelState.AddModelError("ErrorToDisplay", ex.Message);
                 return apiBehaviorOptions.Value.InvalidModelStateResponseFactory(ControllerContext);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
             }
 
         }

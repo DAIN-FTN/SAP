@@ -1,4 +1,5 @@
 ﻿using SAP_API.DTOs;
+using SAP_API.Exceptions;
 using SAP_API.Models;
 using SAP_API.Repositories;
 using System;
@@ -57,7 +58,7 @@ namespace SAP_API.Services
         {
             if(this.IsThereEnoughStockForProducts(orderProducts) == false)
             {
-                throw new Exception("There is not enough products in stock for given order products");
+                throw new NotEnoughStockedProductException();
             }
 
             foreach (OrderProductRequest orderProduct in orderProducts)

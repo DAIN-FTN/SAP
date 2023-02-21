@@ -27,12 +27,12 @@ namespace SAP_API.Services
 
             foreach (var productRequest in createOrderRequest.Products)
             {
-                Product product = _productRepository.GetById(productRequest.ProductId);
+                Product product = _productRepository.GetById(productRequest.ProductId.Value);
                 orderProducts.Add(new ReservedOrderProduct
                 {
                     Product = product,
                     Id = Guid.NewGuid(),
-                    ReservedQuantity = productRequest.Quantity,
+                    ReservedQuantity = productRequest.Quantity.Value,
                 });
             }
 

@@ -4,7 +4,7 @@ using SAP_API.DTOs.Responses;
 
 namespace SAP_API.Services
 {
-    public interface IOrderCreationOrchestrator
+    public interface IOrderTransactionsOrchestrator
     {
         public CreateOrderResponse OrchestrateOrderCreation(CreateOrderRequest orderCreationRequest);
     }

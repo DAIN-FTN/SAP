@@ -1,5 +1,6 @@
 ﻿using SAP_API.DTOs.Requests;
 using SAP_API.DTOs.Responses;
+using SAP_API.Exceptions;
 using SAP_API.Mappers;
 using SAP_API.Models;
 using System;
@@ -8,7 +9,7 @@ using System.Transactions;
 
 namespace SAP_API.Services
 {
-    public class OrderTransactionsOrchestrator: IOrderCreationOrchestrator
+    public class OrderTransactionsOrchestrator: IOrderTransactionsOrchestrator
     {
         private readonly IOrderService _orderService;
         private readonly IBakingProgramService _bakingProgramService;
@@ -25,20 +26,18 @@ namespace SAP_API.Services
             _stockedProductService = stockedProductService;
         }
 
-        //TODO: implement rollback
         public CreateOrderResponse OrchestrateOrderCreation(CreateOrderRequest orderCreationRequest)
         {
             ArrangingResult arrangingResult = _bakingProgramService.GetExistingOrNewProgramsProductShouldBeArrangedInto(orderCreationRequest.ShouldBeDoneAt, orderCreationRequest.Products);
 
             if(arrangingResult.AllProductsCanBeSuccessfullyArranged == false)
             {
-                //TODO: add custom Exception classes
-                throw new Exception();
+                throw new OrderCreationException("Products cannot be succesfully arranged");
             }
 
             if(arrangingResult.IsThereEnoughStockedProducts == false)
             {
-                throw new Exception();
+                throw new OrderCreationException("There isn't enough products in stock");
             }
 
             using (var scope = new TransactionScope())
@@ -64,9 +63,12 @@ namespace SAP_API.Services
 
                 return OrderMapper.OrderToOrderResponse(order);
             }
+            catch(NotEnoughStockedProductException exception)
+            {
+                throw new OrderCreationException(exception.Message);
+            }
             catch (Exception exception)
             {
-                //rollback is automatically handled
                 throw exception;
             }
         }
