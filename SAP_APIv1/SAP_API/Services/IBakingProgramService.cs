@@ -10,7 +10,7 @@ namespace SAP_API.Services
     public interface IBakingProgramService
     {
 
-        public void CreateBakingProgram();
+        public void CreateBakingProgram(BakingProgram bakingProgram);
         public void UpdateBakingProgram(BakingProgram bakingProgram);
         public StartPreparingResponse GetDataForPreparing(BakingProgram bakingProgram);
         public bool CheckIfProgramIsNextForPreparing(BakingProgram bakingProgram);

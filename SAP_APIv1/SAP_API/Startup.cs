@@ -31,6 +31,9 @@ namespace SAP_API
             services.AddSingleton<IProductToPrepareRepository, ProductToPrepareRepository>();
             services.AddScoped<IStockedProductService, StockedProductService>();
             services.AddSingleton<IStockLocationRepository, StockLocationRepository>();
+            services.AddSingleton<IOrderRepository, OrderRepository>();
+            services.AddScoped<IOrderService, OrderService>();
+            services.AddScoped<IOrderTransactionsOrchestrator, OrderTransactionsOrchestrator>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -42,6 +45,7 @@ namespace SAP_API
             }
 
             app.UseRouting();
+
 
             app.UseEndpoints(endpoints =>
             {

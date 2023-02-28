@@ -43,7 +43,14 @@ namespace SAP_API.Repositories
 
         public StockedProduct Update(StockedProduct entity)
         {
-            throw new NotImplementedException();
+            StockedProduct stockedProduct = _stockedProducts.FirstOrDefault(x => x.Id == entity.Id);
+            if (stockedProduct == null)
+            {
+                throw new Exception("Stocked product not found");
+            }
+            _stockedProducts.Remove(stockedProduct);
+            _stockedProducts.Add(entity);
+            return entity;  
         }
 
         public StockedProduct GetByLocationAndProduct(Guid locationId, Guid productId)

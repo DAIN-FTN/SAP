@@ -10,6 +10,6 @@ namespace SAP_API.Services
     {
         public void ChangeStockOnLocationForProduct(Guid locationId, Guid productId, int quantityToSubstract);
         public bool IsThereEnoughStockForProducts(List<OrderProductRequest> orderProducts);
-
+        public void reserveStockedProducts(List<OrderProductRequest> orderProducts);
     }
 }

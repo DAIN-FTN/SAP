@@ -1,4 +1,5 @@
 ﻿using SAP_API.DTOs;
+using SAP_API.DTOs.Requests;
 using SAP_API.Models;
 using System;
 using System.Collections.Generic;
@@ -9,6 +10,6 @@ namespace SAP_API.Services
 {
     public interface IOrderService
     {
-        public bool CreateOrder(DateTime shouldBeDoneAt, Customer customer);
+        public Order CreateOrder(CreateOrderRequest createOrderRequest);
     }
 }

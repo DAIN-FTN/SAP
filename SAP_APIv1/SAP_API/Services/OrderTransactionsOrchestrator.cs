@@ -1,29 +1,76 @@
-﻿using System;
+﻿using SAP_API.DTOs.Requests;
+using SAP_API.DTOs.Responses;
+using SAP_API.Exceptions;
+using SAP_API.Mappers;
+using SAP_API.Models;
+using System;
+using System.Collections.Generic;
+using System.Transactions;
 
 namespace SAP_API.Services
 {
-    public class OrderTransactionsOrchestrator: IOrderCreationOrchestrator
+    public class OrderTransactionsOrchestrator: IOrderTransactionsOrchestrator
     {
         private readonly IOrderService _orderService;
         private readonly IBakingProgramService _bakingProgramService;
-        private readonly IProductService _productService;
+        private readonly IStockedProductService _stockedProductService;
 
         public OrderTransactionsOrchestrator(
             IOrderService orderService,
             IBakingProgramService bakingProgramService,
-            IProductService productService
+            IStockedProductService stockedProductService
             )
         {
             _orderService = orderService;
             _bakingProgramService = bakingProgramService;
-            _productService = productService;
+            _stockedProductService = stockedProductService;
         }
 
-        public void OrchestrateOrderCreation()
+        public CreateOrderResponse OrchestrateOrderCreation(CreateOrderRequest orderCreationRequest)
         {
-            _orderService.CreateOrder(DateTime.Now, null);
-            _bakingProgramService.CreateBakingProgram();
-            _bakingProgramService.UpdateBakingProgram(null);
+            ArrangingResult arrangingResult = _bakingProgramService.GetExistingOrNewProgramsProductShouldBeArrangedInto(orderCreationRequest.ShouldBeDoneAt, orderCreationRequest.Products);
+
+            if(arrangingResult.AllProductsCanBeSuccessfullyArranged == false)
+            {
+                throw new OrderCreationException("Products cannot be succesfully arranged");
+            }
+
+            if(arrangingResult.IsThereEnoughStockedProducts == false)
+            {
+                throw new OrderCreationException("There isn't enough products in stock");
+            }
+
+            using (var scope = new TransactionScope())
+            try
+            {
+                foreach (var bakingProgram in arrangingResult.BakingPrograms)
+                {
+                    if (bakingProgram.Status == BakingProgramStatus.Pending)
+                    {
+                        _bakingProgramService.CreateBakingProgram(bakingProgram);
+                    }
+                    else
+                    {
+                        _bakingProgramService.UpdateBakingProgram(bakingProgram);
+                    }
+                }
+
+                _stockedProductService.reserveStockedProducts(orderCreationRequest.Products);
+
+                Order order = _orderService.CreateOrder(orderCreationRequest);
+
+                scope.Complete();
+
+                return OrderMapper.OrderToOrderResponse(order);
+            }
+            catch(NotEnoughStockedProductException exception)
+            {
+                throw new OrderCreationException(exception.Message);
+            }
+            catch (Exception exception)
+            {
+                throw exception;
+            }
         }
     }
 }

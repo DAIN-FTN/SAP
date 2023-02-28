@@ -7,7 +7,7 @@ namespace SAP_API.Models
 {
     public enum OrderStatus
     {
-        Created,
+        Created ,
         Cancelled,
         Confirmed
     }

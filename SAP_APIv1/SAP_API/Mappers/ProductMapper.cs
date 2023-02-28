@@ -60,5 +60,17 @@ namespace SAP_API.Mappers
             return response;
         }
         
+        
+        public static ReservedOrderProduct OrderProductRequestToReservedOrderProduct(OrderProductRequest orderProductRequest, Order order, Product product)
+        {
+            return new ReservedOrderProduct
+            {
+                Id = Guid.NewGuid(),
+                Order = order,
+                Product = product,
+                //TODO: check if this cast can be handled differently int? -> int
+                ReservedQuantity = (int)orderProductRequest.Quantity
+            };
+        }
     }
 }
