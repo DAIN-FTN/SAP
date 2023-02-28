@@ -37,6 +37,7 @@ namespace SAP_API.Repositories
 
         public BakingProgram Create(BakingProgram bakingProgram)
         {
+            bakingProgram.Id = Guid.NewGuid(); 
             _bakingPrograms.Add(bakingProgram);
             return bakingProgram;
         }
