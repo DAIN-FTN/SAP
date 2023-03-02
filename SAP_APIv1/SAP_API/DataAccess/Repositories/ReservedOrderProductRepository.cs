@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace SAP_API.Repositories
+namespace SAP_API.DataAccess.Repositories
 {
     public class ReservedOrderProductRepository : IReservedOrderProductRepository
     {
@@ -71,7 +71,7 @@ namespace SAP_API.Repositories
                         Code = "L1",
                         Capacity = 200
                     }
-                }, 
+                },
                 new ReservedOrderProduct
                 {
                     Id = Guid.NewGuid(),

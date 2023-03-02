@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System;
 using System.Linq;
 
-namespace SAP_API.Repositories
+namespace SAP_API.DataAccess.Repositories
 {
     public class BakingProgramRepository : IBakingProgramRepository
     {

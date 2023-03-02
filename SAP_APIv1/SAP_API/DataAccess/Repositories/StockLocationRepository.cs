@@ -2,7 +2,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace SAP_API.Repositories
+namespace SAP_API.DataAccess.Repositories
 {
     public class StockLocationRepository : IStockLocationRepository
     {
@@ -27,7 +27,7 @@ namespace SAP_API.Repositories
                 Code = "L2",
                 Capacity = 100
             });
-           
+
         }
 
         public StockLocation Create(StockLocation entity)

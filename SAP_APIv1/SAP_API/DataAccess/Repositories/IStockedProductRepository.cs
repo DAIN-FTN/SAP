@@ -4,9 +4,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace SAP_API.Repositories
+namespace SAP_API.DataAccess.Repositories
 {
-    public interface IStockedProductRepository: IRepository<StockedProduct>
+    public interface IStockedProductRepository : IRepository<StockedProduct>
     {
         public List<StockedProduct> GetByProductId(Guid productId);
         public StockedProduct GetByLocationAndProduct(Guid locationId, Guid productId);

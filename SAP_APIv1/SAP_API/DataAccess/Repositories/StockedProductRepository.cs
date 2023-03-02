@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace SAP_API.Repositories
+namespace SAP_API.DataAccess.Repositories
 {
     public class StockedProductRepository : IStockedProductRepository
     {
@@ -50,7 +50,7 @@ namespace SAP_API.Repositories
             }
             _stockedProducts.Remove(stockedProduct);
             _stockedProducts.Add(entity);
-            return entity;  
+            return entity;
         }
 
         public StockedProduct GetByLocationAndProduct(Guid locationId, Guid productId)
@@ -141,7 +141,7 @@ namespace SAP_API.Repositories
                         Code = "L1",
                         Capacity = 200
                     }
-                },                
+                },
                 new StockedProduct
                 {
                     Id = Guid.NewGuid(),

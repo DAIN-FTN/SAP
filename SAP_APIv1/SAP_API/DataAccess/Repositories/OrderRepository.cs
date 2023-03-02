@@ -3,14 +3,15 @@ using System.Collections.Generic;
 using System;
 using System.Linq;
 
-namespace SAP_API.Repositories
+namespace SAP_API.DataAccess.Repositories
 {
     public class OrderRepository : IOrderRepository
     {
         private readonly List<Order> _orders = new List<Order>();
 
-        public OrderRepository() { 
-            SeedData(); 
+        public OrderRepository()
+        {
+            SeedData();
         }
 
         public IEnumerable<Order> GetAll()
