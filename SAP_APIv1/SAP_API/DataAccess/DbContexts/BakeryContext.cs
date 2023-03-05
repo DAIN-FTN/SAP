@@ -12,8 +12,13 @@ namespace SAP_API.DataAccess.DbContexts
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            SetUniqueConstraints(modelBuilder);
+            DataSeeder.SeedData(modelBuilder);
+        }
+
+        private void SetUniqueConstraints(ModelBuilder modelBuilder) {
             modelBuilder.Entity<BakingProgram>()
-                .HasAlternateKey(x => x.Code);
+               .HasAlternateKey(x => x.Code);
 
             modelBuilder.Entity<Oven>()
                 .HasAlternateKey(x => x.Code);
@@ -23,16 +28,18 @@ namespace SAP_API.DataAccess.DbContexts
 
             modelBuilder.Entity<StockLocation>()
                .HasAlternateKey(x => x.Code);
-
         }
 
-        public DbSet<Order> Order { get; set; }
-        public DbSet<Product> Product { get; set; }
-        public DbSet<Oven> Oven { get; set; }
-        public DbSet<StockedProduct> StockedProduct { get; set;}
-        public DbSet<StockLocation> StockLocation { get; set; }
-        public DbSet<ReservedOrderProduct> ReservedOrderProduct { get; set; }
-        public DbSet<ProductToPrepare> ProductToPrepare { get; set; }
+        public DbSet<BakingProgram> BakingProgram { get; }
+        public DbSet<Order> Order { get;  }
+        public DbSet<Product> Product { get; }
+        public DbSet<Oven> Oven { get;  }
+        public DbSet<StockedProduct> StockedProduct { get;}
+        public DbSet<StockLocation> StockLocation { get; }
+        public DbSet<ReservedOrderProduct> ReservedOrderProduct { get;  }
+        public DbSet<ProductToPrepare> ProductToPrepare { get; }
+        public DbSet<Customer> Customer { get; }
+        public DbSet<User> User { get; }
     }
     
 }
