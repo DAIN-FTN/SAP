@@ -174,7 +174,7 @@ namespace SAP_API.Services
             List<BakingProgramStatus> statusesToExclude = new List<BakingProgramStatus> { BakingProgramStatus.Cancelled, BakingProgramStatus.Finished };
             ExcludeProgramsWithStatuses(bakingPrograms, statusesToExclude);
             ChangeStatusToDoneIfBakingIsDone(bakingPrograms);
-            List<BakingProgram> programsUserIsPreparing = bakingPrograms.FindAll(bp => bp.Status.Equals(BakingProgramStatus.Preparing) && bp.PreparedBy.Id == user.Id);
+            List<BakingProgram> programsUserIsPreparing = bakingPrograms.FindAll(bp => bp.Status.Equals(BakingProgramStatus.Preparing) && bp.PreparedByUser.Id == user.Id);
 
             if (programsUserIsPreparing.Count == 0)
                 return BakingProgramMapper.CreateAllBakingProgramsResponse(bakingPrograms, null);
@@ -268,7 +268,7 @@ namespace SAP_API.Services
             DateTime startTime = timeNow.AddDays(-1);
             DateTime endTime = timeNow.AddHours(4);
             List<BakingProgram> bakingPrograms = _bakingProgramRepository.GetProgramsWithBakingProgrammedAtBetweenDateTimes(startTime, endTime);
-            List<BakingProgram> programsBeingPreparedByUser = bakingPrograms.FindAll(bp => bp.Status.Equals(BakingProgramStatus.Preparing) && bp.PreparedBy.Id.Equals(user.Id));
+            List<BakingProgram> programsBeingPreparedByUser = bakingPrograms.FindAll(bp => bp.Status.Equals(BakingProgramStatus.Preparing) && bp.PreparedByUser.Id.Equals(user.Id));
             return programsBeingPreparedByUser.Count > 0;
         }
 

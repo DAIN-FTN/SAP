@@ -22,21 +22,6 @@ namespace SAP_API.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Oven",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(type: "uuid", nullable: false),
-                    Code = table.Column<string>(type: "text", nullable: false),
-                    MaxTempInC = table.Column<int>(type: "integer", nullable: false),
-                    Capacity = table.Column<int>(type: "integer", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Oven", x => x.Id);
-                    table.UniqueConstraint("AK_Oven_Code", x => x.Code);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "Product",
                 columns: table => new
                 {
@@ -86,7 +71,7 @@ namespace SAP_API.Migrations
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
                     ShouldBeDoneAt = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
                     Status = table.Column<int>(type: "integer", nullable: false),
-                    CustomerId = table.Column<Guid>(type: "uuid", nullable: true)
+                    CustomerId = table.Column<Guid>(type: "uuid", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -96,7 +81,7 @@ namespace SAP_API.Migrations
                         column: x => x.CustomerId,
                         principalTable: "Customer",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -104,8 +89,8 @@ namespace SAP_API.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
-                    ProductId = table.Column<Guid>(type: "uuid", nullable: true),
-                    LocationId = table.Column<Guid>(type: "uuid", nullable: true),
+                    ProductId = table.Column<Guid>(type: "uuid", nullable: false),
+                    LocationId = table.Column<Guid>(type: "uuid", nullable: false),
                     Quantity = table.Column<int>(type: "integer", nullable: false),
                     ReservedQuantity = table.Column<int>(type: "integer", nullable: false)
                 },
@@ -117,13 +102,13 @@ namespace SAP_API.Migrations
                         column: x => x.ProductId,
                         principalTable: "Product",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_StockedProduct_StockLocation_LocationId",
                         column: x => x.LocationId,
                         principalTable: "StockLocation",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -139,8 +124,7 @@ namespace SAP_API.Migrations
                     BakingProgrammedAt = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
                     BakingStartedAt = table.Column<DateTime>(type: "timestamp without time zone", nullable: true),
                     BakingEndsAt = table.Column<DateTime>(type: "timestamp without time zone", nullable: true),
-                    OvenId = table.Column<Guid>(type: "uuid", nullable: true),
-                    PreparedById = table.Column<Guid>(type: "uuid", nullable: true),
+                    PreparedByUserId = table.Column<Guid>(type: "uuid", nullable: false),
                     RemainingOvenCapacity = table.Column<int>(type: "integer", nullable: false)
                 },
                 constraints: table =>
@@ -148,17 +132,11 @@ namespace SAP_API.Migrations
                     table.PrimaryKey("PK_BakingProgram", x => x.Id);
                     table.UniqueConstraint("AK_BakingProgram_Code", x => x.Code);
                     table.ForeignKey(
-                        name: "FK_BakingProgram_Oven_OvenId",
-                        column: x => x.OvenId,
-                        principalTable: "Oven",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_BakingProgram_User_PreparedById",
-                        column: x => x.PreparedById,
+                        name: "FK_BakingProgram_User_PreparedByUserId",
+                        column: x => x.PreparedByUserId,
                         principalTable: "User",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -166,11 +144,11 @@ namespace SAP_API.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
-                    ProductId = table.Column<Guid>(type: "uuid", nullable: true),
-                    OrderId = table.Column<Guid>(type: "uuid", nullable: true),
+                    ProductId = table.Column<Guid>(type: "uuid", nullable: false),
+                    OrderId = table.Column<Guid>(type: "uuid", nullable: false),
+                    StockLocationId = table.Column<Guid>(type: "uuid", nullable: false),
                     ReservedQuantity = table.Column<int>(type: "integer", nullable: false),
-                    PreparedQuantity = table.Column<int>(type: "integer", nullable: false),
-                    LocationWhereProductIsReservedId = table.Column<Guid>(type: "uuid", nullable: true)
+                    PreparedQuantity = table.Column<int>(type: "integer", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -180,19 +158,19 @@ namespace SAP_API.Migrations
                         column: x => x.OrderId,
                         principalTable: "Order",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_ReservedOrderProduct_Product_ProductId",
                         column: x => x.ProductId,
                         principalTable: "Product",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_ReservedOrderProduct_StockLocation_LocationWhereProductIsRe~",
-                        column: x => x.LocationWhereProductIsReservedId,
+                        name: "FK_ReservedOrderProduct_StockLocation_StockLocationId",
+                        column: x => x.StockLocationId,
                         principalTable: "StockLocation",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -200,10 +178,10 @@ namespace SAP_API.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
-                    ProductId = table.Column<Guid>(type: "uuid", nullable: true),
-                    OrderId = table.Column<Guid>(type: "uuid", nullable: true),
-                    QuantityТoBake = table.Column<int>(type: "integer", nullable: false),
-                    BakingProgramId = table.Column<Guid>(type: "uuid", nullable: true)
+                    ProductId = table.Column<Guid>(type: "uuid", nullable: false),
+                    OrderId = table.Column<Guid>(type: "uuid", nullable: false),
+                    BakingProgramId = table.Column<Guid>(type: "uuid", nullable: false),
+                    QuantityТoBake = table.Column<int>(type: "integer", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -213,17 +191,39 @@ namespace SAP_API.Migrations
                         column: x => x.BakingProgramId,
                         principalTable: "BakingProgram",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_BakingProgramProduct_Order_OrderId",
                         column: x => x.OrderId,
                         principalTable: "Order",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_BakingProgramProduct_Product_ProductId",
                         column: x => x.ProductId,
                         principalTable: "Product",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Oven",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    Code = table.Column<string>(type: "text", nullable: false),
+                    MaxTempInC = table.Column<int>(type: "integer", nullable: false),
+                    Capacity = table.Column<int>(type: "integer", nullable: false),
+                    BakingProgramId = table.Column<Guid>(type: "uuid", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Oven", x => x.Id);
+                    table.UniqueConstraint("AK_Oven_Code", x => x.Code);
+                    table.ForeignKey(
+                        name: "FK_Oven_BakingProgram_BakingProgramId",
+                        column: x => x.BakingProgramId,
+                        principalTable: "BakingProgram",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 });
@@ -233,10 +233,10 @@ namespace SAP_API.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
-                    ProductId = table.Column<Guid>(type: "uuid", nullable: true),
-                    BakingProgramId = table.Column<Guid>(type: "uuid", nullable: true),
-                    OrderId = table.Column<Guid>(type: "uuid", nullable: true),
-                    LocationToPrepareFromId = table.Column<Guid>(type: "uuid", nullable: true),
+                    ProductId = table.Column<Guid>(type: "uuid", nullable: false),
+                    BakingProgramId = table.Column<Guid>(type: "uuid", nullable: false),
+                    OrderId = table.Column<Guid>(type: "uuid", nullable: false),
+                    StockLocationId = table.Column<Guid>(type: "uuid", nullable: false),
                     QuantityToPrepare = table.Column<int>(type: "integer", nullable: false)
                 },
                 constraints: table =>
@@ -247,36 +247,31 @@ namespace SAP_API.Migrations
                         column: x => x.BakingProgramId,
                         principalTable: "BakingProgram",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_ProductToPrepare_Order_OrderId",
                         column: x => x.OrderId,
                         principalTable: "Order",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_ProductToPrepare_Product_ProductId",
                         column: x => x.ProductId,
                         principalTable: "Product",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_ProductToPrepare_StockLocation_LocationToPrepareFromId",
-                        column: x => x.LocationToPrepareFromId,
+                        name: "FK_ProductToPrepare_StockLocation_StockLocationId",
+                        column: x => x.StockLocationId,
                         principalTable: "StockLocation",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_BakingProgram_OvenId",
+                name: "IX_BakingProgram_PreparedByUserId",
                 table: "BakingProgram",
-                column: "OvenId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_BakingProgram_PreparedById",
-                table: "BakingProgram",
-                column: "PreparedById");
+                column: "PreparedByUserId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_BakingProgramProduct_BakingProgramId",
@@ -299,14 +294,15 @@ namespace SAP_API.Migrations
                 column: "CustomerId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Oven_BakingProgramId",
+                table: "Oven",
+                column: "BakingProgramId",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
                 name: "IX_ProductToPrepare_BakingProgramId",
                 table: "ProductToPrepare",
                 column: "BakingProgramId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_ProductToPrepare_LocationToPrepareFromId",
-                table: "ProductToPrepare",
-                column: "LocationToPrepareFromId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_ProductToPrepare_OrderId",
@@ -319,9 +315,9 @@ namespace SAP_API.Migrations
                 column: "ProductId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_ReservedOrderProduct_LocationWhereProductIsReservedId",
-                table: "ReservedOrderProduct",
-                column: "LocationWhereProductIsReservedId");
+                name: "IX_ProductToPrepare_StockLocationId",
+                table: "ProductToPrepare",
+                column: "StockLocationId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_ReservedOrderProduct_OrderId",
@@ -332,6 +328,11 @@ namespace SAP_API.Migrations
                 name: "IX_ReservedOrderProduct_ProductId",
                 table: "ReservedOrderProduct",
                 column: "ProductId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ReservedOrderProduct_StockLocationId",
+                table: "ReservedOrderProduct",
+                column: "StockLocationId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_StockedProduct_LocationId",
@@ -348,6 +349,9 @@ namespace SAP_API.Migrations
         {
             migrationBuilder.DropTable(
                 name: "BakingProgramProduct");
+
+            migrationBuilder.DropTable(
+                name: "Oven");
 
             migrationBuilder.DropTable(
                 name: "ProductToPrepare");
@@ -369,9 +373,6 @@ namespace SAP_API.Migrations
 
             migrationBuilder.DropTable(
                 name: "StockLocation");
-
-            migrationBuilder.DropTable(
-                name: "Oven");
 
             migrationBuilder.DropTable(
                 name: "User");

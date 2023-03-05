@@ -66,7 +66,7 @@ namespace SAP_API.DataAccess.Repositories
                     BakingStartedAt = null,
                     BakingEndsAt = null,
                     Oven = new Oven { Id = new Guid("00000000-0000-0000-0000-000000000001"), Code = "Oven 1" },
-                    PreparedBy = new User { Id = new Guid("00000000-0000-0000-0000-000000000002"), Username = "John", Password = "Doe" },
+                    PreparedByUser = new User { Id = new Guid("00000000-0000-0000-0000-000000000002"), Username = "John", Password = "Doe" },
                     RemainingOvenCapacity = 10,
                     Products = new List<BakingProgramProduct>()
                     {
@@ -123,7 +123,7 @@ namespace SAP_API.DataAccess.Repositories
                     BakingStartedAt = null,
                     BakingEndsAt = null,
                     Oven = new Oven { Id = new Guid("00000000-0000-0000-0000-000000000002"), Code = "Oven 2" },
-                    PreparedBy = new User { Id = new Guid("00000000-0000-0000-0000-000000000003"), Username = "Jane", Password = "Doe" },
+                    PreparedByUser = new User { Id = new Guid("00000000-0000-0000-0000-000000000003"), Username = "Jane", Password = "Doe" },
                     RemainingOvenCapacity = 10,
                     Products = new List<BakingProgramProduct>() {
                         new BakingProgramProduct
@@ -179,7 +179,7 @@ namespace SAP_API.DataAccess.Repositories
                     BakingStartedAt = new DateTime(2023, 12, 2, 11, 5, 0),
                     BakingEndsAt = new DateTime(2023, 12, 2, 11, 17, 0),
                     Oven = new Oven { Id = new Guid("00000000-0000-0000-0000-000000000001"), Code = "Oven 1" },
-                    PreparedBy = new User { Id = new Guid("00000000-0000-0000-0000-000000000004"), Username = "Bob", Password = "Smith" },
+                    PreparedByUser = new User { Id = new Guid("00000000-0000-0000-0000-000000000004"), Username = "Bob", Password = "Smith" },
                     RemainingOvenCapacity = 10,
                     Products = new List<BakingProgramProduct>()
                 }

@@ -47,10 +47,7 @@ namespace SAP_API.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("timestamp without time zone");
 
-                    b.Property<Guid?>("OvenId")
-                        .HasColumnType("uuid");
-
-                    b.Property<Guid?>("PreparedById")
+                    b.Property<Guid>("PreparedByUserId")
                         .HasColumnType("uuid");
 
                     b.Property<int>("RemainingOvenCapacity")
@@ -63,9 +60,7 @@ namespace SAP_API.Migrations
 
                     b.HasAlternateKey("Code");
 
-                    b.HasIndex("OvenId");
-
-                    b.HasIndex("PreparedById");
+                    b.HasIndex("PreparedByUserId");
 
                     b.ToTable("BakingProgram");
                 });
@@ -76,13 +71,13 @@ namespace SAP_API.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
-                    b.Property<Guid?>("BakingProgramId")
+                    b.Property<Guid>("BakingProgramId")
                         .HasColumnType("uuid");
 
-                    b.Property<Guid?>("OrderId")
+                    b.Property<Guid>("OrderId")
                         .HasColumnType("uuid");
 
-                    b.Property<Guid?>("ProductId")
+                    b.Property<Guid>("ProductId")
                         .HasColumnType("uuid");
 
                     b.Property<int>("QuantityТoBake")
@@ -125,7 +120,7 @@ namespace SAP_API.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
-                    b.Property<Guid?>("CustomerId")
+                    b.Property<Guid>("CustomerId")
                         .HasColumnType("uuid");
 
                     b.Property<DateTime>("ShouldBeDoneAt")
@@ -147,6 +142,9 @@ namespace SAP_API.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
+                    b.Property<Guid?>("BakingProgramId")
+                        .HasColumnType("uuid");
+
                     b.Property<int>("Capacity")
                         .HasColumnType("integer");
 
@@ -160,6 +158,9 @@ namespace SAP_API.Migrations
                     b.HasKey("Id");
 
                     b.HasAlternateKey("Code");
+
+                    b.HasIndex("BakingProgramId")
+                        .IsUnique();
 
                     b.ToTable("Oven");
                 });
@@ -196,30 +197,30 @@ namespace SAP_API.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
-                    b.Property<Guid?>("BakingProgramId")
+                    b.Property<Guid>("BakingProgramId")
                         .HasColumnType("uuid");
 
-                    b.Property<Guid?>("LocationToPrepareFromId")
+                    b.Property<Guid>("OrderId")
                         .HasColumnType("uuid");
 
-                    b.Property<Guid?>("OrderId")
-                        .HasColumnType("uuid");
-
-                    b.Property<Guid?>("ProductId")
+                    b.Property<Guid>("ProductId")
                         .HasColumnType("uuid");
 
                     b.Property<int>("QuantityToPrepare")
                         .HasColumnType("integer");
 
+                    b.Property<Guid>("StockLocationId")
+                        .HasColumnType("uuid");
+
                     b.HasKey("Id");
 
                     b.HasIndex("BakingProgramId");
 
-                    b.HasIndex("LocationToPrepareFromId");
-
                     b.HasIndex("OrderId");
 
                     b.HasIndex("ProductId");
+
+                    b.HasIndex("StockLocationId");
 
                     b.ToTable("ProductToPrepare");
                 });
@@ -230,28 +231,28 @@ namespace SAP_API.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
-                    b.Property<Guid?>("LocationWhereProductIsReservedId")
-                        .HasColumnType("uuid");
-
-                    b.Property<Guid?>("OrderId")
+                    b.Property<Guid>("OrderId")
                         .HasColumnType("uuid");
 
                     b.Property<int>("PreparedQuantity")
                         .HasColumnType("integer");
 
-                    b.Property<Guid?>("ProductId")
+                    b.Property<Guid>("ProductId")
                         .HasColumnType("uuid");
 
                     b.Property<int>("ReservedQuantity")
                         .HasColumnType("integer");
 
-                    b.HasKey("Id");
+                    b.Property<Guid>("StockLocationId")
+                        .HasColumnType("uuid");
 
-                    b.HasIndex("LocationWhereProductIsReservedId");
+                    b.HasKey("Id");
 
                     b.HasIndex("OrderId");
 
                     b.HasIndex("ProductId");
+
+                    b.HasIndex("StockLocationId");
 
                     b.ToTable("ReservedOrderProduct");
                 });
@@ -282,10 +283,10 @@ namespace SAP_API.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
-                    b.Property<Guid?>("LocationId")
+                    b.Property<Guid>("LocationId")
                         .HasColumnType("uuid");
 
-                    b.Property<Guid?>("ProductId")
+                    b.Property<Guid>("ProductId")
                         .HasColumnType("uuid");
 
                     b.Property<int>("Quantity")
@@ -322,32 +323,36 @@ namespace SAP_API.Migrations
 
             modelBuilder.Entity("SAP_API.Models.BakingProgram", b =>
                 {
-                    b.HasOne("SAP_API.Models.Oven", "Oven")
-                        .WithMany()
-                        .HasForeignKey("OvenId");
+                    b.HasOne("SAP_API.Models.User", "PreparedByUser")
+                        .WithMany("BakingProgramsMade")
+                        .HasForeignKey("PreparedByUserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
-                    b.HasOne("SAP_API.Models.User", "PreparedBy")
-                        .WithMany()
-                        .HasForeignKey("PreparedById");
-
-                    b.Navigation("Oven");
-
-                    b.Navigation("PreparedBy");
+                    b.Navigation("PreparedByUser");
                 });
 
             modelBuilder.Entity("SAP_API.Models.BakingProgramProduct", b =>
                 {
-                    b.HasOne("SAP_API.Models.BakingProgram", null)
+                    b.HasOne("SAP_API.Models.BakingProgram", "BakingProgram")
                         .WithMany("Products")
-                        .HasForeignKey("BakingProgramId");
+                        .HasForeignKey("BakingProgramId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("SAP_API.Models.Order", "Order")
                         .WithMany()
-                        .HasForeignKey("OrderId");
+                        .HasForeignKey("OrderId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("SAP_API.Models.Product", "Product")
                         .WithMany()
-                        .HasForeignKey("ProductId");
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("BakingProgram");
 
                     b.Navigation("Order");
 
@@ -358,28 +363,47 @@ namespace SAP_API.Migrations
                 {
                     b.HasOne("SAP_API.Models.Customer", "Customer")
                         .WithMany()
-                        .HasForeignKey("CustomerId");
+                        .HasForeignKey("CustomerId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Customer");
+                });
+
+            modelBuilder.Entity("SAP_API.Models.Oven", b =>
+                {
+                    b.HasOne("SAP_API.Models.BakingProgram", "BakingProgram")
+                        .WithOne("Oven")
+                        .HasForeignKey("SAP_API.Models.Oven", "BakingProgramId");
+
+                    b.Navigation("BakingProgram");
                 });
 
             modelBuilder.Entity("SAP_API.Models.ProductToPrepare", b =>
                 {
                     b.HasOne("SAP_API.Models.BakingProgram", "BakingProgram")
                         .WithMany()
-                        .HasForeignKey("BakingProgramId");
-
-                    b.HasOne("SAP_API.Models.StockLocation", "LocationToPrepareFrom")
-                        .WithMany()
-                        .HasForeignKey("LocationToPrepareFromId");
+                        .HasForeignKey("BakingProgramId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("SAP_API.Models.Order", "Order")
                         .WithMany()
-                        .HasForeignKey("OrderId");
+                        .HasForeignKey("OrderId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("SAP_API.Models.Product", "Product")
                         .WithMany()
-                        .HasForeignKey("ProductId");
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("SAP_API.Models.StockLocation", "LocationToPrepareFrom")
+                        .WithMany()
+                        .HasForeignKey("StockLocationId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("BakingProgram");
 
@@ -392,17 +416,23 @@ namespace SAP_API.Migrations
 
             modelBuilder.Entity("SAP_API.Models.ReservedOrderProduct", b =>
                 {
-                    b.HasOne("SAP_API.Models.StockLocation", "LocationWhereProductIsReserved")
-                        .WithMany()
-                        .HasForeignKey("LocationWhereProductIsReservedId");
-
                     b.HasOne("SAP_API.Models.Order", "Order")
                         .WithMany("Products")
-                        .HasForeignKey("OrderId");
+                        .HasForeignKey("OrderId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("SAP_API.Models.Product", "Product")
                         .WithMany()
-                        .HasForeignKey("ProductId");
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("SAP_API.Models.StockLocation", "LocationWhereProductIsReserved")
+                        .WithMany()
+                        .HasForeignKey("StockLocationId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("LocationWhereProductIsReserved");
 
@@ -415,11 +445,15 @@ namespace SAP_API.Migrations
                 {
                     b.HasOne("SAP_API.Models.StockLocation", "Location")
                         .WithMany()
-                        .HasForeignKey("LocationId");
+                        .HasForeignKey("LocationId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("SAP_API.Models.Product", "Product")
                         .WithMany()
-                        .HasForeignKey("ProductId");
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Location");
 
@@ -428,12 +462,19 @@ namespace SAP_API.Migrations
 
             modelBuilder.Entity("SAP_API.Models.BakingProgram", b =>
                 {
+                    b.Navigation("Oven");
+
                     b.Navigation("Products");
                 });
 
             modelBuilder.Entity("SAP_API.Models.Order", b =>
                 {
                     b.Navigation("Products");
+                });
+
+            modelBuilder.Entity("SAP_API.Models.User", b =>
+                {
+                    b.Navigation("BakingProgramsMade");
                 });
 #pragma warning restore 612, 618
         }
