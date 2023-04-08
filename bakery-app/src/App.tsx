@@ -4,9 +4,10 @@ import './App.css';
 import Header from './components/Header';
 import styled from 'styled-components';
 import NavMenu from './components/NavMenu';
-import CreateOrderPage from './components/CreateOrderPage';
+import CreateOrderPage from './components/CreateOrderPage/CreateOrderPage';
 import { AdapterLuxon } from '@mui/x-date-pickers/AdapterLuxon';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider'
+import { Outlet } from 'react-router-dom';
 
 const Container = styled.div`
     display: flex;
@@ -27,7 +28,7 @@ function App() {
         <Header />
         <SecondRow>
           <NavMenu />
-          <CreateOrderPage />
+          <Outlet />
         </SecondRow>
       </Container>
     </LocalizationProvider>

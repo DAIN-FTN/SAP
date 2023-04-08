@@ -1,10 +1,15 @@
 export interface ProductDetails {
+    id: string;
     name: string;
-    availableQuantity: number;
+    bakingTimeInMins: number;
+    bakingTempInC: number;
+    size: number;
     stockedLocations: StockedLocationProductQuantity[];
 }
 
 export interface StockedLocationProductQuantity {
-    id: number;
-    availableQuantity: number;
+    id: string;
+    code: string;
+    quantity: number;
+    reservedQuantity: number;
 }

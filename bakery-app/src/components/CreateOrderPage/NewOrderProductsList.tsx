@@ -8,7 +8,7 @@ import TableRow from "@mui/material/TableRow";
 import React, { useState } from "react";
 import { FC } from "react";
 import styled from "styled-components";
-import { ProductBasicInfo } from "../models/ProductBasicInfo";
+import { ProductBasicInfo } from "../../models/ProductBasicInfo";
 // import Table from 'react-bootstrap/Table';
 // import 'bootstrap/dist/css/bootstrap.min.css';
 import AddCircleIcon from '@mui/icons-material/AddCircle';

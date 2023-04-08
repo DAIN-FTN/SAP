@@ -6,6 +6,8 @@ const Container = styled.div`
     background-color: #DC3F3F;
     height: 50px;
     padding: 16px;
+    display: flex;
+    align-items: center;
 `;
 
 const Title = styled.p`

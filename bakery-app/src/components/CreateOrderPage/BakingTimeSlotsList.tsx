@@ -1,5 +1,5 @@
 import { FC, useState } from "react";
-import { BakingTimeSlot } from "../models/BakingTimeSlot";
+import { BakingTimeSlot } from "../../models/BakingTimeSlot";
 import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
 import ListItemButton from "@mui/material/ListItemButton";
