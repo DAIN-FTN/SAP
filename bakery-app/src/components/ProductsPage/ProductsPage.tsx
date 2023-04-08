@@ -3,12 +3,10 @@ import { FC } from "react";
 import styled from "styled-components";
 import { ProductBasicInfo } from "../../models/ProductBasicInfo";
 import { fetchProductsBasicInfo } from "../../services/OrderService";
-import AvailableProductsList from "../CreateOrderPage/AvailableProductsList";
 import Button from '@mui/material/Button';
 import TextField from "@mui/material/TextField";
-import { NewOrderRequest } from "../../models/NewOrderRequest";
-import { BakingTimeSlot } from "../../models/BakingTimeSlot";
-import { ProductDetails } from "../../models/ProductDetails";
+import ProductsInStockList from "./ProductsInStockList";
+import ProductDetailsView from "./ProductDetailsView";
 
 const Container = styled.div`
     width: 100%;
@@ -41,17 +39,13 @@ const SearchWrapper = styled.div`
 
 const ProductsPage: FC = () => {
     const [productsOnStock, setProductsOnStock] = useState<ProductBasicInfo[] | []>([]);
-    const [orderProducts, setOrderProducts] = useState<ProductBasicInfo[] | []>([]);
-    const [bakingTimeSlots, setBakingTimeSlots] = useState<BakingTimeSlot[] | []>([]);
-    const [newOrderRequest, setNewOrderRequest] = useState<NewOrderRequest | null>(null);
-    const [product, setProduct] = useState<ProductDetails | null>(null);
-
+    const [selectedProductId, setSelectedProductId] = useState<string | null>(null);
 
     const productNameSearchChangeHandler = (e: { target: { value: string; }; }) => {
         const productName = e.target.value;
-        console.log(productName);
         if (!productName) {
             setProductsOnStock([]);
+            setSelectedProductId(null);
         } else {
             fetchProductsBasicInfo(productName).then((products) => {
                 console.log('fetch finished for fetchProductsBasicInfo() in CreateOrderPage');
@@ -65,18 +59,14 @@ const ProductsPage: FC = () => {
             <Panel>
                 <Label>Search products</Label>
                 <SearchWrapper>
-                    <TextField id="standard-basic" label="Product name" variant="standard" fullWidth sx={{ paddingRight: '16px' }} 
-                    onChange={productNameSearchChangeHandler}/>
+                    <TextField id="standard-basic" label="Product name" variant="standard" fullWidth sx={{ paddingRight: '16px' }} onChange={productNameSearchChangeHandler}/>
                     <Button variant="contained">Search</Button>
-
                 </SearchWrapper>
                 <Label>Products in stock</Label>
-                <AvailableProductsList props={{availableProducts: productsOnStock, orderProducts, setOrderProducts}} />
-                {/* <NewOrderProductsList props={{products: orderProducts}} /> */}
+                <ProductsInStockList props={{products: productsOnStock, setSelectedProductId}} />
             </Panel>
             <Panel>
-                <Label>Product details</Label>
-                {/* <ProductDetailsView product={product}> */}
+                <ProductDetailsView productId={selectedProductId} />
             </Panel>
         </Container>
     );
