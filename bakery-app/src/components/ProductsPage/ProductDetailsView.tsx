@@ -2,6 +2,7 @@ import { FC, useEffect, useState } from "react";
 import styled from "styled-components";
 import { ProductDetails } from "../../models/ProductDetails";
 import { fetchProductDetails } from "../../services/ProductService";
+import StockedLocationProductQuantitiesList from "./StockedLocationProductQuantitiesList";
 
 export interface ProductDetailsViewProps {
     productId: string | null;
@@ -65,6 +66,8 @@ const ProductDetailsView: FC<ProductDetailsViewProps> = ({ productId }) => {
                 <ProductPropertyValue>{product.bakingTempInC}°C</ProductPropertyValue>
                 <ProductPropertyLabel>Size</ProductPropertyLabel>
                 <ProductPropertyValue>{product.size}</ProductPropertyValue>
+                <ProductPropertyLabel>Locations with stock</ProductPropertyLabel>
+                <StockedLocationProductQuantitiesList props={{locationsWithStock: product.locationsWithStock}} />
             </Container>
         );
     }

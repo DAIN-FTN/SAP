@@ -4,7 +4,7 @@ export interface ProductDetails {
     bakingTimeInMins: number;
     bakingTempInC: number;
     size: number;
-    stockedLocations: StockedLocationProductQuantity[];
+    locationsWithStock: StockedLocationProductQuantity[];
 }
 
 export interface StockedLocationProductQuantity {
