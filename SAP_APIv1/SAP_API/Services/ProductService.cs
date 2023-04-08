@@ -36,6 +36,11 @@ namespace SAP_API.Services
 
         }
 
+        public Product GetById(Guid productId)
+        {
+            return _productRepository.GetById(productId);
+        }
+
         public ProductDetailsResponse GetProductDetails(Guid id)
         {
             List<StockedProduct> stockDetails = _stockedProductRepository.GetByProductId(id);
