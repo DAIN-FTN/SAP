@@ -1,4 +1,3 @@
-import React from "react";
 import { FC } from "react";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
@@ -12,12 +11,6 @@ const StyledButton = styled.button`
         cursor: pointer;
         background-color: #cc2a2a;
     }
-`;
-
-const Name = styled.span`
-    font-size: 20px;
-    text-align: center;
-    max-width: 90%;
 `;
 
 const LinkWrapper = styled(Link)`

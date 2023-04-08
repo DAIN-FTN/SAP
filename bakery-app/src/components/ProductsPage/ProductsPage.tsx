@@ -1,17 +1,14 @@
-import React, { useEffect, useState } from "react";
+import { useState } from "react";
 import { FC } from "react";
 import styled from "styled-components";
 import { ProductBasicInfo } from "../../models/ProductBasicInfo";
-import { fetchBakingTimeSlots, fetchProductsBasicInfo } from "../../services/OrderService";
-import AvailableProductsList, { AvailableProductsListProps } from "../CreateOrderPage/AvailableProductsList";
+import { fetchProductsBasicInfo } from "../../services/OrderService";
+import AvailableProductsList from "../CreateOrderPage/AvailableProductsList";
 import Button from '@mui/material/Button';
 import TextField from "@mui/material/TextField";
 import { NewOrderRequest } from "../../models/NewOrderRequest";
 import { BakingTimeSlot } from "../../models/BakingTimeSlot";
-// import BakingTimeSlotsList, { BakingTimeSlotsListProps } from "./BakingTimeSlotsList";
-import { DateTimePicker } from "@mui/x-date-pickers/DateTimePicker";
 import { ProductDetails } from "../../models/ProductDetails";
-// import NewOrderProductsList from "./NewOrderProductsList";
 
 const Container = styled.div`
     width: 100%;
@@ -78,6 +75,7 @@ const ProductsPage: FC = () => {
                 {/* <NewOrderProductsList props={{products: orderProducts}} /> */}
             </Panel>
             <Panel>
+                <Label>Product details</Label>
                 {/* <ProductDetailsView product={product}> */}
             </Panel>
         </Container>

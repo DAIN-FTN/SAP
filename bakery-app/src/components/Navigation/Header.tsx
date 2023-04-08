@@ -11,7 +11,9 @@ const Container = styled.div`
 `;
 
 const Title = styled.p`
-    font-size: 24px;
+    font-size: 40px;
+    font-family: 'Courgette', cursive;
+    color: #fff;
 `;
 
 const Header: FC = () => {

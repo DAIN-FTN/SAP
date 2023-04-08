@@ -1,10 +1,7 @@
-import React from 'react';
-import logo from './logo.svg';
 import './App.css';
-import Header from './components/Header';
+import Header from './components/Navigation/Header';
 import styled from 'styled-components';
-import NavMenu from './components/NavMenu';
-import CreateOrderPage from './components/CreateOrderPage/CreateOrderPage';
+import NavMenu from './components/Navigation/NavMenu';
 import { AdapterLuxon } from '@mui/x-date-pickers/AdapterLuxon';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider'
 import { Outlet } from 'react-router-dom';
