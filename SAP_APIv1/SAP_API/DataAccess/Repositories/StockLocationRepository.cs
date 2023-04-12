@@ -1,4 +1,5 @@
-﻿using SAP_API.Models;
+﻿using Microsoft.EntityFrameworkCore;
+using SAP_API.Models;
 using System;
 using System.Collections.Generic;
 
@@ -6,28 +7,13 @@ namespace SAP_API.DataAccess.Repositories
 {
     public class StockLocationRepository : IStockLocationRepository
     {
-        private readonly List<StockLocation> _stockLocations = new List<StockLocation>();
+        private readonly DbContext _context;
+        private readonly DbSet<StockLocation> _stockLocations;
 
-        public StockLocationRepository()
+        public StockLocationRepository(DbContext context)
         {
-            SeedData();
-        }
-
-        private void SeedData()
-        {
-            _stockLocations.Add(new StockLocation
-            {
-                Id = new Guid("00000000-0000-0000-0000-000000000001"),
-                Code = "L1",
-                Capacity = 200
-            });
-            _stockLocations.Add(new StockLocation
-            {
-                Id = new Guid("00000000-0000-0000-0000-000000000002"),
-                Code = "L2",
-                Capacity = 100
-            });
-
+            _context = context;
+            _stockLocations = context.Set<StockLocation>();
         }
 
         public StockLocation Create(StockLocation entity)

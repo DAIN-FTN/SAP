@@ -1,4 +1,5 @@
-﻿using SAP_API.Models;
+﻿using Microsoft.EntityFrameworkCore;
+using SAP_API.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,7 +9,15 @@ namespace SAP_API.DataAccess.Repositories
 {
     public class ProductToPrepareRepository : IProductToPrepareRepository
     {
-        private readonly List<ProductToPrepare> _productsToPrepare = new List<ProductToPrepare>();
+        private readonly DbContext _context;
+        private readonly DbSet<ProductToPrepare> _productsToPrepare;
+
+        public ProductToPrepareRepository(DbContext context)
+        {
+            this._context = context;
+            this._productsToPrepare = context.Set<ProductToPrepare>();
+        }
+
         public ProductToPrepare Create(ProductToPrepare entity)
         {
             entity.Id = Guid.NewGuid();
@@ -28,7 +37,7 @@ namespace SAP_API.DataAccess.Repositories
 
         public List<ProductToPrepare> GetByBakingProgramId(Guid bakingProgramId)
         {
-            return _productsToPrepare.FindAll(x => x.BakingProgram.Id == bakingProgramId);
+            return _productsToPrepare.Where(x => x.BakingProgram.Id == bakingProgramId).ToList();
         }
 
         public ProductToPrepare GetById(Guid id)

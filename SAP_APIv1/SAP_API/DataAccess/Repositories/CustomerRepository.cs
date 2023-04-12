@@ -1,34 +1,56 @@
-﻿using SAP_API.Models;
+﻿using Microsoft.EntityFrameworkCore;
+using SAP_API.Models;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace SAP_API.DataAccess.Repositories
 {
-    public class CustomerRepository : ICustomerRepository
+    public class CustomerRepository : IRepository<Customer>
     {
-        public Customer Create(Customer entity)
-        {
-            throw new NotImplementedException();
-        }
+        private readonly DbContext _context;
+        private readonly DbSet<Customer> _dbSet;
 
-        public bool Delete(Guid id)
+        public CustomerRepository(DbContext context)
         {
-            throw new NotImplementedException();
+            _context = context;
+            _dbSet = context.Set<Customer>();
         }
 
         public IEnumerable<Customer> GetAll()
         {
-            throw new NotImplementedException();
+            return _dbSet.ToList();
         }
 
         public Customer GetById(Guid id)
         {
-            throw new NotImplementedException();
+            return _dbSet.FirstOrDefault(c => c.Id == id);
         }
 
-        public Customer Update(Customer entity)
+        public Customer Create(Customer Customer)
         {
-            throw new NotImplementedException();
+            _dbSet.Add(Customer);
+            _context.SaveChanges();
+            return Customer;
+        }
+
+        public Customer Update(Customer Customer)
+        {
+            _dbSet.Update(Customer);
+            _context.SaveChanges();
+            return Customer;
+        }
+
+        public bool Delete(Guid id)
+        {
+            var Customer = GetById(id);
+            if (Customer != null)
+            {
+                _dbSet.Remove(Customer);
+                _context.SaveChanges();
+                return true;
+            }
+            return false;
         }
     }
 }

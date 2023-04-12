@@ -2,16 +2,19 @@
 using System.Collections.Generic;
 using System;
 using System.Linq;
+using Microsoft.EntityFrameworkCore;
 
 namespace SAP_API.DataAccess.Repositories
 {
     public class OvenRepository : IOvenRepository
     {
-        private List<Oven> _ovens = new List<Oven>();
+        private readonly DbContext _context;
+        private readonly DbSet<Oven> _ovens;
 
-        public OvenRepository()
+        public OvenRepository(DbContext context)
         {
-            SeedData();
+            this._context = context;
+            this._ovens = context.Set<Oven>();
         }
 
         public IEnumerable<Oven> GetAll()
@@ -27,6 +30,8 @@ namespace SAP_API.DataAccess.Repositories
         public Oven Create(Oven entity)
         {
             _ovens.Add(entity);
+            _context.SaveChanges();
+
             return entity;
         }
 
@@ -38,6 +43,8 @@ namespace SAP_API.DataAccess.Repositories
                 oven.Code = entity.Code;
                 oven.MaxTempInC = entity.MaxTempInC;
                 oven.Capacity = entity.Capacity;
+
+                _context.SaveChanges();
             }
 
             return oven;
@@ -49,20 +56,13 @@ namespace SAP_API.DataAccess.Repositories
             if (oven != null)
             {
                 _ovens.Remove(oven);
+                _context.SaveChanges();
+
                 return true;
             }
 
             return false;
         }
 
-        private void SeedData()
-        {
-            _ovens = new List<Oven>
-            {
-                new Oven { Id = Guid.NewGuid(), Code = "Oven1", MaxTempInC = 250, Capacity = 20 },
-                new Oven { Id = Guid.NewGuid(), Code = "Oven2", MaxTempInC = 300, Capacity = 25 },
-                new Oven { Id = Guid.NewGuid(), Code = "Oven3", MaxTempInC = 350, Capacity = 30 }
-            };
-        }
     }
 }

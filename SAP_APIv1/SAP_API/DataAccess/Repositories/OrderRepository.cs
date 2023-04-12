@@ -2,17 +2,21 @@
 using System.Collections.Generic;
 using System;
 using System.Linq;
+using Microsoft.EntityFrameworkCore;
 
 namespace SAP_API.DataAccess.Repositories
 {
     public class OrderRepository : IOrderRepository
     {
-        private readonly List<Order> _orders = new List<Order>();
+        private readonly DbContext _context;
+        private readonly DbSet<Order> _orders;
 
-        public OrderRepository()
+        public OrderRepository(DbContext context)
         {
-            SeedData();
+            this._context = context;
+            this._orders = context.Set<Order>();
         }
+
 
         public IEnumerable<Order> GetAll()
         {
@@ -28,6 +32,8 @@ namespace SAP_API.DataAccess.Repositories
         {
             entity.Id = Guid.NewGuid();
             _orders.Add(entity);
+            _context.SaveChanges();
+
             return entity;
         }
 
@@ -39,6 +45,7 @@ namespace SAP_API.DataAccess.Repositories
                 order.ShouldBeDoneAt = entity.ShouldBeDoneAt;
                 order.Status = entity.Status;
                 order.Customer = entity.Customer;
+                _context.SaveChanges();
             }
             return order;
         }
@@ -49,54 +56,11 @@ namespace SAP_API.DataAccess.Repositories
             if (order != null)
             {
                 _orders.Remove(order);
+                _context.SaveChanges();
+
                 return true;
             }
             return false;
-        }
-
-        private void SeedData()
-        {
-            _orders.Add(new Order
-            {
-                Id = Guid.NewGuid(),
-                ShouldBeDoneAt = DateTime.Now,
-                Status = OrderStatus.Created,
-                Customer = new Customer { Email = "jd@gmail.com", FullName = "Johm", Telephone = "+381691025544" },
-                Products = new List<ReservedOrderProduct>(),
-            });
-            _orders.Add(new Order
-            {
-                Id = Guid.NewGuid(),
-                ShouldBeDoneAt = DateTime.Now.AddDays(1),
-                Status = OrderStatus.Cancelled,
-                Customer = new Customer { Email = "jd@gmail.com", FullName = "Johm", Telephone = "+381691025544" },
-                Products = new List<ReservedOrderProduct>()
-            });
-            _orders.Add(new Order
-            {
-                Id = Guid.NewGuid(),
-                ShouldBeDoneAt = DateTime.Now.AddDays(2),
-                Status = OrderStatus.Cancelled,
-                Customer = new Customer { Email = "jd@gmail.com", FullName = "Johm", Telephone = "+381691025544" },
-                Products = new List<ReservedOrderProduct>(),
-            });
-            _orders.Add(new Order
-            {
-                Id = Guid.NewGuid(),
-                ShouldBeDoneAt = DateTime.Now.AddDays(3),
-                Status = OrderStatus.Cancelled,
-                Customer = new Customer { Email = "jd@gmail.com", FullName = "Johm", Telephone = "+381691025544" },
-                Products = new List<ReservedOrderProduct>()
-
-            });
-            _orders.Add(new Order
-            {
-                Id = Guid.NewGuid(),
-                ShouldBeDoneAt = DateTime.Now.AddDays(4),
-                Status = OrderStatus.Confirmed,
-                Customer = new Customer { Email = "jd@gmail.com", FullName = "Johm", Telephone = "+381691025544" },
-                Products = new List<ReservedOrderProduct>()
-            });
         }
     }
 }

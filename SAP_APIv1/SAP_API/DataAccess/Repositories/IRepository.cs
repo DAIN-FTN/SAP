@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace SAP_API.DataAccess.Repositories
 {
+    //TODO: We can make this methods async and use Task class to return the results
     public interface IRepository<T> where T : IEntity
     {
         IEnumerable<T> GetAll();
