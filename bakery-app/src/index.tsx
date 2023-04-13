@@ -14,6 +14,7 @@ import {
 import { ErrorPage } from './components/ErrorPage';
 import CreateOrderPage from './components/CreateOrderPage/CreateOrderPage';
 import ProductsPage from './components/ProductsPage/ProductsPage';
+import HomePage from './components/Home/HomePage';
 
 const router = createBrowserRouter([
   {
@@ -21,6 +22,10 @@ const router = createBrowserRouter([
     element: <App />,
     errorElement: <ErrorPage />,
     children: [
+      {
+        path: "home",
+        element: <HomePage />,
+      },
       {
         path: "order",
         element: <CreateOrderPage />,
