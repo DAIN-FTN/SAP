@@ -1,10 +1,9 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { FC } from "react";
 import styled from "styled-components";
-import { ProductBasicInfo } from "../../models/ProductBasicInfo";
-import { fetchProductsBasicInfo } from "../../services/OrderService";
-import Button from '@mui/material/Button';
-import TextField from "@mui/material/TextField";
+import PrepareForOvenList from "./PrepareForOvenList";
+import { fetchAllBakingPrograms } from "../../services/BakingProgramService";
+import { AllBakingPrograms } from "../../models/AllBakingPrograms";
 
 const Container = styled.div`
     width: 100%;
@@ -16,14 +15,16 @@ const Container = styled.div`
     box-shadow: 0px 2px 14px 0px rgba(122,122,122,1);
     background-color: white;
     margin: 48px;
+    flex-wrap: wrap;
 `;
 
 const Panel = styled.div`
     width: 50%;
+    min-width: 50%;
     padding: 24px;
     display: flex;
     flex-direction: column;
-    
+    box-sizing: border-box;
 `;
 
 const Label = styled.p`
@@ -36,32 +37,37 @@ const SearchWrapper = styled.div`
 `;
 
 const HomePage: FC = () => {
-    const [productsOnStock, setProductsOnStock] = useState<ProductBasicInfo[] | []>([]);
-    const [selectedProductId, setSelectedProductId] = useState<string | null>(null);
+    const [allBakingPrograms, setAllBakingPrograms] = useState<AllBakingPrograms | null>(null);
 
-    const productNameSearchChangeHandler = (e: { target: { value: string; }; }) => {
-        const productName = e.target.value;
-        if (!productName) {
-            setProductsOnStock([]);
-            setSelectedProductId(null);
-        } else {
-            fetchProductsBasicInfo(productName).then((products) => {
-                console.log('fetch finished for fetchProductsBasicInfo() in CreateOrderPage');
-                setProductsOnStock(products);
-            });
-        }
-    };
+    useEffect(() => {
+        console.log('useEffect() in HomePage');
+        fetchAllBakingPrograms().then((allBakingPrograms) => { 
+            console.log('fetch finished for fetchAllBakingPrograms() in HomePage');
+            setAllBakingPrograms(allBakingPrograms);
+        });
+    }, []);
+
+    if (allBakingPrograms == undefined || allBakingPrograms == null) {
+        return <p>No baking programs available</p>;
+    }
 
     return (
         <Container>
             <Panel>
-                <Label>Home</Label>
-                <SearchWrapper>
-                    <TextField id="standard-basic" label="Product name" variant="standard" fullWidth sx={{ paddingRight: '16px' }} onChange={productNameSearchChangeHandler}/>
-                    <Button variant="contained">Search</Button>
-                </SearchWrapper>
+                <Label>Prepare for oven</Label>
+                <PrepareForOvenList props={{prepareForOven: allBakingPrograms?.prepareForOven!}} />
             </Panel>
             <Panel>
+                <Label>Preparing</Label>
+                <PrepareForOvenList props={{prepareForOven: allBakingPrograms?.preparingAndPrepared!}} />
+            </Panel>
+            <Panel>
+                <Label>Baking</Label>
+                <PrepareForOvenList props={{prepareForOven: allBakingPrograms?.baking!}} />
+            </Panel>
+            <Panel>
+                <Label>Done</Label>
+                <PrepareForOvenList props={{prepareForOven: allBakingPrograms?.done!}} />
             </Panel>
         </Container>
     );
