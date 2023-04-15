@@ -13,11 +13,16 @@ import { DateTimePicker } from "@mui/x-date-pickers/DateTimePicker";
 import NewOrderProductsList from "./NewOrderProductsList";
 
 const Container = styled.div`
-    background-color: #e2e2e2;
     width: 100%;
     padding: 36px;
     display: flex;
     flex-direction: row;
+    -webkit-box-shadow: 0px 2px 14px 0px rgba(122,122,122,1);
+    -moz-box-shadow: 0px 2px 14px 0px rgba(122,122,122,1);
+    box-shadow: 0px 2px 14px 0px rgba(122,122,122,1);
+    background-color: white;
+    margin: 48px;
+    flex-wrap: wrap;
 `;
 
 const Panel = styled.div`
@@ -25,6 +30,7 @@ const Panel = styled.div`
     padding: 24px;
     display: flex;
     flex-direction: column;
+    box-sizing: border-box;
 `;
 
 const Label = styled.p`
