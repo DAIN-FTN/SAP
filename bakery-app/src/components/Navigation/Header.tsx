@@ -8,6 +8,7 @@ const Container = styled.div`
     padding: 16px;
     display: flex;
     align-items: center;
+    justify-content: center;
 `;
 
 const Title = styled.p`
