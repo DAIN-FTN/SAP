@@ -16,6 +16,7 @@ const Container = styled.div`
     background-color: white;
     margin: 48px;
     flex-wrap: wrap;
+    align-content: flex-start;
 `;
 
 const Panel = styled.div`
@@ -31,9 +32,8 @@ const Label = styled.p`
     font-size: 24px;
 `;
 
-const SearchWrapper = styled.div`
-    display: flex;
-    flex-direction: row;
+const ErrorMessage = styled.p`
+    font-style: italic;
 `;
 
 const HomePage: FC = () => {
@@ -48,26 +48,30 @@ const HomePage: FC = () => {
     }, []);
 
     if (allBakingPrograms == undefined || allBakingPrograms == null) {
-        return <p>No baking programs available</p>;
+        return (
+            <Container>
+                {/* <ErrorMessage>No baking programs available</ErrorMessage> */}
+            </Container>
+        );
     }
 
     return (
         <Container>
             <Panel>
                 <Label>Prepare for oven</Label>
-                <PrepareForOvenList props={{prepareForOven: allBakingPrograms?.prepareForOven!}} />
+                <PrepareForOvenList props={{prepareForOven: allBakingPrograms?.prepareForOven}} />
             </Panel>
             <Panel>
                 <Label>Preparing</Label>
-                <PrepareForOvenList props={{prepareForOven: allBakingPrograms?.preparingAndPrepared!}} />
+                <PrepareForOvenList props={{prepareForOven: allBakingPrograms?.preparingAndPrepared}} />
             </Panel>
             <Panel>
                 <Label>Baking</Label>
-                <PrepareForOvenList props={{prepareForOven: allBakingPrograms?.baking!}} />
+                <PrepareForOvenList props={{prepareForOven: allBakingPrograms?.baking}} />
             </Panel>
             <Panel>
                 <Label>Done</Label>
-                <PrepareForOvenList props={{prepareForOven: allBakingPrograms?.done!}} />
+                <PrepareForOvenList props={{prepareForOven: allBakingPrograms?.done}} />
             </Panel>
         </Container>
     );
