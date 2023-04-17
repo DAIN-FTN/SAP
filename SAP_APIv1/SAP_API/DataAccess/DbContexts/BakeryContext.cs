@@ -13,6 +13,7 @@ namespace SAP_API.DataAccess.DbContexts
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<Order>().OwnsOne(x => x.Customer);
             SetUniqueConstraints(modelBuilder);
             DataSeeder.SeedData(modelBuilder);
         }
@@ -39,7 +40,6 @@ namespace SAP_API.DataAccess.DbContexts
         public DbSet<StockLocation> StockLocation { get; }
         public DbSet<ReservedOrderProduct> ReservedOrderProduct { get;  }
         public DbSet<ProductToPrepare> ProductToPrepare { get; }
-        public DbSet<Customer> Customer { get; }
         public DbSet<User> User { get; }
     }
     
