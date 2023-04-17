@@ -23,7 +23,6 @@ namespace SAP_API.DataAccess.Repositories
         {
             return _orders
                 .Include(order => order.Products)
-                .Include(order => order.Customer)
                 .ToList();
         }
 

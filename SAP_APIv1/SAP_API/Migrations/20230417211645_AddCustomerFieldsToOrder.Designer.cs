@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using SAP_API.DataAccess.DbContexts;
@@ -9,9 +10,10 @@ using SAP_API.DataAccess.DbContexts;
 namespace SAP_API.Migrations
 {
     [DbContext(typeof(BakeryContext))]
-    partial class BakeryContextModelSnapshot : ModelSnapshot
+    [Migration("20230417211645_AddCustomerFieldsToOrder")]
+    partial class AddCustomerFieldsToOrder
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -68,7 +70,7 @@ namespace SAP_API.Migrations
                         new
                         {
                             Id = new Guid("00000000-0000-0000-0000-000000000008"),
-                            BakingProgrammedAt = new DateTime(2023, 4, 17, 23, 22, 46, 91, DateTimeKind.Local).AddTicks(7986),
+                            BakingProgrammedAt = new DateTime(2023, 4, 17, 23, 16, 42, 572, DateTimeKind.Local).AddTicks(5689),
                             BakingTempInC = 120,
                             BakingTimeInMins = 30,
                             Code = "Code1",
@@ -80,7 +82,7 @@ namespace SAP_API.Migrations
                         new
                         {
                             Id = new Guid("00000000-0000-0000-0000-000000000001"),
-                            BakingProgrammedAt = new DateTime(2023, 4, 17, 23, 22, 46, 92, DateTimeKind.Local).AddTicks(777),
+                            BakingProgrammedAt = new DateTime(2023, 4, 17, 23, 16, 42, 572, DateTimeKind.Local).AddTicks(8855),
                             BakingTempInC = 140,
                             BakingTimeInMins = 30,
                             Code = "Code2",
@@ -93,7 +95,7 @@ namespace SAP_API.Migrations
                         {
                             Id = new Guid("00000000-0000-0000-0000-000000000002"),
                             BakingEndsAt = new DateTime(2023, 12, 2, 11, 17, 0, 0, DateTimeKind.Unspecified),
-                            BakingProgrammedAt = new DateTime(2023, 4, 17, 23, 22, 46, 92, DateTimeKind.Local).AddTicks(883),
+                            BakingProgrammedAt = new DateTime(2023, 4, 17, 23, 16, 42, 572, DateTimeKind.Local).AddTicks(8984),
                             BakingStartedAt = new DateTime(2023, 12, 2, 11, 5, 0, 0, DateTimeKind.Unspecified),
                             BakingTempInC = 190,
                             BakingTimeInMins = 12,
@@ -188,6 +190,9 @@ namespace SAP_API.Migrations
                     b.Property<string>("CustomerFullName")
                         .HasColumnType("text");
 
+                    b.Property<Guid>("CustomerId")
+                        .HasColumnType("uuid");
+
                     b.Property<string>("CustomerTelephone")
                         .HasColumnType("text");
 
@@ -207,8 +212,9 @@ namespace SAP_API.Migrations
                             Id = new Guid("00000000-0000-0000-0000-000000000008"),
                             CustomerEmail = "janesmith@example.com",
                             CustomerFullName = "Jane Smith",
+                            CustomerId = new Guid("00000000-0000-0000-0000-000000000000"),
                             CustomerTelephone = "+44 20 5555 5555",
-                            ShouldBeDoneAt = new DateTime(2023, 4, 17, 23, 22, 46, 78, DateTimeKind.Local).AddTicks(3646),
+                            ShouldBeDoneAt = new DateTime(2023, 4, 17, 23, 16, 42, 559, DateTimeKind.Local).AddTicks(797),
                             Status = 0
                         },
                         new
@@ -216,8 +222,9 @@ namespace SAP_API.Migrations
                             Id = new Guid("00000000-0000-0000-0000-000000000001"),
                             CustomerEmail = "janesmith@example.com",
                             CustomerFullName = "Jane Smith",
+                            CustomerId = new Guid("00000000-0000-0000-0000-000000000000"),
                             CustomerTelephone = "+44 20 5555 5555",
-                            ShouldBeDoneAt = new DateTime(2023, 4, 18, 23, 22, 46, 84, DateTimeKind.Local).AddTicks(3975),
+                            ShouldBeDoneAt = new DateTime(2023, 4, 18, 23, 16, 42, 568, DateTimeKind.Local).AddTicks(766),
                             Status = 1
                         },
                         new
@@ -225,8 +232,9 @@ namespace SAP_API.Migrations
                             Id = new Guid("00000000-0000-0000-0000-000000000002"),
                             CustomerEmail = "janesmith@example.com",
                             CustomerFullName = "Jane Smith",
+                            CustomerId = new Guid("00000000-0000-0000-0000-000000000000"),
                             CustomerTelephone = "+44 20 5555 5555",
-                            ShouldBeDoneAt = new DateTime(2023, 4, 19, 23, 22, 46, 84, DateTimeKind.Local).AddTicks(4182),
+                            ShouldBeDoneAt = new DateTime(2023, 4, 19, 23, 16, 42, 568, DateTimeKind.Local).AddTicks(1055),
                             Status = 1
                         });
                 });

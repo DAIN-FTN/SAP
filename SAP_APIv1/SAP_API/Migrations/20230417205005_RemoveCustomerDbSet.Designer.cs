@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using SAP_API.DataAccess.DbContexts;
@@ -9,9 +10,10 @@ using SAP_API.DataAccess.DbContexts;
 namespace SAP_API.Migrations
 {
     [DbContext(typeof(BakeryContext))]
-    partial class BakeryContextModelSnapshot : ModelSnapshot
+    [Migration("20230417205005_RemoveCustomerDbSet")]
+    partial class RemoveCustomerDbSet
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -68,7 +70,7 @@ namespace SAP_API.Migrations
                         new
                         {
                             Id = new Guid("00000000-0000-0000-0000-000000000008"),
-                            BakingProgrammedAt = new DateTime(2023, 4, 17, 23, 22, 46, 91, DateTimeKind.Local).AddTicks(7986),
+                            BakingProgrammedAt = new DateTime(2023, 4, 17, 22, 50, 3, 899, DateTimeKind.Local).AddTicks(3626),
                             BakingTempInC = 120,
                             BakingTimeInMins = 30,
                             Code = "Code1",
@@ -80,7 +82,7 @@ namespace SAP_API.Migrations
                         new
                         {
                             Id = new Guid("00000000-0000-0000-0000-000000000001"),
-                            BakingProgrammedAt = new DateTime(2023, 4, 17, 23, 22, 46, 92, DateTimeKind.Local).AddTicks(777),
+                            BakingProgrammedAt = new DateTime(2023, 4, 17, 22, 50, 3, 899, DateTimeKind.Local).AddTicks(6519),
                             BakingTempInC = 140,
                             BakingTimeInMins = 30,
                             Code = "Code2",
@@ -93,7 +95,7 @@ namespace SAP_API.Migrations
                         {
                             Id = new Guid("00000000-0000-0000-0000-000000000002"),
                             BakingEndsAt = new DateTime(2023, 12, 2, 11, 17, 0, 0, DateTimeKind.Unspecified),
-                            BakingProgrammedAt = new DateTime(2023, 4, 17, 23, 22, 46, 92, DateTimeKind.Local).AddTicks(883),
+                            BakingProgrammedAt = new DateTime(2023, 4, 17, 22, 50, 3, 899, DateTimeKind.Local).AddTicks(6681),
                             BakingStartedAt = new DateTime(2023, 12, 2, 11, 5, 0, 0, DateTimeKind.Unspecified),
                             BakingTempInC = 190,
                             BakingTimeInMins = 12,
@@ -182,14 +184,8 @@ namespace SAP_API.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
-                    b.Property<string>("CustomerEmail")
-                        .HasColumnType("text");
-
-                    b.Property<string>("CustomerFullName")
-                        .HasColumnType("text");
-
-                    b.Property<string>("CustomerTelephone")
-                        .HasColumnType("text");
+                    b.Property<Guid>("CustomerId")
+                        .HasColumnType("uuid");
 
                     b.Property<DateTime>("ShouldBeDoneAt")
                         .HasColumnType("timestamp without time zone");
@@ -205,28 +201,22 @@ namespace SAP_API.Migrations
                         new
                         {
                             Id = new Guid("00000000-0000-0000-0000-000000000008"),
-                            CustomerEmail = "janesmith@example.com",
-                            CustomerFullName = "Jane Smith",
-                            CustomerTelephone = "+44 20 5555 5555",
-                            ShouldBeDoneAt = new DateTime(2023, 4, 17, 23, 22, 46, 78, DateTimeKind.Local).AddTicks(3646),
+                            CustomerId = new Guid("00000000-0000-0000-0000-000000000000"),
+                            ShouldBeDoneAt = new DateTime(2023, 4, 17, 22, 50, 3, 887, DateTimeKind.Local).AddTicks(8142),
                             Status = 0
                         },
                         new
                         {
                             Id = new Guid("00000000-0000-0000-0000-000000000001"),
-                            CustomerEmail = "janesmith@example.com",
-                            CustomerFullName = "Jane Smith",
-                            CustomerTelephone = "+44 20 5555 5555",
-                            ShouldBeDoneAt = new DateTime(2023, 4, 18, 23, 22, 46, 84, DateTimeKind.Local).AddTicks(3975),
+                            CustomerId = new Guid("00000000-0000-0000-0000-000000000000"),
+                            ShouldBeDoneAt = new DateTime(2023, 4, 18, 22, 50, 3, 894, DateTimeKind.Local).AddTicks(3023),
                             Status = 1
                         },
                         new
                         {
                             Id = new Guid("00000000-0000-0000-0000-000000000002"),
-                            CustomerEmail = "janesmith@example.com",
-                            CustomerFullName = "Jane Smith",
-                            CustomerTelephone = "+44 20 5555 5555",
-                            ShouldBeDoneAt = new DateTime(2023, 4, 19, 23, 22, 46, 84, DateTimeKind.Local).AddTicks(4182),
+                            CustomerId = new Guid("00000000-0000-0000-0000-000000000000"),
+                            ShouldBeDoneAt = new DateTime(2023, 4, 19, 22, 50, 3, 894, DateTimeKind.Local).AddTicks(3232),
                             Status = 1
                         });
                 });
@@ -631,6 +621,56 @@ namespace SAP_API.Migrations
                     b.Navigation("Order");
 
                     b.Navigation("Product");
+                });
+
+            modelBuilder.Entity("SAP_API.Models.Order", b =>
+                {
+                    b.OwnsOne("SAP_API.Models.Customer", "Customer", b1 =>
+                        {
+                            b1.Property<Guid>("OrderId")
+                                .HasColumnType("uuid");
+
+                            b1.Property<string>("Email")
+                                .HasColumnType("text");
+
+                            b1.Property<string>("FullName")
+                                .HasColumnType("text");
+
+                            b1.Property<string>("Telephone")
+                                .HasColumnType("text");
+
+                            b1.HasKey("OrderId");
+
+                            b1.ToTable("Order");
+
+                            b1.WithOwner()
+                                .HasForeignKey("OrderId");
+
+                            b1.HasData(
+                                new
+                                {
+                                    OrderId = new Guid("00000000-0000-0000-0000-000000000002"),
+                                    Email = "janesmith@example.com",
+                                    FullName = "Jane Smith",
+                                    Telephone = "+44 20 5555 5555"
+                                },
+                                new
+                                {
+                                    OrderId = new Guid("00000000-0000-0000-0000-000000000001"),
+                                    Email = "janesmith@example.com",
+                                    FullName = "Jane Smith",
+                                    Telephone = "+44 20 5555 5555"
+                                },
+                                new
+                                {
+                                    OrderId = new Guid("00000000-0000-0000-0000-000000000008"),
+                                    Email = "janesmith@example.com",
+                                    FullName = "Jane Smith",
+                                    Telephone = "+44 20 5555 5555"
+                                });
+                        });
+
+                    b.Navigation("Customer");
                 });
 
             modelBuilder.Entity("SAP_API.Models.Oven", b =>
