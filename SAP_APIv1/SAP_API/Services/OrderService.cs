@@ -38,7 +38,9 @@ namespace SAP_API.Services
 
             Order order = new Order
             {
-                Customer = createOrderRequest.Customer,
+                CustomerFullName = createOrderRequest.Customer.FullName,
+                CustomerEmail = createOrderRequest.Customer.Email,
+                CustomerTelephone = createOrderRequest.Customer.Telephone,
                 ShouldBeDoneAt = createOrderRequest.ShouldBeDoneAt,
                 Status = OrderStatus.Created,
                 Products = orderProducts,

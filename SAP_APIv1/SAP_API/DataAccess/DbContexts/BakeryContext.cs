@@ -13,7 +13,6 @@ namespace SAP_API.DataAccess.DbContexts
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<Order>().OwnsOne(x => x.Customer);
             SetUniqueConstraints(modelBuilder);
             DataSeeder.SeedData(modelBuilder);
         }

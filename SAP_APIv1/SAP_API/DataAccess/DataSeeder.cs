@@ -77,45 +77,29 @@ namespace SAP_API.DataAccess
                     Id = new Guid("00000000-0000-0000-0000-000000000008"),
                     ShouldBeDoneAt = DateTime.Now,
                     Status = OrderStatus.Created,
-                   
+                    CustomerFullName = "Jane Smith",
+                    CustomerEmail = "janesmith@example.com",
+                    CustomerTelephone = "+44 20 5555 5555"
                 },
                new Order
                {
                    Id = new Guid("00000000-0000-0000-0000-000000000001"),
                    ShouldBeDoneAt = DateTime.Now.AddDays(1),
                    Status = OrderStatus.Cancelled,
-              
+                   CustomerFullName = "Jane Smith",
+                   CustomerEmail = "janesmith@example.com",
+                   CustomerTelephone = "+44 20 5555 5555"
                },
                new Order
                {
                    Id = new Guid("00000000-0000-0000-0000-000000000002"),
                    ShouldBeDoneAt = DateTime.Now.AddDays(2),
                    Status = OrderStatus.Cancelled,
-                
+                   CustomerFullName = "Jane Smith",
+                   CustomerEmail = "janesmith@example.com",
+                   CustomerTelephone = "+44 20 5555 5555"
                }
             );
-            orders.OwnsOne(x => x.Customer).HasData(
-            new Customer
-            {
-                OrderId = new Guid("00000000-0000-0000-0000-000000000002"),
-                FullName = "Jane Smith",
-                Email = "janesmith@example.com",
-                Telephone = "+44 20 5555 5555"
-            }, 
-            new Customer
-            {
-                OrderId = new Guid("00000000-0000-0000-0000-000000000001"),
-                FullName = "Jane Smith",
-                Email = "janesmith@example.com",
-                Telephone = "+44 20 5555 5555"
-            },
-            new Customer
-            {
-                OrderId = new Guid("00000000-0000-0000-0000-000000000008"),
-                FullName = "Jane Smith",
-                Email = "janesmith@example.com",
-                Telephone = "+44 20 5555 5555"
-            });
         }
 
         private static void SeedBakingPrograms(EntityTypeBuilder<BakingProgram> bakingPrograms)
