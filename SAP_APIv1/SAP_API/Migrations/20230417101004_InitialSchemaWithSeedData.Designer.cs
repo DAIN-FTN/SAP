@@ -10,8 +10,8 @@ using SAP_API.DataAccess.DbContexts;
 namespace SAP_API.Migrations
 {
     [DbContext(typeof(BakeryContext))]
-    [Migration("20230305140258_InitialSchema")]
-    partial class InitialSchema
+    [Migration("20230417101004_InitialSchemaWithSeedData")]
+    partial class InitialSchemaWithSeedData
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -65,6 +65,46 @@ namespace SAP_API.Migrations
                     b.HasIndex("PreparedByUserId");
 
                     b.ToTable("BakingProgram");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = new Guid("00000000-0000-0000-0000-000000000008"),
+                            BakingProgrammedAt = new DateTime(2023, 4, 17, 12, 10, 3, 839, DateTimeKind.Local).AddTicks(7378),
+                            BakingTempInC = 120,
+                            BakingTimeInMins = 30,
+                            Code = "Code1",
+                            CreatedAt = new DateTime(2020, 1, 1, 12, 0, 0, 0, DateTimeKind.Unspecified),
+                            PreparedByUserId = new Guid("00000000-0000-0000-0000-000000000008"),
+                            RemainingOvenCapacity = 10,
+                            Status = 1
+                        },
+                        new
+                        {
+                            Id = new Guid("00000000-0000-0000-0000-000000000001"),
+                            BakingProgrammedAt = new DateTime(2023, 4, 17, 12, 10, 3, 839, DateTimeKind.Local).AddTicks(8913),
+                            BakingTempInC = 140,
+                            BakingTimeInMins = 30,
+                            Code = "Code2",
+                            CreatedAt = new DateTime(2020, 2, 1, 12, 0, 0, 0, DateTimeKind.Unspecified),
+                            PreparedByUserId = new Guid("00000000-0000-0000-0000-000000000008"),
+                            RemainingOvenCapacity = 10,
+                            Status = 1
+                        },
+                        new
+                        {
+                            Id = new Guid("00000000-0000-0000-0000-000000000002"),
+                            BakingEndsAt = new DateTime(2023, 12, 2, 11, 17, 0, 0, DateTimeKind.Unspecified),
+                            BakingProgrammedAt = new DateTime(2023, 4, 17, 12, 10, 3, 839, DateTimeKind.Local).AddTicks(8969),
+                            BakingStartedAt = new DateTime(2023, 12, 2, 11, 5, 0, 0, DateTimeKind.Unspecified),
+                            BakingTempInC = 190,
+                            BakingTimeInMins = 12,
+                            Code = "Code3",
+                            CreatedAt = new DateTime(2020, 3, 1, 12, 0, 0, 0, DateTimeKind.Unspecified),
+                            PreparedByUserId = new Guid("00000000-0000-0000-0000-000000000008"),
+                            RemainingOvenCapacity = 10,
+                            Status = 5
+                        });
                 });
 
             modelBuilder.Entity("SAP_API.Models.BakingProgramProduct", b =>
@@ -94,6 +134,48 @@ namespace SAP_API.Migrations
                     b.HasIndex("ProductId");
 
                     b.ToTable("BakingProgramProduct");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = new Guid("00000000-0000-0000-0000-000000000008"),
+                            BakingProgramId = new Guid("00000000-0000-0000-0000-000000000008"),
+                            OrderId = new Guid("00000000-0000-0000-0000-000000000008"),
+                            ProductId = new Guid("00000000-0000-0000-0000-000000000008"),
+                            QuantityТoBake = 5
+                        },
+                        new
+                        {
+                            Id = new Guid("00000000-0000-0000-0000-000000000001"),
+                            BakingProgramId = new Guid("00000000-0000-0000-0000-000000000008"),
+                            OrderId = new Guid("00000000-0000-0000-0000-000000000008"),
+                            ProductId = new Guid("00000000-0000-0000-0000-000000000008"),
+                            QuantityТoBake = 5
+                        },
+                        new
+                        {
+                            Id = new Guid("00000000-0000-0000-0000-000000000002"),
+                            BakingProgramId = new Guid("00000000-0000-0000-0000-000000000001"),
+                            OrderId = new Guid("00000000-0000-0000-0000-000000000008"),
+                            ProductId = new Guid("00000000-0000-0000-0000-000000000008"),
+                            QuantityТoBake = 5
+                        },
+                        new
+                        {
+                            Id = new Guid("00000000-0000-0000-0000-000000000003"),
+                            BakingProgramId = new Guid("00000000-0000-0000-0000-000000000001"),
+                            OrderId = new Guid("00000000-0000-0000-0000-000000000008"),
+                            ProductId = new Guid("00000000-0000-0000-0000-000000000002"),
+                            QuantityТoBake = 5
+                        },
+                        new
+                        {
+                            Id = new Guid("00000000-0000-0000-0000-000000000004"),
+                            BakingProgramId = new Guid("00000000-0000-0000-0000-000000000001"),
+                            OrderId = new Guid("00000000-0000-0000-0000-000000000008"),
+                            ProductId = new Guid("00000000-0000-0000-0000-000000000002"),
+                            QuantityТoBake = 5
+                        });
                 });
 
             modelBuilder.Entity("SAP_API.Models.Customer", b =>
@@ -114,6 +196,15 @@ namespace SAP_API.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Customer");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = new Guid("00000000-0000-0000-0000-000000000008"),
+                            Email = "janesmith@example.com",
+                            FullName = "Jane Smith",
+                            Telephone = "+44 20 5555 5555"
+                        });
                 });
 
             modelBuilder.Entity("SAP_API.Models.Order", b =>
@@ -136,6 +227,29 @@ namespace SAP_API.Migrations
                     b.HasIndex("CustomerId");
 
                     b.ToTable("Order");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = new Guid("00000000-0000-0000-0000-000000000008"),
+                            CustomerId = new Guid("00000000-0000-0000-0000-000000000008"),
+                            ShouldBeDoneAt = new DateTime(2023, 4, 17, 12, 10, 3, 833, DateTimeKind.Local).AddTicks(6064),
+                            Status = 0
+                        },
+                        new
+                        {
+                            Id = new Guid("00000000-0000-0000-0000-000000000001"),
+                            CustomerId = new Guid("00000000-0000-0000-0000-000000000008"),
+                            ShouldBeDoneAt = new DateTime(2023, 4, 18, 12, 10, 3, 836, DateTimeKind.Local).AddTicks(7221),
+                            Status = 1
+                        },
+                        new
+                        {
+                            Id = new Guid("00000000-0000-0000-0000-000000000002"),
+                            CustomerId = new Guid("00000000-0000-0000-0000-000000000008"),
+                            ShouldBeDoneAt = new DateTime(2023, 4, 19, 12, 10, 3, 836, DateTimeKind.Local).AddTicks(7402),
+                            Status = 1
+                        });
                 });
 
             modelBuilder.Entity("SAP_API.Models.Oven", b =>
@@ -165,6 +279,32 @@ namespace SAP_API.Migrations
                         .IsUnique();
 
                     b.ToTable("Oven");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = new Guid("00000000-0000-0000-0000-000000000008"),
+                            BakingProgramId = new Guid("00000000-0000-0000-0000-000000000008"),
+                            Capacity = 20,
+                            Code = "Oven1",
+                            MaxTempInC = 250
+                        },
+                        new
+                        {
+                            Id = new Guid("00000000-0000-0000-0000-000000000001"),
+                            BakingProgramId = new Guid("00000000-0000-0000-0000-000000000001"),
+                            Capacity = 25,
+                            Code = "Oven2",
+                            MaxTempInC = 300
+                        },
+                        new
+                        {
+                            Id = new Guid("00000000-0000-0000-0000-000000000002"),
+                            BakingProgramId = new Guid("00000000-0000-0000-0000-000000000002"),
+                            Capacity = 30,
+                            Code = "Oven3",
+                            MaxTempInC = 350
+                        });
                 });
 
             modelBuilder.Entity("SAP_API.Models.Product", b =>
@@ -191,6 +331,40 @@ namespace SAP_API.Migrations
                     b.HasAlternateKey("Name");
 
                     b.ToTable("Product");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = new Guid("00000000-0000-0000-0000-000000000008"),
+                            BakingTempInC = 120,
+                            BakingTimeInMins = 30,
+                            Name = "Chocolate Croissant",
+                            Size = 2
+                        },
+                        new
+                        {
+                            Id = new Guid("00000000-0000-0000-0000-000000000001"),
+                            BakingTempInC = 140,
+                            BakingTimeInMins = 30,
+                            Name = "Vanilla Croissant",
+                            Size = 1
+                        },
+                        new
+                        {
+                            Id = new Guid("00000000-0000-0000-0000-000000000002"),
+                            BakingTempInC = 120,
+                            BakingTimeInMins = 30,
+                            Name = "Pizza",
+                            Size = 6
+                        },
+                        new
+                        {
+                            Id = new Guid("00000000-0000-0000-0000-000000000003"),
+                            BakingTempInC = 200,
+                            BakingTimeInMins = 45,
+                            Name = "Bagguete",
+                            Size = 6
+                        });
                 });
 
             modelBuilder.Entity("SAP_API.Models.ProductToPrepare", b =>
@@ -257,6 +431,53 @@ namespace SAP_API.Migrations
                     b.HasIndex("StockLocationId");
 
                     b.ToTable("ReservedOrderProduct");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = new Guid("00000000-0000-0000-0000-000000000008"),
+                            OrderId = new Guid("00000000-0000-0000-0000-000000000008"),
+                            PreparedQuantity = 0,
+                            ProductId = new Guid("00000000-0000-0000-0000-000000000008"),
+                            ReservedQuantity = 5,
+                            StockLocationId = new Guid("00000000-0000-0000-0000-000000000002")
+                        },
+                        new
+                        {
+                            Id = new Guid("00000000-0000-0000-0000-000000000001"),
+                            OrderId = new Guid("00000000-0000-0000-0000-000000000008"),
+                            PreparedQuantity = 0,
+                            ProductId = new Guid("00000000-0000-0000-0000-000000000008"),
+                            ReservedQuantity = 5,
+                            StockLocationId = new Guid("00000000-0000-0000-0000-000000000001")
+                        },
+                        new
+                        {
+                            Id = new Guid("00000000-0000-0000-0000-000000000002"),
+                            OrderId = new Guid("00000000-0000-0000-0000-000000000008"),
+                            PreparedQuantity = 0,
+                            ProductId = new Guid("00000000-0000-0000-0000-000000000008"),
+                            ReservedQuantity = 5,
+                            StockLocationId = new Guid("00000000-0000-0000-0000-000000000001")
+                        },
+                        new
+                        {
+                            Id = new Guid("00000000-0000-0000-0000-000000000003"),
+                            OrderId = new Guid("00000000-0000-0000-0000-000000000008"),
+                            PreparedQuantity = 0,
+                            ProductId = new Guid("00000000-0000-0000-0000-000000000002"),
+                            ReservedQuantity = 5,
+                            StockLocationId = new Guid("00000000-0000-0000-0000-000000000002")
+                        },
+                        new
+                        {
+                            Id = new Guid("00000000-0000-0000-0000-000000000004"),
+                            OrderId = new Guid("00000000-0000-0000-0000-000000000008"),
+                            PreparedQuantity = 0,
+                            ProductId = new Guid("00000000-0000-0000-0000-000000000002"),
+                            ReservedQuantity = 5,
+                            StockLocationId = new Guid("00000000-0000-0000-0000-000000000001")
+                        });
                 });
 
             modelBuilder.Entity("SAP_API.Models.StockLocation", b =>
@@ -277,6 +498,20 @@ namespace SAP_API.Migrations
                     b.HasAlternateKey("Code");
 
                     b.ToTable("StockLocation");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = new Guid("00000000-0000-0000-0000-000000000001"),
+                            Capacity = 200,
+                            Code = "L1"
+                        },
+                        new
+                        {
+                            Id = new Guid("00000000-0000-0000-0000-000000000002"),
+                            Capacity = 100,
+                            Code = "L2"
+                        });
                 });
 
             modelBuilder.Entity("SAP_API.Models.StockedProduct", b =>
@@ -304,6 +539,56 @@ namespace SAP_API.Migrations
                     b.HasIndex("ProductId");
 
                     b.ToTable("StockedProduct");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = new Guid("00000000-0000-0000-0000-000000000008"),
+                            LocationId = new Guid("00000000-0000-0000-0000-000000000002"),
+                            ProductId = new Guid("00000000-0000-0000-0000-000000000008"),
+                            Quantity = 20,
+                            ReservedQuantity = 10
+                        },
+                        new
+                        {
+                            Id = new Guid("00000000-0000-0000-0000-000000000001"),
+                            LocationId = new Guid("00000000-0000-0000-0000-000000000002"),
+                            ProductId = new Guid("00000000-0000-0000-0000-000000000001"),
+                            Quantity = 20,
+                            ReservedQuantity = 10
+                        },
+                        new
+                        {
+                            Id = new Guid("00000000-0000-0000-0000-000000000002"),
+                            LocationId = new Guid("00000000-0000-0000-0000-000000000001"),
+                            ProductId = new Guid("00000000-0000-0000-0000-000000000008"),
+                            Quantity = 300,
+                            ReservedQuantity = 10
+                        },
+                        new
+                        {
+                            Id = new Guid("00000000-0000-0000-0000-000000000003"),
+                            LocationId = new Guid("00000000-0000-0000-0000-000000000001"),
+                            ProductId = new Guid("00000000-0000-0000-0000-000000000002"),
+                            Quantity = 20,
+                            ReservedQuantity = 10
+                        },
+                        new
+                        {
+                            Id = new Guid("00000000-0000-0000-0000-000000000004"),
+                            LocationId = new Guid("00000000-0000-0000-0000-000000000001"),
+                            ProductId = new Guid("00000000-0000-0000-0000-000000000002"),
+                            Quantity = 200,
+                            ReservedQuantity = 10
+                        },
+                        new
+                        {
+                            Id = new Guid("00000000-0000-0000-0000-000000000005"),
+                            LocationId = new Guid("00000000-0000-0000-0000-000000000002"),
+                            ProductId = new Guid("00000000-0000-0000-0000-000000000003"),
+                            Quantity = 20,
+                            ReservedQuantity = 10
+                        });
                 });
 
             modelBuilder.Entity("SAP_API.Models.User", b =>
@@ -321,6 +606,14 @@ namespace SAP_API.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("User");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = new Guid("00000000-0000-0000-0000-000000000008"),
+                            Password = "12ik12k0",
+                            Username = "username"
+                        });
                 });
 
             modelBuilder.Entity("SAP_API.Models.BakingProgram", b =>

@@ -1,16 +1,18 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using SAP_API.DataAccess.DbContexts;
 using SAP_API.Models;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace SAP_API.DataAccess.Repositories
 {
     public class StockLocationRepository : IStockLocationRepository
     {
-        private readonly DbContext _context;
+        private readonly BakeryContext _context;
         private readonly DbSet<StockLocation> _stockLocations;
 
-        public StockLocationRepository(DbContext context)
+        public StockLocationRepository(BakeryContext context)
         {
             _context = context;
             _stockLocations = context.Set<StockLocation>();
@@ -18,27 +20,46 @@ namespace SAP_API.DataAccess.Repositories
 
         public StockLocation Create(StockLocation entity)
         {
-            throw new NotImplementedException();
+            StockLocation stockLocation = _stockLocations.Add(entity).Entity;
+            _context.SaveChanges();
+
+            return stockLocation;
         }
 
         public bool Delete(Guid id)
         {
-            throw new NotImplementedException();
+            StockLocation stockLocation = GetById(id);
+            if (stockLocation != null)
+            {
+                _stockLocations.Remove(stockLocation);
+                _context.SaveChanges();
+                return true;
+            }
+            return false;
         }
 
         public IEnumerable<StockLocation> GetAll()
         {
-            throw new NotImplementedException();
+            return _stockLocations.ToList();
         }
 
         public StockLocation GetById(Guid id)
         {
-            throw new NotImplementedException();
+            return _stockLocations.SingleOrDefault(sl => sl.Id == id);
         }
 
-        public StockLocation Update(StockLocation entity)
+        public StockLocation Update(StockLocation updatedStockLocation)
         {
-            throw new NotImplementedException();
+            StockLocation stockLocation = GetById(updatedStockLocation.Id);
+            if (stockLocation != null)
+            {
+                _stockLocations.Remove(stockLocation);
+                _stockLocations.Add(updatedStockLocation);
+                _context.SaveChanges();
+
+                return stockLocation;
+            }
+            throw new Exception("StockLocation not found");
         }
     }
 }

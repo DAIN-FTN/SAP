@@ -20,6 +20,54 @@ namespace SAP_API.DataAccess
             SeedStockLocations(modelBuilder.Entity<StockLocation>());
             SeedCustomers(modelBuilder.Entity<Customer>());
             SeedUsers(modelBuilder.Entity<User>());
+            SeedBakingProgramProducts(modelBuilder.Entity<BakingProgramProduct>());
+        }
+
+        private static void SeedBakingProgramProducts(EntityTypeBuilder<BakingProgramProduct> bakingProgramProducts)
+        {
+            bakingProgramProducts.HasData(
+                    new BakingProgramProduct
+                    {
+                        Id = Guid.Parse("00000000-0000-0000-0000-000000000008"),
+                        OrderId = Guid.Parse("00000000-0000-0000-0000-000000000008"),
+                        ProductId = Guid.Parse("00000000-0000-0000-0000-000000000008"),
+                        BakingProgramId = Guid.Parse("00000000-0000-0000-0000-000000000008"),
+                        QuantityТoBake = 5,
+                    },
+                    new BakingProgramProduct
+                    {
+                        Id = Guid.Parse("00000000-0000-0000-0000-000000000001"),
+                        OrderId = Guid.Parse("00000000-0000-0000-0000-000000000008"),
+                        ProductId = Guid.Parse("00000000-0000-0000-0000-000000000008"),
+                        BakingProgramId = Guid.Parse("00000000-0000-0000-0000-000000000008"),
+                        QuantityТoBake = 5,
+                    },
+                    new BakingProgramProduct
+                    {
+                        Id = Guid.Parse("00000000-0000-0000-0000-000000000002"),
+                        OrderId = Guid.Parse("00000000-0000-0000-0000-000000000008"),
+                        ProductId = Guid.Parse("00000000-0000-0000-0000-000000000008"),
+                        BakingProgramId = Guid.Parse("00000000-0000-0000-0000-000000000001"),
+                        QuantityТoBake = 5,
+                        
+                    },
+                    new BakingProgramProduct
+                    {
+                        Id = Guid.Parse("00000000-0000-0000-0000-000000000003"),
+                        ProductId = Guid.Parse("00000000-0000-0000-0000-000000000002"),
+                        OrderId = Guid.Parse("00000000-0000-0000-0000-000000000008"),
+                        BakingProgramId = Guid.Parse("00000000-0000-0000-0000-000000000001"),
+                        QuantityТoBake = 5,
+                    },
+                    new BakingProgramProduct
+                    {
+                        Id = Guid.Parse("00000000-0000-0000-0000-000000000004"),
+                        ProductId = Guid.Parse("00000000-0000-0000-0000-000000000002"),
+                        OrderId = Guid.Parse("00000000-0000-0000-0000-000000000008"),
+                        BakingProgramId = Guid.Parse("00000000-0000-0000-0000-000000000001"),
+                        QuantityТoBake = 5,
+                    }
+                );
         }
 
         private static void SeedOrders(EntityTypeBuilder<Order> orders)
@@ -64,7 +112,8 @@ namespace SAP_API.DataAccess
                     BakingProgrammedAt = DateTime.Now,
                     BakingStartedAt = null,
                     BakingEndsAt = null,
-                    RemainingOvenCapacity = 10
+                    RemainingOvenCapacity = 10,
+                    
                 },
                 new BakingProgram
                 {

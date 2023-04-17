@@ -10,6 +10,7 @@ namespace SAP_API.DataAccess.DbContexts
         {
         }
 
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             SetUniqueConstraints(modelBuilder);

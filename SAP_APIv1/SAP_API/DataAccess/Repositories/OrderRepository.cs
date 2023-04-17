@@ -3,15 +3,16 @@ using System.Collections.Generic;
 using System;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
+using SAP_API.DataAccess.DbContexts;
 
 namespace SAP_API.DataAccess.Repositories
 {
     public class OrderRepository : IOrderRepository
     {
-        private readonly DbContext _context;
+        private readonly BakeryContext _context;
         private readonly DbSet<Order> _orders;
 
-        public OrderRepository(DbContext context)
+        public OrderRepository(BakeryContext context)
         {
             this._context = context;
             this._orders = context.Set<Order>();
@@ -20,7 +21,10 @@ namespace SAP_API.DataAccess.Repositories
 
         public IEnumerable<Order> GetAll()
         {
-            return _orders;
+            return _orders
+                .Include(order => order.Products)
+                .Include(order => order.Customer)
+                .ToList();
         }
 
         public Order GetById(Guid id)
@@ -39,15 +43,14 @@ namespace SAP_API.DataAccess.Repositories
 
         public Order Update(Order entity)
         {
-            var order = _orders.SingleOrDefault(o => o.Id == entity.Id);
+            Order order = _orders.SingleOrDefault(o => o.Id == entity.Id);
             if (order != null)
             {
-                order.ShouldBeDoneAt = entity.ShouldBeDoneAt;
-                order.Status = entity.Status;
-                order.Customer = entity.Customer;
+                _context.Remove(order);
+                _context.Add(entity);
                 _context.SaveChanges();
             }
-            return order;
+            throw new Exception("Order not found");
         }
 
         public bool Delete(Guid id)

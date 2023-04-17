@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace SAP_API.Migrations
 {
-    public partial class InitialSchema : Migration
+    public partial class InitialSchemaWithSeedData : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -266,6 +266,103 @@ namespace SAP_API.Migrations
                         principalTable: "StockLocation",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.InsertData(
+                table: "Customer",
+                columns: new[] { "Id", "Email", "FullName", "Telephone" },
+                values: new object[] { new Guid("00000000-0000-0000-0000-000000000008"), "janesmith@example.com", "Jane Smith", "+44 20 5555 5555" });
+
+            migrationBuilder.InsertData(
+                table: "Product",
+                columns: new[] { "Id", "BakingTempInC", "BakingTimeInMins", "Name", "Size" },
+                values: new object[,]
+                {
+                    { new Guid("00000000-0000-0000-0000-000000000008"), 120, 30, "Chocolate Croissant", 2 },
+                    { new Guid("00000000-0000-0000-0000-000000000001"), 140, 30, "Vanilla Croissant", 1 },
+                    { new Guid("00000000-0000-0000-0000-000000000002"), 120, 30, "Pizza", 6 },
+                    { new Guid("00000000-0000-0000-0000-000000000003"), 200, 45, "Bagguete", 6 }
+                });
+
+            migrationBuilder.InsertData(
+                table: "StockLocation",
+                columns: new[] { "Id", "Capacity", "Code" },
+                values: new object[,]
+                {
+                    { new Guid("00000000-0000-0000-0000-000000000001"), 200, "L1" },
+                    { new Guid("00000000-0000-0000-0000-000000000002"), 100, "L2" }
+                });
+
+            migrationBuilder.InsertData(
+                table: "User",
+                columns: new[] { "Id", "Password", "Username" },
+                values: new object[] { new Guid("00000000-0000-0000-0000-000000000008"), "12ik12k0", "username" });
+
+            migrationBuilder.InsertData(
+                table: "BakingProgram",
+                columns: new[] { "Id", "BakingEndsAt", "BakingProgrammedAt", "BakingStartedAt", "BakingTempInC", "BakingTimeInMins", "Code", "CreatedAt", "PreparedByUserId", "RemainingOvenCapacity", "Status" },
+                values: new object[,]
+                {
+                    { new Guid("00000000-0000-0000-0000-000000000008"), null, new DateTime(2023, 4, 17, 12, 10, 3, 839, DateTimeKind.Local).AddTicks(7378), null, 120, 30, "Code1", new DateTime(2020, 1, 1, 12, 0, 0, 0, DateTimeKind.Unspecified), new Guid("00000000-0000-0000-0000-000000000008"), 10, 1 },
+                    { new Guid("00000000-0000-0000-0000-000000000001"), null, new DateTime(2023, 4, 17, 12, 10, 3, 839, DateTimeKind.Local).AddTicks(8913), null, 140, 30, "Code2", new DateTime(2020, 2, 1, 12, 0, 0, 0, DateTimeKind.Unspecified), new Guid("00000000-0000-0000-0000-000000000008"), 10, 1 },
+                    { new Guid("00000000-0000-0000-0000-000000000002"), new DateTime(2023, 12, 2, 11, 17, 0, 0, DateTimeKind.Unspecified), new DateTime(2023, 4, 17, 12, 10, 3, 839, DateTimeKind.Local).AddTicks(8969), new DateTime(2023, 12, 2, 11, 5, 0, 0, DateTimeKind.Unspecified), 190, 12, "Code3", new DateTime(2020, 3, 1, 12, 0, 0, 0, DateTimeKind.Unspecified), new Guid("00000000-0000-0000-0000-000000000008"), 10, 5 }
+                });
+
+            migrationBuilder.InsertData(
+                table: "Order",
+                columns: new[] { "Id", "CustomerId", "ShouldBeDoneAt", "Status" },
+                values: new object[,]
+                {
+                    { new Guid("00000000-0000-0000-0000-000000000008"), new Guid("00000000-0000-0000-0000-000000000008"), new DateTime(2023, 4, 17, 12, 10, 3, 833, DateTimeKind.Local).AddTicks(6064), 0 },
+                    { new Guid("00000000-0000-0000-0000-000000000001"), new Guid("00000000-0000-0000-0000-000000000008"), new DateTime(2023, 4, 18, 12, 10, 3, 836, DateTimeKind.Local).AddTicks(7221), 1 },
+                    { new Guid("00000000-0000-0000-0000-000000000002"), new Guid("00000000-0000-0000-0000-000000000008"), new DateTime(2023, 4, 19, 12, 10, 3, 836, DateTimeKind.Local).AddTicks(7402), 1 }
+                });
+
+            migrationBuilder.InsertData(
+                table: "StockedProduct",
+                columns: new[] { "Id", "LocationId", "ProductId", "Quantity", "ReservedQuantity" },
+                values: new object[,]
+                {
+                    { new Guid("00000000-0000-0000-0000-000000000002"), new Guid("00000000-0000-0000-0000-000000000001"), new Guid("00000000-0000-0000-0000-000000000008"), 300, 10 },
+                    { new Guid("00000000-0000-0000-0000-000000000003"), new Guid("00000000-0000-0000-0000-000000000001"), new Guid("00000000-0000-0000-0000-000000000002"), 20, 10 },
+                    { new Guid("00000000-0000-0000-0000-000000000004"), new Guid("00000000-0000-0000-0000-000000000001"), new Guid("00000000-0000-0000-0000-000000000002"), 200, 10 },
+                    { new Guid("00000000-0000-0000-0000-000000000008"), new Guid("00000000-0000-0000-0000-000000000002"), new Guid("00000000-0000-0000-0000-000000000008"), 20, 10 },
+                    { new Guid("00000000-0000-0000-0000-000000000001"), new Guid("00000000-0000-0000-0000-000000000002"), new Guid("00000000-0000-0000-0000-000000000001"), 20, 10 },
+                    { new Guid("00000000-0000-0000-0000-000000000005"), new Guid("00000000-0000-0000-0000-000000000002"), new Guid("00000000-0000-0000-0000-000000000003"), 20, 10 }
+                });
+
+            migrationBuilder.InsertData(
+                table: "BakingProgramProduct",
+                columns: new[] { "Id", "BakingProgramId", "OrderId", "ProductId", "QuantityТoBake" },
+                values: new object[,]
+                {
+                    { new Guid("00000000-0000-0000-0000-000000000008"), new Guid("00000000-0000-0000-0000-000000000008"), new Guid("00000000-0000-0000-0000-000000000008"), new Guid("00000000-0000-0000-0000-000000000008"), 5 },
+                    { new Guid("00000000-0000-0000-0000-000000000001"), new Guid("00000000-0000-0000-0000-000000000008"), new Guid("00000000-0000-0000-0000-000000000008"), new Guid("00000000-0000-0000-0000-000000000008"), 5 },
+                    { new Guid("00000000-0000-0000-0000-000000000002"), new Guid("00000000-0000-0000-0000-000000000001"), new Guid("00000000-0000-0000-0000-000000000008"), new Guid("00000000-0000-0000-0000-000000000008"), 5 },
+                    { new Guid("00000000-0000-0000-0000-000000000003"), new Guid("00000000-0000-0000-0000-000000000001"), new Guid("00000000-0000-0000-0000-000000000008"), new Guid("00000000-0000-0000-0000-000000000002"), 5 },
+                    { new Guid("00000000-0000-0000-0000-000000000004"), new Guid("00000000-0000-0000-0000-000000000001"), new Guid("00000000-0000-0000-0000-000000000008"), new Guid("00000000-0000-0000-0000-000000000002"), 5 }
+                });
+
+            migrationBuilder.InsertData(
+                table: "Oven",
+                columns: new[] { "Id", "BakingProgramId", "Capacity", "Code", "MaxTempInC" },
+                values: new object[,]
+                {
+                    { new Guid("00000000-0000-0000-0000-000000000008"), new Guid("00000000-0000-0000-0000-000000000008"), 20, "Oven1", 250 },
+                    { new Guid("00000000-0000-0000-0000-000000000001"), new Guid("00000000-0000-0000-0000-000000000001"), 25, "Oven2", 300 },
+                    { new Guid("00000000-0000-0000-0000-000000000002"), new Guid("00000000-0000-0000-0000-000000000002"), 30, "Oven3", 350 }
+                });
+
+            migrationBuilder.InsertData(
+                table: "ReservedOrderProduct",
+                columns: new[] { "Id", "OrderId", "PreparedQuantity", "ProductId", "ReservedQuantity", "StockLocationId" },
+                values: new object[,]
+                {
+                    { new Guid("00000000-0000-0000-0000-000000000008"), new Guid("00000000-0000-0000-0000-000000000008"), 0, new Guid("00000000-0000-0000-0000-000000000008"), 5, new Guid("00000000-0000-0000-0000-000000000002") },
+                    { new Guid("00000000-0000-0000-0000-000000000001"), new Guid("00000000-0000-0000-0000-000000000008"), 0, new Guid("00000000-0000-0000-0000-000000000008"), 5, new Guid("00000000-0000-0000-0000-000000000001") },
+                    { new Guid("00000000-0000-0000-0000-000000000002"), new Guid("00000000-0000-0000-0000-000000000008"), 0, new Guid("00000000-0000-0000-0000-000000000008"), 5, new Guid("00000000-0000-0000-0000-000000000001") },
+                    { new Guid("00000000-0000-0000-0000-000000000003"), new Guid("00000000-0000-0000-0000-000000000008"), 0, new Guid("00000000-0000-0000-0000-000000000002"), 5, new Guid("00000000-0000-0000-0000-000000000002") },
+                    { new Guid("00000000-0000-0000-0000-000000000004"), new Guid("00000000-0000-0000-0000-000000000008"), 0, new Guid("00000000-0000-0000-0000-000000000002"), 5, new Guid("00000000-0000-0000-0000-000000000001") }
                 });
 
             migrationBuilder.CreateIndex(

@@ -3,15 +3,16 @@ using System.Collections.Generic;
 using System;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
+using SAP_API.DataAccess.DbContexts;
 
 namespace SAP_API.DataAccess.Repositories
 {
     public class OvenRepository : IOvenRepository
     {
-        private readonly DbContext _context;
+        private readonly BakeryContext _context;
         private readonly DbSet<Oven> _ovens;
 
-        public OvenRepository(DbContext context)
+        public OvenRepository(BakeryContext context)
         {
             this._context = context;
             this._ovens = context.Set<Oven>();
@@ -19,12 +20,16 @@ namespace SAP_API.DataAccess.Repositories
 
         public IEnumerable<Oven> GetAll()
         {
-            return _ovens;
+            return _ovens
+                .Include(oven => oven.BakingProgram)
+                .ToList();
         }
 
         public Oven GetById(Guid id)
         {
-            return _ovens.SingleOrDefault(o => o.Id == id);
+            return _ovens
+                .Include(oven => oven.BakingProgram)
+                .SingleOrDefault(o => o.Id == id);
         }
 
         public Oven Create(Oven entity)
@@ -47,7 +52,7 @@ namespace SAP_API.DataAccess.Repositories
                 _context.SaveChanges();
             }
 
-            return oven;
+            throw new Exception("Oven not found");
         }
 
         public bool Delete(Guid id)

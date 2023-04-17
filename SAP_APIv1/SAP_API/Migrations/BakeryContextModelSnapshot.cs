@@ -68,7 +68,7 @@ namespace SAP_API.Migrations
                         new
                         {
                             Id = new Guid("00000000-0000-0000-0000-000000000008"),
-                            BakingProgrammedAt = new DateTime(2023, 3, 5, 20, 38, 46, 976, DateTimeKind.Local).AddTicks(974),
+                            BakingProgrammedAt = new DateTime(2023, 4, 17, 12, 10, 3, 839, DateTimeKind.Local).AddTicks(7378),
                             BakingTempInC = 120,
                             BakingTimeInMins = 30,
                             Code = "Code1",
@@ -80,7 +80,7 @@ namespace SAP_API.Migrations
                         new
                         {
                             Id = new Guid("00000000-0000-0000-0000-000000000001"),
-                            BakingProgrammedAt = new DateTime(2023, 3, 5, 20, 38, 46, 976, DateTimeKind.Local).AddTicks(3160),
+                            BakingProgrammedAt = new DateTime(2023, 4, 17, 12, 10, 3, 839, DateTimeKind.Local).AddTicks(8913),
                             BakingTempInC = 140,
                             BakingTimeInMins = 30,
                             Code = "Code2",
@@ -93,7 +93,7 @@ namespace SAP_API.Migrations
                         {
                             Id = new Guid("00000000-0000-0000-0000-000000000002"),
                             BakingEndsAt = new DateTime(2023, 12, 2, 11, 17, 0, 0, DateTimeKind.Unspecified),
-                            BakingProgrammedAt = new DateTime(2023, 3, 5, 20, 38, 46, 976, DateTimeKind.Local).AddTicks(3240),
+                            BakingProgrammedAt = new DateTime(2023, 4, 17, 12, 10, 3, 839, DateTimeKind.Local).AddTicks(8969),
                             BakingStartedAt = new DateTime(2023, 12, 2, 11, 5, 0, 0, DateTimeKind.Unspecified),
                             BakingTempInC = 190,
                             BakingTimeInMins = 12,
@@ -132,6 +132,48 @@ namespace SAP_API.Migrations
                     b.HasIndex("ProductId");
 
                     b.ToTable("BakingProgramProduct");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = new Guid("00000000-0000-0000-0000-000000000008"),
+                            BakingProgramId = new Guid("00000000-0000-0000-0000-000000000008"),
+                            OrderId = new Guid("00000000-0000-0000-0000-000000000008"),
+                            ProductId = new Guid("00000000-0000-0000-0000-000000000008"),
+                            QuantityТoBake = 5
+                        },
+                        new
+                        {
+                            Id = new Guid("00000000-0000-0000-0000-000000000001"),
+                            BakingProgramId = new Guid("00000000-0000-0000-0000-000000000008"),
+                            OrderId = new Guid("00000000-0000-0000-0000-000000000008"),
+                            ProductId = new Guid("00000000-0000-0000-0000-000000000008"),
+                            QuantityТoBake = 5
+                        },
+                        new
+                        {
+                            Id = new Guid("00000000-0000-0000-0000-000000000002"),
+                            BakingProgramId = new Guid("00000000-0000-0000-0000-000000000001"),
+                            OrderId = new Guid("00000000-0000-0000-0000-000000000008"),
+                            ProductId = new Guid("00000000-0000-0000-0000-000000000008"),
+                            QuantityТoBake = 5
+                        },
+                        new
+                        {
+                            Id = new Guid("00000000-0000-0000-0000-000000000003"),
+                            BakingProgramId = new Guid("00000000-0000-0000-0000-000000000001"),
+                            OrderId = new Guid("00000000-0000-0000-0000-000000000008"),
+                            ProductId = new Guid("00000000-0000-0000-0000-000000000002"),
+                            QuantityТoBake = 5
+                        },
+                        new
+                        {
+                            Id = new Guid("00000000-0000-0000-0000-000000000004"),
+                            BakingProgramId = new Guid("00000000-0000-0000-0000-000000000001"),
+                            OrderId = new Guid("00000000-0000-0000-0000-000000000008"),
+                            ProductId = new Guid("00000000-0000-0000-0000-000000000002"),
+                            QuantityТoBake = 5
+                        });
                 });
 
             modelBuilder.Entity("SAP_API.Models.Customer", b =>
@@ -189,21 +231,21 @@ namespace SAP_API.Migrations
                         {
                             Id = new Guid("00000000-0000-0000-0000-000000000008"),
                             CustomerId = new Guid("00000000-0000-0000-0000-000000000008"),
-                            ShouldBeDoneAt = new DateTime(2023, 3, 5, 20, 38, 46, 967, DateTimeKind.Local).AddTicks(7567),
+                            ShouldBeDoneAt = new DateTime(2023, 4, 17, 12, 10, 3, 833, DateTimeKind.Local).AddTicks(6064),
                             Status = 0
                         },
                         new
                         {
                             Id = new Guid("00000000-0000-0000-0000-000000000001"),
                             CustomerId = new Guid("00000000-0000-0000-0000-000000000008"),
-                            ShouldBeDoneAt = new DateTime(2023, 3, 6, 20, 38, 46, 973, DateTimeKind.Local).AddTicks(1742),
+                            ShouldBeDoneAt = new DateTime(2023, 4, 18, 12, 10, 3, 836, DateTimeKind.Local).AddTicks(7221),
                             Status = 1
                         },
                         new
                         {
                             Id = new Guid("00000000-0000-0000-0000-000000000002"),
                             CustomerId = new Guid("00000000-0000-0000-0000-000000000008"),
-                            ShouldBeDoneAt = new DateTime(2023, 3, 7, 20, 38, 46, 973, DateTimeKind.Local).AddTicks(1919),
+                            ShouldBeDoneAt = new DateTime(2023, 4, 19, 12, 10, 3, 836, DateTimeKind.Local).AddTicks(7402),
                             Status = 1
                         });
                 });

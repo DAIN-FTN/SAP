@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using SAP_API.DataAccess.DbContexts;
 using SAP_API.Models;
 using System;
 using System.Collections.Generic;
@@ -8,45 +9,50 @@ namespace SAP_API.DataAccess.Repositories
 {
     public class CustomerRepository : IRepository<Customer>
     {
-        private readonly DbContext _context;
-        private readonly DbSet<Customer> _dbSet;
+        private readonly BakeryContext _context;
+        private readonly DbSet<Customer> _customers;
 
-        public CustomerRepository(DbContext context)
+        public CustomerRepository(BakeryContext context)
         {
             _context = context;
-            _dbSet = context.Set<Customer>();
+            _customers = context.Set<Customer>();
         }
 
         public IEnumerable<Customer> GetAll()
         {
-            return _dbSet.ToList();
+            return _customers.ToList();
         }
 
         public Customer GetById(Guid id)
         {
-            return _dbSet.FirstOrDefault(c => c.Id == id);
+            return _customers.FirstOrDefault(c => c.Id == id);
         }
 
-        public Customer Create(Customer Customer)
+        public Customer Create(Customer customer)
         {
-            _dbSet.Add(Customer);
+            _customers.Add(customer);
             _context.SaveChanges();
-            return Customer;
+            return customer;
         }
 
-        public Customer Update(Customer Customer)
+        public Customer Update(Customer updatedCustomer)
         {
-            _dbSet.Update(Customer);
-            _context.SaveChanges();
-            return Customer;
+            Customer customer = GetById(updatedCustomer.Id);
+            if (customer != null)
+            {
+                _context.Remove(customer);
+                _context.Add(updatedCustomer);
+                _context.SaveChanges();
+            }
+            throw new Exception("Customer not found");
         }
 
         public bool Delete(Guid id)
         {
-            var Customer = GetById(id);
+            Customer Customer = GetById(id);
             if (Customer != null)
             {
-                _dbSet.Remove(Customer);
+                _customers.Remove(Customer);
                 _context.SaveChanges();
                 return true;
             }

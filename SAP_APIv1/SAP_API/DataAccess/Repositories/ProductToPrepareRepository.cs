@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using SAP_API.Models;
 using System;
+using SAP_API.DataAccess.DbContexts;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -9,10 +10,10 @@ namespace SAP_API.DataAccess.Repositories
 {
     public class ProductToPrepareRepository : IProductToPrepareRepository
     {
-        private readonly DbContext _context;
+        private readonly BakeryContext _context;
         private readonly DbSet<ProductToPrepare> _productsToPrepare;
 
-        public ProductToPrepareRepository(DbContext context)
+        public ProductToPrepareRepository(BakeryContext context)
         {
             this._context = context;
             this._productsToPrepare = context.Set<ProductToPrepare>();
@@ -27,27 +28,53 @@ namespace SAP_API.DataAccess.Repositories
 
         public bool Delete(Guid id)
         {
-            throw new NotImplementedException();
+            ProductToPrepare productToPrepare = GetById(id);
+            if (productToPrepare != null)
+            {
+                _productsToPrepare.Remove(productToPrepare);
+                _context.SaveChanges();
+                return true;
+            }
+            return false;
         }
 
         public IEnumerable<ProductToPrepare> GetAll()
         {
-            throw new NotImplementedException();
+            return _productsToPrepare
+                .Include(x => x.BakingProgram)
+                .Include(x => x.Product)
+                .Include(x => x.Order)
+                .ToList();
         }
 
         public List<ProductToPrepare> GetByBakingProgramId(Guid bakingProgramId)
         {
-            return _productsToPrepare.Where(x => x.BakingProgram.Id == bakingProgramId).ToList();
+            return _productsToPrepare
+                .Include(x => x.BakingProgram)
+                .Include(x => x.Product)
+                .Include(x => x.Order)
+                .Where(x => x.BakingProgram.Id == bakingProgramId).ToList();
         }
 
         public ProductToPrepare GetById(Guid id)
         {
-            throw new NotImplementedException();
+            return _productsToPrepare
+                .Include(x => x.BakingProgram)
+                .Include(x => x.Product)
+                .Include(x => x.Order)
+                .FirstOrDefault(x => x.Id == id);
         }
 
         public ProductToPrepare Update(ProductToPrepare entity)
         {
-            throw new NotImplementedException();
+            ProductToPrepare productToPrepare = GetById(entity.Id);
+            if (productToPrepare != null)
+            {
+                Delete(entity.Id);
+                Create(entity);
+                _context.SaveChanges();
+            }
+            throw new Exception("Product to prepare not found");
         }
-    }
+    } 
 }

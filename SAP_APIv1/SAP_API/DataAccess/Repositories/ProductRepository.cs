@@ -1,18 +1,18 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using SAP_API.DataAccess.DbContexts;
 using SAP_API.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace SAP_API.DataAccess.Repositories
 {
     public class ProductRepository : IProductRepository
     {
-        private readonly DbContext _context;
+        private readonly BakeryContext _context;
         private readonly DbSet<Product> _products;
 
-        public ProductRepository(DbContext context)
+        public ProductRepository(BakeryContext context)
         {
             this._context = context;
             this._products = context.Set<Product>();
@@ -41,7 +41,8 @@ namespace SAP_API.DataAccess.Repositories
 
         public IEnumerable<Product> GetAll()
         {
-            return _products;
+            return _products
+                .ToList();
         }
 
         public Product GetById(Guid id)
@@ -54,19 +55,18 @@ namespace SAP_API.DataAccess.Repositories
             return _products.Where(p => p.Name.Contains(name)).ToList();
         }
 
-        public Product Update(Product productUpdate)
+        public Product Update(Product updatedProduct)
         {
-            Product product = GetById(productUpdate.Id);
+            Product product = GetById(updatedProduct.Id);
+            if(product != null)
+            {
+                _products.Remove(product);
+                _products.Add(updatedProduct);
+                _context.SaveChanges();
 
-            product.BakingTimeInMins = productUpdate.BakingTimeInMins;
-            product.Name = productUpdate.Name;
-            product.BakingTempInC = productUpdate.BakingTempInC;
-            product.Size = productUpdate.Size;
-
-            _products.Update(product);
-            _context.SaveChanges();
-
-            return product;
+                return updatedProduct;
+            }
+            throw new Exception("Product not found");
         }
 
     }

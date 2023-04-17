@@ -3,15 +3,17 @@ using SAP_API.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using SAP_API.DataAccess.DbContexts;
+
 
 namespace SAP_API.DataAccess.Repositories
 {
     public class StockedProductRepository : IStockedProductRepository
     {
-        private readonly DbContext _context;
+        private readonly BakeryContext _context;
         private readonly DbSet<StockedProduct> _stockedProducts;
 
-        public StockedProductRepository(DbContext context)
+        public StockedProductRepository(BakeryContext context)
         {
             this._context = context;
             this._stockedProducts = context.Set<StockedProduct>();
@@ -27,7 +29,7 @@ namespace SAP_API.DataAccess.Repositories
 
         public bool Delete(Guid id)
         {
-            var stockedProduct = GetById(id);
+            StockedProduct stockedProduct = GetById(id);
             if (stockedProduct != null)
             {
                 _stockedProducts.Remove(stockedProduct);
@@ -41,7 +43,10 @@ namespace SAP_API.DataAccess.Repositories
 
         public IEnumerable<StockedProduct> GetAll()
         {
-            return _stockedProducts;
+            return _stockedProducts
+                .Include(x => x.Location)
+                .Include(x => x.Product)
+                .ToList();
         }
 
         public StockedProduct GetById(Guid id)
@@ -51,27 +56,32 @@ namespace SAP_API.DataAccess.Repositories
 
         public List<StockedProduct> GetByProductId(Guid productId)
         {
-            return _stockedProducts.Where(sp => sp.Product.Id == productId).ToList();
+            return _stockedProducts
+                .Include(x => x.Location)
+                .Include(x => x.Product)
+                .Where(sp => sp.Product.Id == productId).ToList();
         }
 
-        public StockedProduct Update(StockedProduct entity)
+        public StockedProduct Update(StockedProduct updatedStockProduct)
         {
-            StockedProduct stockedProduct = _stockedProducts.FirstOrDefault(x => x.Id == entity.Id);
-            if (stockedProduct == null)
+            StockedProduct stockedProduct = _stockedProducts.FirstOrDefault(x => x.Id == updatedStockProduct.Id);
+            if (stockedProduct != null)
             {
-                throw new Exception("Stocked product not found");
+                _stockedProducts.Remove(stockedProduct);
+                _stockedProducts.Add(updatedStockProduct);
+                _context.SaveChanges();
+
+                return updatedStockProduct;
             }
-            _stockedProducts.Remove(stockedProduct);
-            _stockedProducts.Add(entity);
-            _context.SaveChanges();
-
-
-            return entity;
+            throw new Exception("Stocked product not found");
         }
 
         public StockedProduct GetByLocationAndProduct(Guid locationId, Guid productId)
         {
-            return _stockedProducts.FirstOrDefault(x => x.Location.Id == locationId && x.Product.Id == productId);
+            return _stockedProducts
+                .Include(x => x.Location)
+                .Include(x => x.Product)
+                .FirstOrDefault(x => x.Location.Id == locationId && x.Product.Id == productId);
         }
     }
 }

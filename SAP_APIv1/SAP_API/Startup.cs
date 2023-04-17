@@ -1,4 +1,4 @@
-using Microsoft.AspNetCore.Builder;
+ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
@@ -24,22 +24,26 @@ namespace SAP_API
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
+            services.AddDbContext<BakeryContext>(options =>
+            {
+                options.UseNpgsql(Configuration.GetConnectionString("DefaultConnection"));
+            });
+
+            services.AddScoped<IProductRepository, ProductRepository>();
+            services.AddScoped<IStockedProductRepository, StockedProductRepository>();
+            services.AddScoped<IOvenRepository, OvenRepository>();
+            services.AddScoped<IReservedOrderProductRepository, ReservedOrderProductRepository>();
+            services.AddScoped<IBakingProgramRepository, BakingProgramRepository>();
+            services.AddScoped<IProductToPrepareRepository, ProductToPrepareRepository>();
+            services.AddScoped<IStockLocationRepository, StockLocationRepository>();
+            services.AddScoped<IOrderRepository, OrderRepository>();
             services.AddScoped<IProductService, ProductService>();
             services.AddScoped<IBakingProgramService, BakingProgramService>();
-            services.AddSingleton<IProductRepository, ProductRepository>();
-            services.AddSingleton<IStockedProductRepository, StockedProductRepository>();
-            services.AddSingleton<IBakingProgramRepository, BakingProgramRepository>();
-            services.AddSingleton<IOvenRepository, OvenRepository>();
-            services.AddTransient<IArrangingProductsToProgramsService, ArrangingProductsToProgramsService>();
-            services.AddSingleton<IReservedOrderProductRepository, ReservedOrderProductRepository>();
+            services.AddScoped<IArrangingProductsToProgramsService, ArrangingProductsToProgramsService>();
             services.AddScoped<IStartPreparingService, StartPreparingService>();
-            services.AddSingleton<IProductToPrepareRepository, ProductToPrepareRepository>();
             services.AddScoped<IStockedProductService, StockedProductService>();
-            services.AddSingleton<IStockLocationRepository, StockLocationRepository>();
-            services.AddSingleton<IOrderRepository, OrderRepository>();
             services.AddScoped<IOrderService, OrderService>();
             services.AddScoped<IOrderTransactionsOrchestrator, OrderTransactionsOrchestrator>();
-            services.AddDbContext<BakeryContext>(options => options.UseNpgsql(Configuration.GetConnectionString("DefaultConnection")));
         }
 
     public IConfiguration Configuration { get; }
