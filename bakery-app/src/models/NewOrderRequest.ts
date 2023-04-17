@@ -1,6 +1,6 @@
-import { ProductBasicInfo } from "./ProductBasicInfo";
+import ProductBasicInfo from "./ProductBasicInfo";
 
-export interface NewOrderRequest {
+export default interface NewOrderRequest {
     products: ProductBasicInfo[];
     bakingProgramId: string | null;
 }

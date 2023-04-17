@@ -1,9 +1,6 @@
-import { getData, postData } from "./DataService";
+import { getData } from "./DataService";
 import { BakingTimeSlot as BakingProgram } from "../models/BakingTimeSlot";
-import { NewOrderRequest } from "../models/NewOrderRequest";
-import { Order } from "../models/Order";
-import { ProductBasicInfo } from "../models/ProductBasicInfo";
-import { AllBakingPrograms } from "../models/AllBakingPrograms";
+import AllBakingPrograms from "../models/AllBakingPrograms";
 
 export async function fetchAllBakingPrograms(): Promise<AllBakingPrograms> {
     try {
@@ -35,9 +32,9 @@ export async function fetchAllBakingPrograms(): Promise<AllBakingPrograms> {
 //     }));
 // }
 
-// export async function createNewOrder(name: string, newOrderRequest: NewOrderRequest): Promise<Order> {
-//     return await postData<Order>(`/api/products/stock?name=${name}`, newOrderRequest);
-// }
+export async function prepareBakingProgram(id: string): Promise<BakingProgram> {
+    return await getData<BakingProgram>(`/api/baking-programs/start-preparing/${id}`);
+}
 
 function mapAllBakingPrograms(allBakingPrograms: AllBakingPrograms): AllBakingPrograms {
     return {

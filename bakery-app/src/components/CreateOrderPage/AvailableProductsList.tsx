@@ -5,17 +5,12 @@ import TableCell from "@mui/material/TableCell";
 import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
-import React, { useState } from "react";
 import { FC } from "react";
-import styled from "styled-components";
-import { ProductBasicInfo } from "../../models/ProductBasicInfo";
-// import Table from 'react-bootstrap/Table';
-// import 'bootstrap/dist/css/bootstrap.min.css';
+import ProductBasicInfo from "../../models/ProductBasicInfo";
 import AddCircleIcon from '@mui/icons-material/AddCircle';
 import RemoveCircleIcon from '@mui/icons-material/RemoveCircle';
 import IconButton from "@mui/material/IconButton";
 import TextField from "@mui/material/TextField";
-import { fetchProductsBasicInfo } from "../../services/OrderService";
 
 export interface AvailableProductsListProps {
     availableProducts: ProductBasicInfo[];

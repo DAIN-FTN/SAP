@@ -3,7 +3,7 @@ export interface BakingTimeSlot {
     code: string | null;
     createdAt: Date
     status: BakingProgramStatus | null;
-    bakingTimeInMinutes: number | null;
+    bakingTimeInMins: number | null;
     bakingTempInC: number | null;
     bakingProgrammedAt: Date
     bakingStartedAt: Date

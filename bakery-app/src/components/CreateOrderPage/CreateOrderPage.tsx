@@ -1,15 +1,14 @@
-import React, { useEffect, useState } from "react";
+import { useState } from "react";
 import { FC } from "react";
 import styled from "styled-components";
-import { ProductBasicInfo } from "../../models/ProductBasicInfo";
+import ProductBasicInfo from "../../models/ProductBasicInfo";
 import { fetchBakingTimeSlots, fetchProductsBasicInfo } from "../../services/OrderService";
-import AvailableProductsList, { AvailableProductsListProps } from "../CreateOrderPage/AvailableProductsList";
+import AvailableProductsList from "../CreateOrderPage/AvailableProductsList";
 import Button from '@mui/material/Button';
 import TextField from "@mui/material/TextField";
-import { NewOrderRequest } from "../../models/NewOrderRequest";
+import NewOrderRequest from "../../models/NewOrderRequest";
 import { BakingTimeSlot } from "../../models/BakingTimeSlot";
-import BakingTimeSlotsList, { BakingTimeSlotsListProps } from "./BakingTimeSlotsList";
-import { DateTimePicker } from "@mui/x-date-pickers/DateTimePicker";
+import BakingTimeSlotsList from "./BakingTimeSlotsList";
 import NewOrderProductsList from "./NewOrderProductsList";
 
 const Container = styled.div`

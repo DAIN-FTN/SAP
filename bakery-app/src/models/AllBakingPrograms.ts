@@ -1,6 +1,6 @@
 import { BakingTimeSlot as BakingProgram } from "./BakingTimeSlot";
 
-export interface AllBakingPrograms {
+export default interface AllBakingPrograms {
     prepareForOven: BakingProgram[];
     preparingAndPrepared: BakingProgram[];
     baking: BakingProgram[];

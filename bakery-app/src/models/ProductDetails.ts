@@ -1,4 +1,4 @@
-export interface ProductDetails {
+export default interface ProductDetails {
     id: string;
     name: string;
     bakingTimeInMins: number;

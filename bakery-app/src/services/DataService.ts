@@ -3,9 +3,17 @@ import { config } from "../config";
 const baseUrl = `${config.httpProtocol}${config.serverAddress}${config.port}`;
 
 export async function getData<T>(url: string): Promise<T> {
-    const response = await fetch(`${baseUrl}${url}`);
+    const rawResponse = await fetch(`${baseUrl}${url}`);
 
-    return await response.json() as T;
+    const jsonResponse = await rawResponse.json();
+
+    if (jsonResponse.errors) {
+        console.warn("Shit hit the fan... throwing error in component DataService.ts", jsonResponse.errors.ErrorToDisplay[0]);
+
+        throw new Error(jsonResponse.errors.ErrorToDisplay[0]);
+    }
+
+    return jsonResponse as T;
 }
 
 export async function postData<T>(url: string, payload: any): Promise<T> {
@@ -23,5 +31,4 @@ export async function postData<T>(url: string, payload: any): Promise<T> {
         console.error(error);
         return [] as T;
     }
-
 }

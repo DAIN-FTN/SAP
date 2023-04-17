@@ -7,7 +7,7 @@ import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import { FC } from "react";
 import styled from "styled-components";
-import { ProductBasicInfo } from "../../models/ProductBasicInfo";
+import ProductBasicInfo from "../../models/ProductBasicInfo";
 
 export interface ProductsInStockListProps {
     products: ProductBasicInfo[];

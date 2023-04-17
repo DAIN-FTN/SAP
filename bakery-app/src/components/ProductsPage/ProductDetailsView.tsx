@@ -1,6 +1,6 @@
 import { FC, useEffect, useState } from "react";
 import styled from "styled-components";
-import { ProductDetails } from "../../models/ProductDetails";
+import ProductDetails from "../../models/ProductDetails";
 import { fetchProductDetails } from "../../services/ProductService";
 import StockedLocationProductQuantitiesList from "./StockedLocationProductQuantitiesList";
 

@@ -30,6 +30,7 @@ const BottomNavigation = styled.div`
 
     &:hover div {
         height: 40px;
+        opacity: 1;
         max-height: fit-content;
     }
 `;
@@ -45,8 +46,9 @@ const HiddenLogoutContent = styled.div`
     flex-direction: column;
     align-items: center;
     height: 0px;
+    opacity: 0;
     overflow: hidden;
-    transition: height 0.2s ease-in-out;
+    transition: all 0.2s ease-in-out;
 `;
 
 const NavMenu: FC = () => {

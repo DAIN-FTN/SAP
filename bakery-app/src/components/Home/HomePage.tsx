@@ -3,7 +3,7 @@ import { FC } from "react";
 import styled from "styled-components";
 import PrepareForOvenList from "./PrepareForOvenList";
 import { fetchAllBakingPrograms } from "../../services/BakingProgramService";
-import { AllBakingPrograms } from "../../models/AllBakingPrograms";
+import AllBakingPrograms from "../../models/AllBakingPrograms";
 
 const Container = styled.div`
     width: 100%;
@@ -47,6 +47,13 @@ const HomePage: FC = () => {
         });
     }, []);
 
+    function refreshView () {
+        fetchAllBakingPrograms().then((allBakingPrograms) => { 
+            console.log('fetch finished for fetchAllBakingPrograms() in HomePage');
+            setAllBakingPrograms(allBakingPrograms);
+        });
+    }
+
     if (allBakingPrograms == undefined || allBakingPrograms == null) {
         return (
             <Container>
@@ -59,19 +66,19 @@ const HomePage: FC = () => {
         <Container>
             <Panel>
                 <Label>Prepare for oven</Label>
-                <PrepareForOvenList props={{prepareForOven: allBakingPrograms?.prepareForOven}} />
+                <PrepareForOvenList props={{prepareForOven: allBakingPrograms?.prepareForOven, refreshView}} />
             </Panel>
             <Panel>
                 <Label>Preparing</Label>
-                <PrepareForOvenList props={{prepareForOven: allBakingPrograms?.preparingAndPrepared}} />
+                <PrepareForOvenList props={{prepareForOven: allBakingPrograms?.preparingAndPrepared, refreshView}} />
             </Panel>
             <Panel>
                 <Label>Baking</Label>
-                <PrepareForOvenList props={{prepareForOven: allBakingPrograms?.baking}} />
+                <PrepareForOvenList props={{prepareForOven: allBakingPrograms?.baking, refreshView}} />
             </Panel>
             <Panel>
                 <Label>Done</Label>
-                <PrepareForOvenList props={{prepareForOven: allBakingPrograms?.done}} />
+                <PrepareForOvenList props={{prepareForOven: allBakingPrograms?.done, refreshView}} />
             </Panel>
         </Container>
     );

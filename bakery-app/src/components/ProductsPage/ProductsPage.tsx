@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { FC } from "react";
 import styled from "styled-components";
-import { ProductBasicInfo } from "../../models/ProductBasicInfo";
+import ProductBasicInfo from "../../models/ProductBasicInfo";
 import { fetchProductsBasicInfo } from "../../services/OrderService";
 import Button from '@mui/material/Button';
 import TextField from "@mui/material/TextField";

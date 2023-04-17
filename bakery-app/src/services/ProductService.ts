@@ -1,9 +1,9 @@
 import { getData, postData } from "./DataService";
 import { BakingTimeSlot } from "../models/BakingTimeSlot";
-import { NewOrderRequest } from "../models/NewOrderRequest";
-import { Order } from "../models/Order";
-import { ProductBasicInfo } from "../models/ProductBasicInfo";
-import { ProductDetails } from "../models/ProductDetails";
+import NewOrderRequest from "../models/NewOrderRequest";
+import Order from "../models/Order";
+import ProductBasicInfo from "../models/ProductBasicInfo";
+import ProductDetails from "../models/ProductDetails";
 
 export async function fetchProductDetails(productId: string): Promise<null | ProductDetails> {
     try {

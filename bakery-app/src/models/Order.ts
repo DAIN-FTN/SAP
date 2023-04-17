@@ -1,3 +1,3 @@
-export interface Order {
+export default interface Order {
     id: number;
 }
