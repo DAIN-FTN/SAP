@@ -4,9 +4,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace SAP_API.Repositories
+namespace SAP_API.DataAccess.Repositories
 {
-    public interface IStockLocationRepository: IRepository<StockLocation>
+    public interface IStockLocationRepository : IRepository<StockLocation>
     {
     }
 }

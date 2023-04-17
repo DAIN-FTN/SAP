@@ -1,9 +1,9 @@
-﻿using SAP_API.DTOs;
+﻿using SAP_API.DataAccess.Repositories;
+using SAP_API.DTOs;
 using SAP_API.DTOs.Requests;
 using SAP_API.DTOs.Responses;
 using SAP_API.Mappers;
 using SAP_API.Models;
-using SAP_API.Repositories;
 using System;
 using System.Collections.Generic;
 
@@ -125,12 +125,14 @@ namespace SAP_API.Services
             DateTime bakingProgrammedAtTime = bakingProgram.BakingProgrammedAt;
             DateTime timeNow = DateTime.Now;
             int numberOfMinutesBeforeProgrammedTimePreparingIsAllowed = 25;
-            DateTime earliestTimeToStartPreparing = timeNow.AddMinutes(-numberOfMinutesBeforeProgrammedTimePreparingIsAllowed);
+            DateTime earliestTimeToStartPreparing = bakingProgrammedAtTime.AddMinutes(-numberOfMinutesBeforeProgrammedTimePreparingIsAllowed);
 
-            if (bakingProgrammedAtTime < earliestTimeToStartPreparing)
+            bool isTooEarlyToPrepareProgram = timeNow.CompareTo(earliestTimeToStartPreparing) < 0;
+
+            if (isTooEarlyToPrepareProgram)
                 return false;
 
-            List<BakingProgram> bakingProgramsThatShouldBePrepared = _bakingProgramRepository.GetProgramsWithBakingProgrammedAtBetweenDateTimes(earliestTimeToStartPreparing, timeNow.AddMinutes(numberOfMinutesBeforeProgrammedTimePreparingIsAllowed));
+            List<BakingProgram> bakingProgramsThatShouldBePrepared = _bakingProgramRepository.GetProgramsWithBakingProgrammedAtBetweenDateTimes(timeNow.AddMinutes(-numberOfMinutesBeforeProgrammedTimePreparingIsAllowed), timeNow);
             if (bakingProgramsThatShouldBePrepared.Count == 0)
                 return false;
 
@@ -174,7 +176,7 @@ namespace SAP_API.Services
             List<BakingProgramStatus> statusesToExclude = new List<BakingProgramStatus> { BakingProgramStatus.Cancelled, BakingProgramStatus.Finished };
             ExcludeProgramsWithStatuses(bakingPrograms, statusesToExclude);
             ChangeStatusToDoneIfBakingIsDone(bakingPrograms);
-            List<BakingProgram> programsUserIsPreparing = bakingPrograms.FindAll(bp => bp.Status.Equals(BakingProgramStatus.Preparing) && bp.PreparedBy.Id == user.Id);
+            List<BakingProgram> programsUserIsPreparing = bakingPrograms.FindAll(bp => bp.Status.Equals(BakingProgramStatus.Preparing) && bp.PreparedByUser.Id == user.Id);
 
             if (programsUserIsPreparing.Count == 0)
                 return BakingProgramMapper.CreateAllBakingProgramsResponse(bakingPrograms, null);
@@ -268,7 +270,7 @@ namespace SAP_API.Services
             DateTime startTime = timeNow.AddDays(-1);
             DateTime endTime = timeNow.AddHours(4);
             List<BakingProgram> bakingPrograms = _bakingProgramRepository.GetProgramsWithBakingProgrammedAtBetweenDateTimes(startTime, endTime);
-            List<BakingProgram> programsBeingPreparedByUser = bakingPrograms.FindAll(bp => bp.Status.Equals(BakingProgramStatus.Preparing) && bp.PreparedBy.Id.Equals(user.Id));
+            List<BakingProgram> programsBeingPreparedByUser = bakingPrograms.FindAll(bp => bp.Status.Equals(BakingProgramStatus.Preparing) && bp.PreparedByUser.Id.Equals(user.Id));
             return programsBeingPreparedByUser.Count > 0;
         }
 
