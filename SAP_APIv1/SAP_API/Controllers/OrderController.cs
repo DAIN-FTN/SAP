@@ -15,13 +15,40 @@ namespace SAP_API.Controllers
 {
     [ApiController]
     [Route("api/orders")]
-    public class OrderController: ControllerBase
+    public class OrderController : ControllerBase
     {
         private readonly IOrderTransactionsOrchestrator _orderCreationOrchestrator;
 
         public OrderController(IOrderTransactionsOrchestrator orderCreationOrchestrator)
         {
             _orderCreationOrchestrator = orderCreationOrchestrator;
+        }
+
+        [HttpGet]
+        public IActionResult GetAll()
+        {
+            try
+            {
+
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+            }
+        }
+
+        [HttpGet("{orderId}")]
+        public IActionResult GetById(Guid orderId)
+        {
+            try
+            {
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+            }
         }
 
         [HttpPost]

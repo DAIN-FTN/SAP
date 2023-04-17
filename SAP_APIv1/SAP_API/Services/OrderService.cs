@@ -1,4 +1,5 @@
 ﻿using SAP_API.DTOs.Requests;
+using SAP_API.DTOs.Responses.Order;
 using SAP_API.Models;
 using SAP_API.Repositories;
 using System;
@@ -47,5 +48,18 @@ namespace SAP_API.Services
 
             return _orderRepository.Create(order);
         }
+
+        public OrderResponse GetOrders()
+        {
+
+            return null;
+        }
+
+        public OrderDetailsResponse GetOrderDetails()
+        {
+
+            return null;
+        }
+
     }
 }
