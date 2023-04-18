@@ -7,14 +7,14 @@ import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import { FC, useState } from "react";
 import styled from "styled-components";
-import { BakingTimeSlot as BakingProgram } from "../../models/BakingTimeSlot";
-import { startPreparingBakingProgram } from "../../services/BakingProgramService";
+import { BakingTimeSlot as BakingProgram, BakingProgramStatus } from "../../models/BakingTimeSlot";
+import { cancellBakingProgram, startPreparingBakingProgram } from "../../services/BakingProgramService";
 import ErrorDialogue from "./ErrorDialogue";
 import DetailsModal from "./DetailsModal";
 import { DateUtils } from "../../services/Utils";
 
-export interface PrepareForOvenListProps {
-    prepareForOven: BakingProgram[];
+export interface DoneListProps {
+    doneBakingPrograms: BakingProgram[];
     refreshView: Function;
 }
 
@@ -35,6 +35,7 @@ const PrepareButton = styled.div`
     width: fit-content;
     padding: 0px 14px;
     border-radius: 21px;
+    margin-right: 4px;
 
     &:hover {
         background-color: #cc2a2a;
@@ -51,7 +52,7 @@ const AvailableActionsTableCell = styled(TableCell)`
     justify-content: flex-end !important;
 `;
 
-const PrepareForOvenList: FC<{ props: PrepareForOvenListProps }> = ({ props: { prepareForOven, refreshView } }) => {
+const DoneList: FC<{ props: DoneListProps }> = ({ props: { doneBakingPrograms, refreshView } }) => {
     const [open, setOpen] = useState(false);
     const [errorMessage, setErrorMessage] = useState("");
     const [showDetails, setShowDetails] = useState(false);
@@ -73,7 +74,25 @@ const PrepareForOvenList: FC<{ props: PrepareForOvenListProps }> = ({ props: { p
         setShowDetails(true);
     }
 
-    if (prepareForOven.length === 0) {
+    function finishClickHandler(bakingProgramId: string) {
+        throw new Error("Not implemented");
+    }
+
+    function cancelClickHandler(bakingProgramId: string) {
+        cancellBakingProgram(bakingProgramId)
+            .then(() => {
+                refreshView();
+            });
+    }
+
+    function startBakingClickHandler(bakingProgramId: string) {
+        cancellBakingProgram(bakingProgramId)
+            .then(() => {
+                refreshView();
+            });
+    }
+
+    if (doneBakingPrograms.length === 0) {
         return <ErrorMessage>No baking programs to show.</ErrorMessage>;
     }
 
@@ -84,16 +103,19 @@ const PrepareForOvenList: FC<{ props: PrepareForOvenListProps }> = ({ props: { p
                     <TableRow>
                         <TableCell>Oven code</TableCell>
                         <TableCell align="right">Baking programmed at</TableCell>
-                        <TableCell align="right" sx={{ width: '130px' }}>Available action</TableCell>
+                        <TableCell align="right" sx={{ width: '110px' }}>Available action</TableCell>
                     </TableRow>
                 </TableHead>
                 <TableBody>
-                    {prepareForOven.map((bakingProgram) => (
+                    {doneBakingPrograms.map((bakingProgram) => (
                         <TableRowStyled key={bakingProgram.id} sx={{ '&:last-child td, &:last-child th': { border: 0 } }} >
                             <TableCell component="th" scope="row" onClick={() => rowClickHandler(bakingProgram)}>{bakingProgram.ovenCode}</TableCell>
                             <TableCell align="right" onClick={() => rowClickHandler(bakingProgram)}>{DateUtils.getMeaningfulDate(bakingProgram.bakingProgrammedAt)}</TableCell>
                             <AvailableActionsTableCell>
-                                <PrepareButton onClick={() => prepareClickHandler(bakingProgram.id, refreshView)}>Start preparing</PrepareButton>
+                                <PrepareButton onClick={() => finishClickHandler(bakingProgram.id)}>Finish</PrepareButton>
+                                <PrepareButton onClick={() => cancelClickHandler(bakingProgram.id)}>Cancel</PrepareButton>
+                                {(bakingProgram.status === BakingProgramStatus.Prepared)
+                                    && <PrepareButton onClick={() => startBakingClickHandler(bakingProgram.id)}>Start baking</PrepareButton>}
                             </AvailableActionsTableCell>
                         </TableRowStyled>
                     ))}
@@ -105,4 +127,4 @@ const PrepareForOvenList: FC<{ props: PrepareForOvenListProps }> = ({ props: { p
     );
 };
 
-export default PrepareForOvenList;
+export default DoneList;

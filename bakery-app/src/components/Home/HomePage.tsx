@@ -4,6 +4,9 @@ import styled from "styled-components";
 import PrepareForOvenList from "./PrepareForOvenList";
 import { fetchAllBakingPrograms } from "../../services/BakingProgramService";
 import AllBakingPrograms from "../../models/AllBakingPrograms";
+import PreparingList from "./PreparingList";
+import BakingList from "./BakingList";
+import DoneList from "./DoneList";
 
 const Container = styled.div`
     width: 100%;
@@ -70,15 +73,15 @@ const HomePage: FC = () => {
             </Panel>
             <Panel>
                 <Label>Preparing</Label>
-                <PrepareForOvenList props={{prepareForOven: allBakingPrograms?.preparingAndPrepared, refreshView}} />
+                <PreparingList props={{preparingBakingPrograms: allBakingPrograms?.preparingAndPrepared, preparingInProgress: allBakingPrograms.preparingInProgress, refreshView}} />
             </Panel>
             <Panel>
                 <Label>Baking</Label>
-                <PrepareForOvenList props={{prepareForOven: allBakingPrograms?.baking, refreshView}} />
+                <BakingList props={{bakingBakingPrograms: allBakingPrograms?.baking, refreshView}} />
             </Panel>
             <Panel>
                 <Label>Done</Label>
-                <PrepareForOvenList props={{prepareForOven: allBakingPrograms?.done, refreshView}} />
+                <DoneList props={{doneBakingPrograms: allBakingPrograms?.done, refreshView}} />
             </Panel>
         </Container>
     );

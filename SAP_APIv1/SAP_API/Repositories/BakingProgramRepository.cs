@@ -168,21 +168,21 @@ namespace SAP_API.Repositories
                         }
                     }
                 },
-                new BakingProgram
-                {
-                    Id = new Guid("00000000-0000-0000-0000-000000000002"),
-                    CreatedAt = new DateTime(2020, 3, 1, 12, 0, 0),
-                    Status = BakingProgramStatus.Done,
-                    BakingTimeInMins = 12,
-                    BakingTempInC = 190,
-                    BakingProgrammedAt = DateTime.Now,
-                    BakingStartedAt = new DateTime(2023, 12, 2, 11, 5, 0),
-                    BakingEndsAt = new DateTime(2023, 12, 2, 11, 17, 0),
-                    Oven = new Oven { Id = new Guid("00000000-0000-0000-0000-000000000001"), Code = "Oven 1" },
-                    PreparedBy = new User { Id = new Guid("00000000-0000-0000-0000-000000000004"), Username = "Bob", Password = "Smith" },
-                    RemainingOvenCapacity = 10,
-                    Products = new List<BakingProgramProduct>()
-                }
+                //new BakingProgram
+                //{
+                //    Id = new Guid("00000000-0000-0000-0000-000000000002"),
+                //    CreatedAt = new DateTime(2020, 3, 1, 12, 0, 0),
+                //    Status = BakingProgramStatus.Done,
+                //    BakingTimeInMins = 12,
+                //    BakingTempInC = 190,
+                //    BakingProgrammedAt = DateTime.Now,
+                //    BakingStartedAt = new DateTime(2023, 12, 2, 11, 5, 0),
+                //    BakingEndsAt = new DateTime(2023, 12, 2, 11, 17, 0),
+                //    Oven = new Oven { Id = new Guid("00000000-0000-0000-0000-000000000001"), Code = "Oven 1" },
+                //    PreparedBy = new User { Id = new Guid("00000000-0000-0000-0000-000000000004"), Username = "Bob", Password = "Smith" },
+                //    RemainingOvenCapacity = 10,
+                //    Products = new List<BakingProgramProduct>()
+                //}
             };
         }
 

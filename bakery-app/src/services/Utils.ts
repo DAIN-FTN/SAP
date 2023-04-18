@@ -20,7 +20,7 @@ function formatDate(date: Date): string {
     const month = (date.getMonth() + 1).toString();
     const year = date.getFullYear().toString();
 
-    return `${day}.${month}.${year}.`;
+    return `${day}.${month}.${year}`;
 }
 
 function getTimeAsString(date: Date): string {
@@ -30,9 +30,26 @@ function getTimeAsString(date: Date): string {
     return `${hours}:${minutes}`;
 }
 
+function getMeaningfulDate(date: Date) {
+    if (!date) {
+        return '/';
+    }
+
+    if (isToday(date)) {
+        return `Today, ${getTimeAsString(date)}`;
+    }
+
+    if (isTomorrow(date)) {
+        return `Tomorrow, ${getTimeAsString(date)}`;
+    }
+
+    return `${formatDate(date)}, ${getTimeAsString(date)}`;
+}
+
 export const DateUtils = {
     isToday,
     isTomorrow,
     formatDate,
-    getTimeAsString
+    getTimeAsString,
+    getMeaningfulDate
 };

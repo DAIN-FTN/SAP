@@ -6,15 +6,20 @@ export interface BakingTimeSlot {
     bakingTimeInMins: number | null;
     bakingTempInC: number | null;
     bakingProgrammedAt: Date
-    bakingStartedAt: Date
+    canBePreparedAt: Date
+    canBeBakedAt: Date
+    bakingStartedAt: Date | null;
+    ovenId: string | null;
     ovenCode: string | null;
 }
 
 export enum BakingProgramStatus {
+    Pending,
     Created,
     Preparing,
     Prepared,
     Baking,
     Done,
-    Cancelled
+    Cancelled,
+    Finished
 }

@@ -27,7 +27,7 @@ export async function fetchBakingTimeSlots(deliveryDateTime: Date, products: Pro
 
     return temp.map((bakingTimeSlot) => ({
         ...bakingTimeSlot,
-        bakingStartedAt: new Date(bakingTimeSlot.bakingStartedAt),
+        bakingStartedAt: bakingTimeSlot.bakingStartedAt ? new Date(bakingTimeSlot.bakingStartedAt) : null,
         bakingProgrammedAt: new Date(bakingTimeSlot.bakingProgrammedAt),
         createdAt: new Date(bakingTimeSlot.createdAt)
     }));
