@@ -4,7 +4,9 @@ using Microsoft.Extensions.Options;
 using SAP_API.DTOs;
 using SAP_API.DTOs.Requests;
 using SAP_API.DTOs.Responses;
+using SAP_API.DTOs.Responses.Order;
 using SAP_API.Exceptions;
+using SAP_API.Models;
 using SAP_API.Services;
 using System;
 using System.Collections.Generic;
@@ -18,10 +20,12 @@ namespace SAP_API.Controllers
     public class OrderController : ControllerBase
     {
         private readonly IOrderTransactionsOrchestrator _orderCreationOrchestrator;
+        private readonly IOrderService _orderService;
 
-        public OrderController(IOrderTransactionsOrchestrator orderCreationOrchestrator)
+        public OrderController(IOrderTransactionsOrchestrator orderCreationOrchestrator, IOrderService orderService)
         {
             _orderCreationOrchestrator = orderCreationOrchestrator;
+            _orderService = orderService;
         }
 
         [HttpGet]
@@ -29,8 +33,8 @@ namespace SAP_API.Controllers
         {
             try
             {
-
-                return Ok();
+                List<OrderResponse> response = _orderService.GetOrders();
+                return Ok(response);
             }
             catch (Exception ex)
             {
@@ -43,7 +47,12 @@ namespace SAP_API.Controllers
         {
             try
             {
-                return Ok();
+                Order order = _orderService.GetById(orderId);
+                if(order == null)
+                    return NotFound();
+
+                OrderDetailsResponse response = _orderService.GetOrderDetails(order);
+                return Ok(response);
             }
             catch (Exception ex)
             {

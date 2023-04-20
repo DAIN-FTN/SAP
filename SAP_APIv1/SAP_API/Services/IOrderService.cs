@@ -1,5 +1,6 @@
 ﻿using SAP_API.DTOs;
 using SAP_API.DTOs.Requests;
+using SAP_API.DTOs.Responses.Order;
 using SAP_API.Models;
 using System;
 using System.Collections.Generic;
@@ -11,5 +12,8 @@ namespace SAP_API.Services
     public interface IOrderService
     {
         public Order CreateOrder(CreateOrderRequest createOrderRequest);
+        public Order GetById(Guid id);
+        public List<OrderResponse> GetOrders();
+        public OrderDetailsResponse GetOrderDetails(Order order);
     }
 }

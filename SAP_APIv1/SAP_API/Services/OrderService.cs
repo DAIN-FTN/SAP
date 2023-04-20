@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using static SAP_API.Services.ArrangingProductsToProgramsService;
+using SAP_API.Mappers;
 
 namespace SAP_API.Services
 {
@@ -16,11 +17,13 @@ namespace SAP_API.Services
 
         private readonly IOrderRepository _orderRepository;
         private readonly  IProductRepository _productRepository;
+        private readonly IBakingProgramProductRepository _bakingProgramProductRepository;
 
-        public OrderService(IOrderRepository orderRepository, IProductRepository productRepository)
+        public OrderService(IOrderRepository orderRepository, IProductRepository productRepository, IBakingProgramProductRepository bakingProgramProductRepository)
         {
             _orderRepository = orderRepository;
             _productRepository = productRepository;
+            _bakingProgramProductRepository = bakingProgramProductRepository;
         }
 
         public Order CreateOrder(CreateOrderRequest createOrderRequest)
@@ -52,17 +55,21 @@ namespace SAP_API.Services
             return _orderRepository.Create(order);
         }
 
-        public OrderResponse GetOrders()
+        public List<OrderResponse> GetOrders()
         {
-
-            return null;
+            List<Order> orders = (List<Order>)_orderRepository.GetAll();
+            return OrderMapper.OrderListToOrderResponseList(orders);
         }
 
-        public OrderDetailsResponse GetOrderDetails()
+        public OrderDetailsResponse GetOrderDetails(Order order)
         {
-
-            return null;
+            List<BakingProgramProduct> productsInBakingProgramsFromOrder = _bakingProgramProductRepository.GetByOrderId(order.Id);
+            return OrderMapper.OrderToOrderDetailsResponse(order, productsInBakingProgramsFromOrder);
         }
 
+        public Order GetById(Guid id)
+        {
+            return _orderRepository.GetById(id);
+        }
     }
 }
