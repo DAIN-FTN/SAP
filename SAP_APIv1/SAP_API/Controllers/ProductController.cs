@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using SAP_API.DTOs;
+using SAP_API.DTOs.Requests;
 using SAP_API.DTOs.Responses;
 using SAP_API.Models;
 using SAP_API.Services;
@@ -78,5 +79,18 @@ namespace SAP_API.Controllers
             }
         }
 
+        public IActionResult CreateProduct([FromBody] CreateProductRequest body)
+        {
+            try
+            {
+                CreateProductResponse response = _productService.CreateProduct(body);
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+            }
+
+        }
     }
 }

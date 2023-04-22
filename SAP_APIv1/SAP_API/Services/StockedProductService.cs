@@ -1,6 +1,9 @@
 ﻿using SAP_API.DataAccess.Repositories;
 using SAP_API.DTOs;
+using SAP_API.DTOs.Requests;
+using SAP_API.DTOs.Responses;
 using SAP_API.Exceptions;
+using SAP_API.Mappers;
 using SAP_API.Models;
 using System;
 using System.Collections.Generic;
@@ -85,6 +88,14 @@ namespace SAP_API.Services
                     _stockedProductRepository.Update(stockedProduct);
                 }
             }
+
+        }
+
+        public CreateStockedProductResponse Create(CreateStockedProductRequest body)
+        {
+            StockedProduct stockedProduct = StockedProductMapper.CreateStockedProductFromCreateStockedProductRequest(body);
+            StockedProduct created = _stockedProductRepository.Create(stockedProduct);
+            return StockedProductMapper.CreateCreateStockedProductResponseFromStockedProduct(created);
 
         }
     }
