@@ -28,24 +28,39 @@ namespace SAP_API.Services
 
         public CreateOrderResponse OrchestrateOrderCreation(CreateOrderRequest orderCreationRequest)
         {
-            ArrangingResult arrangingResult = _bakingProgramService.GetExistingOrNewProgramsProductShouldBeArrangedInto(orderCreationRequest.ShouldBeDoneAt, orderCreationRequest.Products);
-
-            if(arrangingResult.AllProductsCanBeSuccessfullyArranged == false)
-            {
-                throw new OrderCreationException("Products cannot be succesfully arranged");
-            }
-
-            if(arrangingResult.IsThereEnoughStockedProducts == false)
-            {
-                throw new OrderCreationException("There isn't enough products in stock");
-            }
-
             using (var scope = new TransactionScope())
             try
             {
-                foreach (var bakingProgram in arrangingResult.BakingPrograms)
+                    Guid orderId = new Guid();
+
+                    List<ReservedOrderProduct> reservedOrderProducts = _stockedProductService.reserveStockedProducts(orderCreationRequest.Products, orderId);
+
+                    Order order = _orderService.CreateOrder(
+                        new CreateOrderInput
+                        {
+                            Customer = orderCreationRequest.Customer,
+                            ShouldBeDoneAt = orderCreationRequest.ShouldBeDoneAt,
+                            Products = reservedOrderProducts
+                        },
+                        orderId
+                    );
+
+                    ArrangingResult arrangingResult = _bakingProgramService.GetExistingOrNewProgramsProductShouldBeArrangedInto(orderCreationRequest.ShouldBeDoneAt, orderCreationRequest.Products, order.Id);
+
+                    if (arrangingResult.AllProductsCanBeSuccessfullyArranged == false)
+                    {
+                        throw new OrderCreationException("Products cannot be succesfully arranged");
+                    }
+
+                    if (arrangingResult.IsThereEnoughStockedProducts == false)
+                    {
+                        throw new OrderCreationException("There isn't enough products in stock");
+                    }
+
+
+                    foreach (var bakingProgram in arrangingResult.BakingPrograms)
                 {
-                    if (bakingProgram.Status == BakingProgramStatus.Pending)
+                        if (bakingProgram.Status == BakingProgramStatus.Pending)
                     {
                         _bakingProgramService.CreateBakingProgram(bakingProgram);
                     }
@@ -54,10 +69,6 @@ namespace SAP_API.Services
                         _bakingProgramService.UpdateBakingProgram(bakingProgram);
                     }
                 }
-
-                _stockedProductService.reserveStockedProducts(orderCreationRequest.Products);
-
-                Order order = _orderService.CreateOrder(orderCreationRequest);
 
                 scope.Complete();
 

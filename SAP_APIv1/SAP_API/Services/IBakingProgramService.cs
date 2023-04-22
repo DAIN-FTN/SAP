@@ -16,8 +16,8 @@ namespace SAP_API.Services
         public bool CheckIfProgramIsNextForPreparing(BakingProgram bakingProgram);
         public void CancellPreparing(BakingProgram bakingProgram);
         public void FinishPreparing(BakingProgram bakingProgram);
-        public AvailableProgramsResponse FindAvailableBakingPrograms(FindAvailableBakingProgramsRequest body);
-        public ArrangingResult GetExistingOrNewProgramsProductShouldBeArrangedInto(DateTime timeOrderShouldBeDone, List<OrderProductRequest> orderProducts);
+        public AvailableProgramsResponse FindAvailableBakingPrograms(FindAvailableBakingProgramsRequest body, Guid orderId = new Guid());
+        public ArrangingResult GetExistingOrNewProgramsProductShouldBeArrangedInto(DateTime timeOrderShouldBeDone, List<OrderProductRequest> orderProducts, Guid orderId);
         public AllBakingProgramsResponse GetBakingProgramsForUser();
         bool CheckIfProgramIsNextForBaking(BakingProgram bakingProgram);
         void StartBaking(BakingProgram bakingProgram);

@@ -34,9 +34,12 @@ namespace SAP_API.DataAccess.Repositories
             if (existingBakingProgram != null)
             {
                 _bakingPrograms.Remove(existingBakingProgram);
-                _bakingPrograms.Add(bakingProgram);
-
                 _context.SaveChanges();
+
+                _bakingPrograms.Add(bakingProgram);
+                _context.SaveChanges();
+                
+                return bakingProgram;
             }
             throw new Exception("BakingProgram not found");
         }
