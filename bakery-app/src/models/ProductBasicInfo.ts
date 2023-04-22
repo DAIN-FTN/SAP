@@ -1,5 +1,5 @@
-export interface ProductBasicInfo {
+export default interface ProductBasicInfo {
     id: string;
     name: string;
-    availableQuantity: number;
+    quantity: number;
 }

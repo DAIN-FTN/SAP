@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace SAP_API.Models
 {
-    public class Customer: IEntity
+    public class Customer
     {
-        public Guid Id { get; set; }
+        public Guid OrderId { get; set; }
         public string FullName { get; set; }
 
         [EmailAddress]

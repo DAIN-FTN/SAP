@@ -18,7 +18,6 @@ namespace SAP_API.DataAccess
             SeedReservedOrderProducts(modelBuilder.Entity<ReservedOrderProduct>());
             SeedStockedProducts(modelBuilder.Entity<StockedProduct>());
             SeedStockLocations(modelBuilder.Entity<StockLocation>());
-            SeedCustomers(modelBuilder.Entity<Customer>());
             SeedUsers(modelBuilder.Entity<User>());
             SeedBakingProgramProducts(modelBuilder.Entity<BakingProgramProduct>());
         }
@@ -78,21 +77,27 @@ namespace SAP_API.DataAccess
                     Id = new Guid("00000000-0000-0000-0000-000000000008"),
                     ShouldBeDoneAt = DateTime.Now,
                     Status = OrderStatus.Created,
-                    CustomerId = Guid.Parse("00000000-0000-0000-0000-000000000008")
+                    CustomerFullName = "Jane Smith",
+                    CustomerEmail = "janesmith@example.com",
+                    CustomerTelephone = "+44 20 5555 5555"
                 },
                new Order
                {
                    Id = new Guid("00000000-0000-0000-0000-000000000001"),
                    ShouldBeDoneAt = DateTime.Now.AddDays(1),
                    Status = OrderStatus.Cancelled,
-                   CustomerId = Guid.Parse("00000000-0000-0000-0000-000000000008")
+                   CustomerFullName = "Jane Smith",
+                   CustomerEmail = "janesmith@example.com",
+                   CustomerTelephone = "+44 20 5555 5555"
                },
                new Order
                {
                    Id = new Guid("00000000-0000-0000-0000-000000000002"),
                    ShouldBeDoneAt = DateTime.Now.AddDays(2),
                    Status = OrderStatus.Cancelled,
-                   CustomerId = Guid.Parse("00000000-0000-0000-0000-000000000008")
+                   CustomerFullName = "Jane Smith",
+                   CustomerEmail = "janesmith@example.com",
+                   CustomerTelephone = "+44 20 5555 5555"
                }
             );
         }
@@ -315,19 +320,6 @@ namespace SAP_API.DataAccess
                     Capacity = 100
                 }
             );
-        }
-
-        private static void SeedCustomers(EntityTypeBuilder<Customer> customers)
-        {
-            customers.HasData(
-                   new Customer
-                   {
-                       Id = Guid.Parse("00000000-0000-0000-0000-000000000008"),
-                       FullName = "Jane Smith",
-                       Email = "janesmith@example.com",
-                       Telephone = "+44 20 5555 5555"
-                   }
-                );
         }
 
         private static void SeedUsers(EntityTypeBuilder<User> users)

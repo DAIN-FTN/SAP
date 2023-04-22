@@ -26,8 +26,10 @@ namespace SAP_API.Services
             Order order = new Order
             {
                 Id = orderId,
-                Customer = createOrderInput.Customer,
                 ShouldBeDoneAt = createOrderInput.ShouldBeDoneAt,
+                CustomerFullName = createOrderInput.Customer.FullName,
+                CustomerEmail = createOrderInput.Customer.Email,
+                CustomerTelephone = createOrderInput.Customer.Telephone,
                 Status = OrderStatus.Created,
                 Products = createOrderInput.Products,
             };

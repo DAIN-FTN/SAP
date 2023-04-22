@@ -1,3 +1,3 @@
-export interface Order {
-    numOfItems: number;
+export default interface Order {
+    id: number;
 }
