@@ -12,7 +12,7 @@ export interface StartPreparing {
 export interface LocationToPrepareFrom {
     locationId: string;
     locationCode: string;
-    products: string;
+    products: ProductToPrepare[];
 }
 
 export interface ProductToPrepare {

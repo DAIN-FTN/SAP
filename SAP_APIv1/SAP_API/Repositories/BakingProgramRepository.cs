@@ -60,7 +60,7 @@ namespace SAP_API.Repositories
                     Id = new Guid("00000000-0000-0000-0000-000000000000"),
                     CreatedAt = new DateTime(2020, 1, 1, 12, 0, 0),
                     Status = BakingProgramStatus.Created,
-                    BakingTimeInMins = 30,
+                    BakingTimeInMins = 1,
                     BakingTempInC = 120,
                     BakingProgrammedAt = DateTime.Now,
                     BakingStartedAt = null,
@@ -76,7 +76,7 @@ namespace SAP_API.Repositories
                              Product = new Product
                             {
                                 BakingTempInC = 120,
-                                BakingTimeInMins = 30,
+                                BakingTimeInMins = 1,
                                 Id = Guid.Parse("5cd54cb6-0df4-420f-96fd-f6e2cf6e2000"),
                                 Name = "Chocolate Croissant",
                                 Size = 2
@@ -96,7 +96,7 @@ namespace SAP_API.Repositories
                             Product =  new Product
                             {
                                 BakingTempInC = 120,
-                                BakingTimeInMins= 30,
+                                BakingTimeInMins = 1,
                                 Id= Guid.Parse("d174996a-63e4-4b6b-b322-fdf235d91444"),
                                 Name = "Pizza",
                                 Size = 6
@@ -117,7 +117,7 @@ namespace SAP_API.Repositories
                     Id = new Guid("00000000-0000-0000-0000-000000000001"),
                     CreatedAt = new DateTime(2020, 2, 1, 12, 0, 0),
                     Status = BakingProgramStatus.Created,
-                    BakingTimeInMins = 30,
+                    BakingTimeInMins = 1,
                     BakingTempInC = 140,
                     BakingProgrammedAt =  DateTime.Now,
                     BakingStartedAt = null,
@@ -132,7 +132,7 @@ namespace SAP_API.Repositories
                              Product = new Product
                             {
                                 BakingTempInC = 120,
-                                BakingTimeInMins = 30,
+                                BakingTimeInMins = 1,
                                 Id = Guid.Parse("5cd54cb6-0df4-420f-96fd-f6e2cf6e2000"),
                                 Name = "Chocolate Croissant",
                                 Size = 2
@@ -152,7 +152,7 @@ namespace SAP_API.Repositories
                             Product =  new Product
                             {
                                 BakingTempInC = 120,
-                                BakingTimeInMins= 30,
+                                BakingTimeInMins = 1,
                                 Id= Guid.Parse("d174996a-63e4-4b6b-b322-fdf235d91444"),
                                 Name = "Pizza",
                                 Size = 6

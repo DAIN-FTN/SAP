@@ -57,7 +57,7 @@ const HomePage: FC = () => {
         });
     }
 
-    if (allBakingPrograms == undefined || allBakingPrograms == null) {
+    if (allBakingPrograms === undefined || allBakingPrograms === null) {
         return (
             <Container>
                 {/* <ErrorMessage>No baking programs available</ErrorMessage> */}

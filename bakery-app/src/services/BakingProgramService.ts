@@ -1,6 +1,7 @@
 import { getData, putDataWithoutResponse } from "./DataService";
 import { BakingTimeSlot as BakingProgram } from "../models/BakingTimeSlot";
 import AllBakingPrograms from "../models/AllBakingPrograms";
+import { StartPreparing } from "../models/Responses/StartPreparing";
 
 export async function fetchAllBakingPrograms(): Promise<AllBakingPrograms> {
     const response = await getData<AllBakingPrograms>(`/api/baking-programs`);
@@ -25,11 +26,18 @@ export async function startBakingBakingProgram(id: string) {
 
 function mapAllBakingPrograms(allBakingPrograms: AllBakingPrograms): AllBakingPrograms {
     return {
-        preparingInProgress: allBakingPrograms.preparingInProgress,
+        preparingInProgress: mapPreparingInProgress(allBakingPrograms.preparingInProgress),
         prepareForOven: mapBakingPrograms(allBakingPrograms.prepareForOven),
         preparingAndPrepared: mapBakingPrograms(allBakingPrograms.preparingAndPrepared),
         baking: mapBakingPrograms(allBakingPrograms.baking),
         done: mapBakingPrograms(allBakingPrograms.done),
+    }
+
+    function mapPreparingInProgress(preparingInProgress: StartPreparing): StartPreparing {
+        return {
+            ...preparingInProgress,
+            bakingProgrammedAt: new Date(preparingInProgress.bakingProgrammedAt)
+        };
     }
 
     function mapBakingPrograms(bakingPrograms: BakingProgram[]): BakingProgram[] {

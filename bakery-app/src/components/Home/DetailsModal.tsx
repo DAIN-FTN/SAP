@@ -3,13 +3,7 @@ import Dialog from '@mui/material/Dialog';
 import styled from 'styled-components';
 import { BakingTimeSlot as BakingProgram, BakingProgramStatus } from '../../models/BakingTimeSlot';
 import { DateUtils } from '../../services/Utils';
-import TableContainer from '@mui/material/TableContainer';
-import Paper from '@mui/material/Paper';
-import Table from '@mui/material/Table';
-import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
-import TableCell from '@mui/material/TableCell';
-import TableBody from '@mui/material/TableBody';
 
 export interface DetailsModalProps {
     isOpen: boolean;

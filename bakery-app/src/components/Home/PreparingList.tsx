@@ -13,6 +13,7 @@ import ErrorDialogue from "./ErrorDialogue";
 import DetailsModal from "./DetailsModal";
 import { DateUtils } from "../../services/Utils";
 import { StartPreparing } from "../../models/Responses/StartPreparing";
+import SuperDetailsModal from "./SuperDetailsModal/SuperDetailsModal";
 
 export interface PreparingListProps {
     preparingBakingPrograms: BakingProgram[];
@@ -74,6 +75,7 @@ const PreparingList: FC<{ props: PreparingListProps }> = ({ props: { preparingBa
     const [isErrorDialogOpen, setIsErrorDialogOpen] = useState(false);
     const [errorMessage, setErrorDialogMessage] = useState("");
     const [showDetails, setShowDetails] = useState(false);
+    const [showPreparingDetails, setShowPreparingDetails] = useState(false);
     const [selectedBakingProgram, setSelectedBakingProgram] = useState<BakingProgram | null>(null);
 
     function rowClickHandler(bakingProgram: BakingProgram) {
@@ -114,6 +116,11 @@ const PreparingList: FC<{ props: PreparingListProps }> = ({ props: { preparingBa
             });
     }
 
+    function preparingClickHandler() {
+        setShowPreparingDetails(true);
+
+    }
+
     if (preparingBakingPrograms.length === 0) {
         return <ErrorMessage>No baking programs to show.</ErrorMessage>;
     }
@@ -129,31 +136,31 @@ const PreparingList: FC<{ props: PreparingListProps }> = ({ props: { preparingBa
                     </TableRow>
                 </TableHead>
                 <TableBody>
-                    {preparingInProgress && <TableRowStyled>
+                    {preparingInProgress && <TableRowStyled onClick={() => setShowPreparingDetails(true)}>
                         <TableCell component="th" scope="row" sx={{ display: 'flex', flexDirection: "row" }}><PreparingTag>Preparing</PreparingTag> {preparingInProgress.ovenCode}</TableCell>
-                        <TableCell align="right">123</TableCell>
+                        <TableCell align="right">{DateUtils.getMeaningfulDate(preparingInProgress.bakingProgrammedAt)}</TableCell>
                         <AvailableActionsTableCell>
                             <PrepareButton onClick={() => finishClickHandler(preparingInProgress.id)}>Finish</PrepareButton>
                         </AvailableActionsTableCell>
                     </TableRowStyled>}
-                    {preparingBakingPrograms.map((bakingProgram) => (
-                        <TableRowStyled key={bakingProgram.id}>
-                            <TableCell component="th" scope="row" onClick={() => rowClickHandler(bakingProgram)}>{bakingProgram.ovenCode}</TableCell>
-                            <TableCell align="right" onClick={() => rowClickHandler(bakingProgram)}>{DateUtils.getMeaningfulDate(bakingProgram.bakingProgrammedAt)}</TableCell>
-                            <AvailableActionsTableCell>
-                                {/* {(bakingProgram.status === BakingProgramStatus.Preparing)
-                                    && <PrepareButton onClick={() => finishClickHandler(bakingProgram.id)}>Finish</PrepareButton>} */}
-                                {(bakingProgram.status === BakingProgramStatus.Preparing)
-                                    && <PrepareButton onClick={() => cancelClickHandler(bakingProgram.id)}>Cancel</PrepareButton>}
-                                {(bakingProgram.status === BakingProgramStatus.Prepared)
-                                    && <PrepareButton onClick={() => startBakingClickHandler(bakingProgram.id)}>Start baking</PrepareButton>}
-                            </AvailableActionsTableCell>
-                        </TableRowStyled>
-                    ))}
+                    {preparingBakingPrograms
+                        .filter(bakingProgram => bakingProgram.status == BakingProgramStatus.Prepared)
+                        .map((bakingProgram) => (
+                            <TableRowStyled key={bakingProgram.id}>
+                                <TableCell component="th" scope="row" onClick={() => rowClickHandler(bakingProgram)}>{bakingProgram.ovenCode}</TableCell>
+                                <TableCell align="right" onClick={() => rowClickHandler(bakingProgram)}>{DateUtils.getMeaningfulDate(bakingProgram.bakingProgrammedAt)}</TableCell>
+                                <AvailableActionsTableCell>
+                                    {(bakingProgram.status === BakingProgramStatus.Preparing)
+                                        && <PrepareButton onClick={() => cancelClickHandler(bakingProgram.id)}>Cancel</PrepareButton>}
+                                    {(bakingProgram.status === BakingProgramStatus.Prepared)
+                                        && <PrepareButton onClick={() => startBakingClickHandler(bakingProgram.id)}>Start baking</PrepareButton>}
+                                </AvailableActionsTableCell>
+                            </TableRowStyled>
+                        ))}
                 </TableBody>
             </Table>
             <ErrorDialogue open={isErrorDialogOpen} errorMessage={errorMessage} onClose={() => setIsErrorDialogOpen(false)} />
-            <DetailsModal isOpen={showDetails} onClose={() => setShowDetails(false)} bakingProgram={selectedBakingProgram} />
+            <SuperDetailsModal isOpen={showPreparingDetails} onClose={() => setShowPreparingDetails(false)} bakingProgram={preparingInProgress} />
         </TableContainer>
     );
 };
