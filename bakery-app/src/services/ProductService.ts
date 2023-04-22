@@ -3,17 +3,13 @@ import { BakingTimeSlot } from "../models/BakingTimeSlot";
 import NewOrderRequest from "../models/NewOrderRequest";
 import Order from "../models/Order";
 import ProductBasicInfo from "../models/ProductBasicInfo";
+import ProductDetails from "../models/ProductDetails";
 
-export async function fetchProductsBasicInfo(name: string): Promise<ProductBasicInfo[]> {
+export async function fetchProductDetails(productId: string): Promise<null | ProductDetails> {
     try {
-        const data = await getData<any[]>(`/api/products/stock?name=${name}`);
-        return data.map((product) => ({
-            id: product.id,
-            name: product.name,
-            quantity: product.availableQuantity,
-        }));
+        return await getData<ProductDetails>(`/api/products/${productId}`);
     } catch (error) {
-        return [] as ProductBasicInfo[];
+        return null as unknown as ProductDetails;
     }
 }
 
