@@ -19,8 +19,8 @@ const Container = styled.div`
     flex-direction: column;
 
     & .MuiPaper-elevation { // TODO: this "&" is not working and is being propagated to the child elements
-        max-width: auto;
-        width: auto;
+        max-width: auto !important;
+        width: auto !important;
     }
 `;
 

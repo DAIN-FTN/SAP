@@ -1,16 +1,8 @@
 import DialogTitle from '@mui/material/DialogTitle';
 import Dialog from '@mui/material/Dialog';
 import styled from 'styled-components';
-import { BakingTimeSlot as BakingProgram, BakingProgramStatus } from '../../../models/BakingTimeSlot';
 import { DateUtils } from '../../../services/Utils';
-import TableRow from '@mui/material/TableRow';
 import { FC } from 'react';
-import TableContainer from '@mui/material/TableContainer';
-import Paper from '@mui/material/Paper';
-import Table from '@mui/material/Table';
-import TableHead from '@mui/material/TableHead';
-import TableCell from '@mui/material/TableCell';
-import TableBody from '@mui/material/TableBody';
 import LocationsToPrepareFromList from './LocationsToPrepareFromList';
 import { StartPreparing } from '../../../models/Responses/StartPreparing';
 
@@ -68,17 +60,6 @@ const DialogStyled = styled(Dialog)`
     }
 `;
 
-const TableRowStyled = styled(TableRow)`
-    cursor: pointer;
-
-    &:last-child td + &:last-child th {
-        border: 0;
-    }
-
-    &:hover {
-        background-color: #f5f5f5;
-    }
-`;
 const SuperDetailsModal: FC<SuperDetailsModalProps> = ({ isOpen, bakingProgram, onClose }) => {
 
     const handleClose = () => {
