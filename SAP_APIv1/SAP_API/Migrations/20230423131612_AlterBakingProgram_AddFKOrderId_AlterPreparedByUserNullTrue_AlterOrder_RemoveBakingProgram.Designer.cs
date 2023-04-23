@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using SAP_API.DataAccess.DbContexts;
@@ -9,9 +10,10 @@ using SAP_API.DataAccess.DbContexts;
 namespace SAP_API.Migrations
 {
     [DbContext(typeof(BakeryContext))]
-    partial class BakeryContextModelSnapshot : ModelSnapshot
+    [Migration("20230423131612_AlterBakingProgram_AddFKOrderId_AlterPreparedByUserNullTrue_AlterOrder_RemoveBakingProgram")]
+    partial class AlterBakingProgram_AddFKOrderId_AlterPreparedByUserNullTrue_AlterOrder_RemoveBakingProgram
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -296,6 +298,7 @@ namespace SAP_API.Migrations
                         .HasColumnType("integer");
 
                     b.Property<string>("Name")
+                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<int>("Size")
@@ -303,8 +306,7 @@ namespace SAP_API.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("Name")
-                        .IsUnique();
+                    b.HasAlternateKey("Name");
 
                     b.ToTable("Product");
 
@@ -510,10 +512,9 @@ namespace SAP_API.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasAlternateKey("ProductId", "LocationId")
-                        .HasName("UQ_ProductId_LocationId");
-
                     b.HasIndex("LocationId");
+
+                    b.HasIndex("ProductId");
 
                     b.ToTable("StockedProduct");
 
@@ -548,6 +549,14 @@ namespace SAP_API.Migrations
                             LocationId = new Guid("00000000-0000-0000-0000-000000000001"),
                             ProductId = new Guid("00000000-0000-0000-0000-000000000002"),
                             Quantity = 20,
+                            ReservedQuantity = 10
+                        },
+                        new
+                        {
+                            Id = new Guid("00000000-0000-0000-0000-000000000004"),
+                            LocationId = new Guid("00000000-0000-0000-0000-000000000001"),
+                            ProductId = new Guid("00000000-0000-0000-0000-000000000002"),
+                            Quantity = 200,
                             ReservedQuantity = 10
                         },
                         new

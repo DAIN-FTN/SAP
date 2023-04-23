@@ -12,8 +12,8 @@ namespace SAP_API.DataAccess
         public static void SeedData(ModelBuilder modelBuilder)
         {
             SeedOrders(modelBuilder.Entity<Order>());
-            SeedBakingPrograms(modelBuilder.Entity<BakingProgram>());
             SeedOvens(modelBuilder.Entity<Oven>());
+            SeedBakingPrograms(modelBuilder.Entity<BakingProgram>());
             SeedProducts(modelBuilder.Entity<Product>());
             SeedReservedOrderProducts(modelBuilder.Entity<ReservedOrderProduct>());
             SeedStockedProducts(modelBuilder.Entity<StockedProduct>());
@@ -108,7 +108,8 @@ namespace SAP_API.DataAccess
                 new BakingProgram
                 {
                     Id = new Guid("00000000-0000-0000-0000-000000000008"),
-                    PreparedByUserId = new Guid("00000000-0000-0000-0000-000000000008"),
+                    PreparedByUserId = null,
+                    OvenId = new Guid("00000000-0000-0000-0000-000000000008"),
                     Code = "Code1",
                     CreatedAt = new DateTime(2020, 1, 1, 12, 0, 0),
                     Status = BakingProgramStatus.Created,
@@ -123,7 +124,8 @@ namespace SAP_API.DataAccess
                 new BakingProgram
                 {
                     Id = new Guid("00000000-0000-0000-0000-000000000001"),
-                    PreparedByUserId = new Guid("00000000-0000-0000-0000-000000000008"),
+                    PreparedByUserId = null,
+                    OvenId = new Guid("00000000-0000-0000-0000-000000000001"),
                     Code = "Code2",
                     CreatedAt = new DateTime(2020, 2, 1, 12, 0, 0),
                     Status = BakingProgramStatus.Created,
@@ -138,6 +140,7 @@ namespace SAP_API.DataAccess
                 {
                     Id = new Guid("00000000-0000-0000-0000-000000000002"),
                     PreparedByUserId = new Guid("00000000-0000-0000-0000-000000000008"),
+                    OvenId = new Guid("00000000-0000-0000-0000-000000000002"),
                     Code = "Code3",
                     CreatedAt = new DateTime(2020, 3, 1, 12, 0, 0),
                     Status = BakingProgramStatus.Done,
@@ -155,9 +158,9 @@ namespace SAP_API.DataAccess
         private static void SeedOvens(EntityTypeBuilder<Oven> ovens)
         {
             ovens.HasData(
-                new Oven { Id = new Guid("00000000-0000-0000-0000-000000000008"), Code = "Oven1", MaxTempInC = 250, Capacity = 20, BakingProgramId = new Guid("00000000-0000-0000-0000-000000000008") },
-                new Oven { Id = new Guid("00000000-0000-0000-0000-000000000001"), Code = "Oven2", MaxTempInC = 300, Capacity = 25, BakingProgramId = new Guid("00000000-0000-0000-0000-000000000001") },
-                new Oven { Id = new Guid("00000000-0000-0000-0000-000000000002"), Code = "Oven3", MaxTempInC = 350, Capacity = 30, BakingProgramId = new Guid("00000000-0000-0000-0000-000000000002") }
+                new Oven { Id = new Guid("00000000-0000-0000-0000-000000000008"), Code = "Oven1", MaxTempInC = 250, Capacity = 20 },
+                new Oven { Id = new Guid("00000000-0000-0000-0000-000000000001"), Code = "Oven2", MaxTempInC = 300, Capacity = 25 },
+                new Oven { Id = new Guid("00000000-0000-0000-0000-000000000002"), Code = "Oven3", MaxTempInC = 350, Capacity = 30 }
                 );
         }
 
