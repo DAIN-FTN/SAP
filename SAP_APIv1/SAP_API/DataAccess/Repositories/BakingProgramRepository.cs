@@ -33,13 +33,10 @@ namespace SAP_API.DataAccess.Repositories
             var existingBakingProgram = _bakingPrograms.FirstOrDefault(x => x.Id == bakingProgram.Id);
             if (existingBakingProgram != null)
             {
-                _bakingPrograms.Remove(existingBakingProgram);
-                _context.SaveChanges();
-
-                _bakingPrograms.Add(bakingProgram);
+                _bakingPrograms.Update(bakingProgram);
                 _context.SaveChanges();
                 
-                return bakingProgram;
+                return GetById(existingBakingProgram.Id);
             }
             throw new Exception("BakingProgram not found");
         }

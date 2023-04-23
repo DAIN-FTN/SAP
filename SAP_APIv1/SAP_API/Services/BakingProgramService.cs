@@ -278,5 +278,11 @@ namespace SAP_API.Services
         {
             return _bakingProgramRepository.GetById(bakingProgramId);
         }
+
+        public void Finish(BakingProgram bakingProgram)
+        {
+            bakingProgram.Finish();
+            _bakingProgramRepository.Update(bakingProgram);
+        }
     }
 }

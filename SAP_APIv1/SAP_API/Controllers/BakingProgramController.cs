@@ -168,5 +168,28 @@ namespace SAP_API.Controllers
             }
         }
 
+        [HttpPut("finish/{bakingProgramId}")]
+        public IActionResult Finish(Guid bakingProgramId, [FromServices] IOptions<ApiBehaviorOptions> apiBehaviorOptions)
+        {
+            try
+            {
+                BakingProgram bakingProgram = _bakingProgramService.GetById(bakingProgramId);
+                if (bakingProgram == null)
+                    return NotFound();
+
+                _bakingProgramService.Finish(bakingProgram);
+                return Ok();
+            }
+            catch (BadProgramStatusException statusEx)
+            {
+                ModelState.AddModelError("ErrorToDisplay", statusEx.Message);
+                return apiBehaviorOptions.Value.InvalidModelStateResponseFactory(ControllerContext);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+            }
+        }
+
     }
 }
