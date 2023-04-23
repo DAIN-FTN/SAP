@@ -111,7 +111,7 @@ namespace SAP_API.Services
             }
 
             bakingProgram.FinishPreparing();
-            //TODO saveChanges
+            _bakingProgramRepository.Update(bakingProgram);
 
         }
 
@@ -152,7 +152,7 @@ namespace SAP_API.Services
         public void CancellPreparing(BakingProgram bakingProgram)
         {
             bakingProgram.CancellPreparing();
-            //TODO SaveChanges
+            _bakingProgramRepository.Update(bakingProgram);
         }
 
         //TODO user from req
@@ -197,6 +197,7 @@ namespace SAP_API.Services
                 if(program.IsBakingDone())
                 {
                     program.FinishBaking();
+                    _bakingProgramRepository.Update(program);
                 }
             }
         }
@@ -246,7 +247,8 @@ namespace SAP_API.Services
         public void StartBaking(BakingProgram bakingProgram)
         {
             bakingProgram.StartBaking();
-            //TODO save changes
+            _bakingProgramRepository.Update(bakingProgram);
+
         }
 
         public bool CheckIfUserIsAlreadyPreparingAnotherProgram()
