@@ -21,14 +21,12 @@ namespace SAP_API.DataAccess.Repositories
         public IEnumerable<Oven> GetAll()
         {
             return _ovens
-                .Include(oven => oven.BakingProgram)
                 .ToList();
         }
 
         public Oven GetById(Guid id)
         {
             return _ovens
-                .Include(oven => oven.BakingProgram)
                 .SingleOrDefault(o => o.Id == id);
         }
 

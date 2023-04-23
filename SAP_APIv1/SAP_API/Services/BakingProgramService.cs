@@ -28,7 +28,7 @@ namespace SAP_API.Services
         }
 
 
-        public ArrangingResult GetExistingOrNewProgramsProductShouldBeArrangedInto(DateTime timeOrderShouldBeDone, List<OrderProductRequest> orderProducts)
+        public ArrangingResult GetExistingOrNewProgramsProductShouldBeArrangedInto(DateTime timeOrderShouldBeDone, List<OrderProductRequest> orderProducts, Guid orderId)
         {
 
             bool thereIsEnoughStock = _stockedProductService.IsThereEnoughStockForProducts(orderProducts);
@@ -38,7 +38,7 @@ namespace SAP_API.Services
             _arrangingService.SetTimeOrderShouldBeDone(timeOrderShouldBeDone);
             _arrangingService.PrepareProductsForArranging(orderProducts);
 
-            List<BakingProgram> existingPrograms = _arrangingService.GetExistingProgramsProductShouldBeArrangedInto();
+            List<BakingProgram> existingPrograms = _arrangingService.GetExistingProgramsProductShouldBeArrangedInto(orderId);
             programsProductsShouldBeArrangedTo.AddRange(existingPrograms);
 
             bool allProductsSuccessfullyArranged = !_arrangingService.ThereAreProductsLeftForArranging();
@@ -51,7 +51,7 @@ namespace SAP_API.Services
                 };
             }
 
-            List<BakingProgram> newPrograms = _arrangingService.GetNewProgramsProductsShouldBeArrangedInto();
+            List<BakingProgram> newPrograms = _arrangingService.GetNewProgramsProductsShouldBeArrangedInto(orderId);
             programsProductsShouldBeArrangedTo.AddRange(newPrograms);
 
             allProductsSuccessfullyArranged = !_arrangingService.ThereAreProductsLeftForArranging();
@@ -94,9 +94,9 @@ namespace SAP_API.Services
            _bakingProgramRepository.Update(bakingProgram); 
         }
 
-        public AvailableProgramsResponse FindAvailableBakingPrograms(FindAvailableBakingProgramsRequest body)
+        public AvailableProgramsResponse FindAvailableBakingPrograms(FindAvailableBakingProgramsRequest body, Guid orderId)
         {
-            ArrangingResult result = GetExistingOrNewProgramsProductShouldBeArrangedInto((DateTime)body.ShouldBeDoneAt, body.OrderProducts);
+            ArrangingResult result = GetExistingOrNewProgramsProductShouldBeArrangedInto((DateTime)body.ShouldBeDoneAt, body.OrderProducts, orderId);
             AvailableProgramsResponse resultResponse = BakingProgramMapper.CreateAvailableProgramResponse(result);
             return resultResponse;
         }
@@ -277,6 +277,12 @@ namespace SAP_API.Services
         public BakingProgram GetById(Guid bakingProgramId)
         {
             return _bakingProgramRepository.GetById(bakingProgramId);
+        }
+
+        public void Finish(BakingProgram bakingProgram)
+        {
+            bakingProgram.Finish();
+            _bakingProgramRepository.Update(bakingProgram);
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using SAP_API.DTOs;
+using SAP_API.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,6 +11,6 @@ namespace SAP_API.Services
     {
         public void ChangeStockOnLocationForProduct(Guid locationId, Guid productId, int quantityToSubstract);
         public bool IsThereEnoughStockForProducts(List<OrderProductRequest> orderProducts);
-        public void reserveStockedProducts(List<OrderProductRequest> orderProducts);
+        public List<ReservedOrderProduct> reserveStockedProducts(List<OrderProductRequest> orderProducts, Guid orderId);
     }
 }

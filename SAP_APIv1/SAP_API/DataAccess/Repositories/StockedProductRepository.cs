@@ -68,6 +68,7 @@ namespace SAP_API.DataAccess.Repositories
             if (stockedProduct != null)
             {
                 _stockedProducts.Remove(stockedProduct);
+                _context.SaveChanges();
                 _stockedProducts.Add(updatedStockProduct);
                 _context.SaveChanges();
 

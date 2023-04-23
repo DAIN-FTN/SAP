@@ -11,9 +11,11 @@ namespace SAP_API.Services
 {
     public interface IOrderService
     {
-        public Order CreateOrder(CreateOrderRequest createOrderRequest);
+
         public Order GetById(Guid id);
         public List<OrderResponse> GetOrders();
         public OrderDetailsResponse GetOrderDetails(Order order);
+        public Order CreateOrder(CreateOrderInput input, Guid orderId = new Guid());
+
     }
 }

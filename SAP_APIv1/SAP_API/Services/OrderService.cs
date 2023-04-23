@@ -26,32 +26,19 @@ namespace SAP_API.Services
             _bakingProgramProductRepository = bakingProgramProductRepository;
         }
 
-        public Order CreateOrder(CreateOrderRequest createOrderRequest)
+        public Order CreateOrder(CreateOrderInput createOrderInput, Guid orderId = new Guid())
         {
-            List<ReservedOrderProduct> orderProducts = new List<ReservedOrderProduct>();
-
-            foreach (var productRequest in createOrderRequest.Products)
-            {
-                Product product = _productRepository.GetById(productRequest.ProductId.Value);
-                orderProducts.Add(new ReservedOrderProduct
-                {
-                    Product = product,
-                    Id = Guid.NewGuid(),
-                    ReservedQuantity = productRequest.Quantity.Value,
-                });
-            }
-
             Order order = new Order
             {
-                CustomerFullName = createOrderRequest.Customer.FullName,
-                CustomerEmail = createOrderRequest.Customer.Email,
-                CustomerTelephone = createOrderRequest.Customer.Telephone,
-                ShouldBeDoneAt = createOrderRequest.ShouldBeDoneAt,
+                Id = orderId,
+                ShouldBeDoneAt = createOrderInput.ShouldBeDoneAt,
+                CustomerFullName = createOrderInput.Customer.FullName,
+                CustomerEmail = createOrderInput.Customer.Email,
+                CustomerTelephone = createOrderInput.Customer.Telephone,
                 Status = OrderStatus.Created,
-                Products = orderProducts,
+                Products = createOrderInput.Products,
             };
             
-
             return _orderRepository.Create(order);
         }
 
@@ -71,5 +58,6 @@ namespace SAP_API.Services
         {
             return _orderRepository.GetById(id);
         }
+
     }
 }
