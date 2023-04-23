@@ -54,6 +54,7 @@ namespace SAP_API.DataAccess.Repositories
             if (stockLocation != null)
             {
                 _stockLocations.Remove(stockLocation);
+                _context.SaveChanges();
                 _stockLocations.Add(updatedStockLocation);
                 _context.SaveChanges();
 

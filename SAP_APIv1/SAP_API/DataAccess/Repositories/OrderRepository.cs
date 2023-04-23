@@ -46,6 +46,7 @@ namespace SAP_API.DataAccess.Repositories
             if (order != null)
             {
                 _context.Remove(order);
+                _context.SaveChanges();
                 _context.Add(entity);
                 _context.SaveChanges();
             }
