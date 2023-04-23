@@ -40,7 +40,7 @@ namespace SAP_API.Models
         }
 
         //TODO PreparedBy
-        internal void StartPreparing(User user)
+        internal void StartPreparing(Guid userId)
         {
             if (!Status.Equals(BakingProgramStatus.Created))
             {
@@ -49,7 +49,7 @@ namespace SAP_API.Models
             }
                 
             Status = BakingProgramStatus.Preparing;
-            PreparedByUser = user;
+            PreparedByUserId = userId;
         }
 
         private string CreateUnableToTransitionErrorMessage(BakingProgramStatus statusToTransitionTo)
