@@ -80,10 +80,10 @@ namespace SAP_API.Mappers
             return new Product
             {
                 Id = Guid.NewGuid(),
-                BakingTempInC = body.BakingTempInC,
-                BakingTimeInMins = body.BakingTimeInMins,
+                BakingTempInC = (int)body.BakingTempInC,
+                BakingTimeInMins = (int)body.BakingTimeInMins,
                 Name = body.Name,
-                Size = body.Size,
+                Size = (int)body.Size,
             };
         }
 
@@ -97,6 +97,17 @@ namespace SAP_API.Mappers
                 BakingTimeInMins = body.BakingTimeInMins,
                 Size = body.Size,
                 Stock = null
+            };
+        }
+
+        internal static UpdateProductResponse CreateUpdateProductResponseFromProduct(Product updated)
+        {
+            return new UpdateProductResponse
+            {
+                Name = updated.Name,
+                BakingTempInC = updated.BakingTempInC,
+                Size = updated.Size,
+                BakingTimeInMins = updated.BakingTimeInMins
             };
         }
     }

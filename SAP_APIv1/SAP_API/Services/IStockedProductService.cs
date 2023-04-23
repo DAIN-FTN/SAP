@@ -1,6 +1,8 @@
 ﻿using SAP_API.DTOs;
 using SAP_API.DTOs.Requests;
 using SAP_API.DTOs.Responses;
+using SAP_API.DTOs.Responses.StockedProduct;
+using SAP_API.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,5 +17,7 @@ namespace SAP_API.Services
         public void reserveStockedProducts(List<OrderProductRequest> orderProducts);
 
         CreateStockedProductResponse Create(CreateStockedProductRequest stockedProduct);
+        UpdateStockedProductResponse Update(StockedProduct stockedProduct, UpdateStockedProductRequest body);
+        StockedProduct GetByLocationIdProductId(Guid locationId, Guid productId);
     }
 }

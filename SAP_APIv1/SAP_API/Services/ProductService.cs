@@ -96,5 +96,20 @@ namespace SAP_API.Services
 
             return resultList;
         }
+
+        public UpdateProductResponse UpdateProduct(Product product, UpdateProductRequest body)
+        {
+            UpdateProductFields(product, body);
+            Product updated = _productRepository.Update(product);
+            return ProductMapper.CreateUpdateProductResponseFromProduct(updated);
+        }
+
+        private void UpdateProductFields(Product product, UpdateProductRequest body)
+        {
+            product.BakingTempInC = (int)body.BakingTempInC;
+            product.BakingTimeInMins = (int)body.BakingTimeInMins;
+            product.Name = body.Name;
+            product.Size = (int)body.Size;
+        }
     }
 }

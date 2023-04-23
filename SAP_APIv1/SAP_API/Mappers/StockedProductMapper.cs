@@ -1,5 +1,6 @@
 ﻿using SAP_API.DTOs.Requests;
 using SAP_API.DTOs.Responses;
+using SAP_API.DTOs.Responses.StockedProduct;
 using SAP_API.Models;
 using System;
 using System.Collections.Generic;
@@ -27,9 +28,9 @@ namespace SAP_API.Mappers
             return new StockedProduct
             {
                 Id = Guid.NewGuid(),
-                LocationId = body.LocationId,
-                ProductId = body.ProductId,
-                Quantity = body.Quantity,
+                LocationId = (Guid)body.LocationId,
+                ProductId = (Guid)body.ProductId,
+                Quantity = (int)body.Quantity,
                 ReservedQuantity = 0
             };
         }
@@ -47,6 +48,17 @@ namespace SAP_API.Mappers
             };
         }
 
-
+        internal static UpdateStockedProductResponse CreateUpdateStockedProductResponseFromStockedProduct(StockedProduct stockedPoduct)
+        {
+            return new UpdateStockedProductResponse
+            {
+                LocationId = stockedPoduct.LocationId,
+                LocationCode = stockedPoduct.Location.Code,
+                ProductId = stockedPoduct.ProductId,
+                ProductName = stockedPoduct.Product.Name,
+                Quantity = stockedPoduct.Quantity,
+                ReservedQuantity = stockedPoduct.ReservedQuantity
+            };
+        }
     }
 }

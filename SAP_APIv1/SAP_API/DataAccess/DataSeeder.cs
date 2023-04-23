@@ -287,14 +287,6 @@ namespace SAP_API.DataAccess
                 },
                 new StockedProduct
                 {
-                    Id = Guid.Parse("00000000-0000-0000-0000-000000000004"),
-                    ProductId = Guid.Parse("00000000-0000-0000-0000-000000000002"),
-                    LocationId = Guid.Parse("00000000-0000-0000-0000-000000000001"),
-                    Quantity = 200,
-                    ReservedQuantity = 10
-                },
-                new StockedProduct
-                {
                     Id = Guid.Parse("00000000-0000-0000-0000-000000000005"),
                     ProductId = Guid.Parse("00000000-0000-0000-0000-000000000003"),
                     LocationId = Guid.Parse("00000000-0000-0000-0000-000000000002"),

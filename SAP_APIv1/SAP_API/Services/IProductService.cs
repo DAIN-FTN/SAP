@@ -15,5 +15,6 @@ namespace SAP_API.Services
         public List<ProductResponse> GetAll(string name);
         public Product GetById(Guid productId);
         CreateProductResponse CreateProduct(CreateProductRequest body);
+        UpdateProductResponse UpdateProduct(Product product, UpdateProductRequest body);
     }
 }

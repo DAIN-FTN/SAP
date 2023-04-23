@@ -67,14 +67,13 @@ namespace SAP_API.DataAccess.Repositories
 
         public StockedProduct Update(StockedProduct updatedStockProduct)
         {
-            StockedProduct stockedProduct = _stockedProducts.FirstOrDefault(x => x.Id == updatedStockProduct.Id);
+            StockedProduct stockedProduct = _stockedProducts.FirstOrDefault(x => x.LocationId.Equals(updatedStockProduct.LocationId) && x.ProductId.Equals(updatedStockProduct.ProductId));
             if (stockedProduct != null)
             {
-                _stockedProducts.Remove(stockedProduct);
-                _stockedProducts.Add(updatedStockProduct);
+                _stockedProducts.Update(updatedStockProduct);
                 _context.SaveChanges();
 
-                return updatedStockProduct;
+                return GetById(stockedProduct.Id);
             }
             throw new Exception("Stocked product not found");
         }
