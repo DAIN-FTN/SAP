@@ -6,5 +6,5 @@ export default interface AllBakingPrograms {
     preparingAndPrepared: BakingProgram[];
     baking: BakingProgram[];
     done: BakingProgram[];
-    preparingInProgress: StartPreparing;
+    preparingInProgress: StartPreparing | null;
 }

@@ -33,7 +33,9 @@ function mapAllBakingPrograms(allBakingPrograms: AllBakingPrograms): AllBakingPr
         done: mapBakingPrograms(allBakingPrograms.done),
     }
 
-    function mapPreparingInProgress(preparingInProgress: StartPreparing): StartPreparing {
+    function mapPreparingInProgress(preparingInProgress: StartPreparing | null): StartPreparing | null{
+        if (preparingInProgress === null) return null;    
+
         return {
             ...preparingInProgress,
             bakingProgrammedAt: new Date(preparingInProgress.bakingProgrammedAt)
