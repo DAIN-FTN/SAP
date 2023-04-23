@@ -1,6 +1,6 @@
-﻿using SAP_API.DTOs.Requests;
+﻿using SAP_API.DataAccess.Repositories;
+using SAP_API.DTOs.Requests;
 using SAP_API.Models;
-using SAP_API.Repositories;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,31 +21,21 @@ namespace SAP_API.Services
             _productRepository = productRepository;
         }
 
-        public Order CreateOrder(CreateOrderRequest createOrderRequest)
+        public Order CreateOrder(CreateOrderInput createOrderInput, Guid orderId = new Guid())
         {
-            List<ReservedOrderProduct> orderProducts = new List<ReservedOrderProduct>();
-
-            foreach (var productRequest in createOrderRequest.Products)
-            {
-                Product product = _productRepository.GetById(productRequest.ProductId.Value);
-                orderProducts.Add(new ReservedOrderProduct
-                {
-                    Product = product,
-                    Id = Guid.NewGuid(),
-                    ReservedQuantity = productRequest.Quantity.Value,
-                });
-            }
-
             Order order = new Order
             {
-                Customer = createOrderRequest.Customer,
-                ShouldBeDoneAt = createOrderRequest.ShouldBeDoneAt,
+                Id = orderId,
+                ShouldBeDoneAt = createOrderInput.ShouldBeDoneAt,
+                CustomerFullName = createOrderInput.Customer.FullName,
+                CustomerEmail = createOrderInput.Customer.Email,
+                CustomerTelephone = createOrderInput.Customer.Telephone,
                 Status = OrderStatus.Created,
-                Products = orderProducts,
+                Products = createOrderInput.Products,
             };
             
-
             return _orderRepository.Create(order);
         }
+
     }
 }

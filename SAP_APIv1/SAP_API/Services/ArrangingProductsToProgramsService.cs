@@ -1,6 +1,6 @@
-﻿using SAP_API.DTOs;
+﻿using SAP_API.DataAccess.Repositories;
+using SAP_API.DTOs;
 using SAP_API.Models;
-using SAP_API.Repositories;
 using System;
 using System.Collections.Generic;
 
@@ -55,6 +55,7 @@ namespace SAP_API.Services
         private readonly IBakingProgramRepository _bakingProgramRepository;
         private readonly IOvenRepository _ovenRepository;
         private readonly IProductRepository _productRepository;
+        private readonly Guid _orderId;
 
 
         public ArrangingProductsToProgramsService(IBakingProgramRepository bakingProgramRepository, IOvenRepository ovenRepository, IProductRepository productRepository)
@@ -62,6 +63,7 @@ namespace SAP_API.Services
             _bakingProgramRepository = bakingProgramRepository;
             _ovenRepository = ovenRepository;
             _productRepository = productRepository;
+            //_orderId = orderId;
         }
 
         // TODO 8 and 1 should be in config
@@ -80,7 +82,7 @@ namespace SAP_API.Services
             GroupProductsByBakingTempAndTime(orderProducts);
 
         }
-        public List<BakingProgram> GetExistingProgramsProductShouldBeArrangedInto()
+        public List<BakingProgram> GetExistingProgramsProductShouldBeArrangedInto(Guid orderId)
         {
 
             IEnumerable<TimeAndTempGroup> bakingGroups = productsGroupedByTempAndTimeDict.Keys;
@@ -89,7 +91,7 @@ namespace SAP_API.Services
                 List<BakingProgram> bakingProgramsFromGroup = GetExistingBakingProgramsFromGroup(group);
                 List<OrderProduct> productsFromGroup = productsGroupedByTempAndTimeDict[group];
 
-                ArrangeProductsToExistingPrograms(bakingProgramsFromGroup, productsFromGroup);
+                ArrangeProductsToExistingPrograms(bakingProgramsFromGroup, productsFromGroup, orderId);
 
             }
 
@@ -103,7 +105,7 @@ namespace SAP_API.Services
         /// </summary>
         /// <param name="groupedProductsDict"></param>
         /// <returns></returns>
-        public List<BakingProgram> GetNewProgramsProductsShouldBeArrangedInto()
+        public List<BakingProgram> GetNewProgramsProductsShouldBeArrangedInto(Guid orderId)
         {
             IEnumerable<TimeAndTempGroup> bakingGroups = productsGroupedByTempAndTimeDict.Keys;
 
@@ -113,7 +115,7 @@ namespace SAP_API.Services
             foreach (TimeAndTempGroup group in bakingGroups)
             {
                 List<OrderProduct> productsFromGroup = productsGroupedByTempAndTimeDict[group];
-                ArrangeProductsFromGroupToNewPrograms(bakingPrograms, productsFromGroup, group);
+                ArrangeProductsFromGroupToNewPrograms(bakingPrograms, productsFromGroup, group, orderId);
 
             }
             return newProgramsProductsShouldBeArrangedTo;
@@ -187,7 +189,7 @@ namespace SAP_API.Services
             return bakingPrograms;
         }
 
-        private void ArrangeProductsToExistingPrograms(List<BakingProgram> bakingPrograms, List<OrderProduct> products)
+        private void ArrangeProductsToExistingPrograms(List<BakingProgram> bakingPrograms, List<OrderProduct> products, Guid orderId)
         {
             int currentProgramIndex = 0;
             int currentProductIndex = 0;
@@ -205,7 +207,7 @@ namespace SAP_API.Services
                         FinishArrangingCurrentProgram(bakingPrograms);
                         break;
                     }
-                    ArrangeProductToExistingProgram(product, numberOfProductsThatCanBeArrangedToProgram, program);
+                    ArrangeProductToExistingProgram(product, numberOfProductsThatCanBeArrangedToProgram, program, orderId);
 
                     if (product.QuantityToBake == 0)
                     {
@@ -249,21 +251,21 @@ namespace SAP_API.Services
             products.RemoveAt(0);
         }
 
-        private void ArrangeProductToExistingProgram(OrderProduct product, int numberOfProductsToArrange, BakingProgram program)
+        private void ArrangeProductToExistingProgram(OrderProduct product, int numberOfProductsToArrange, BakingProgram program, Guid orderId)
         {
             existingProgramsProductsShouldBeArrangedTo.Remove(program);
-            ArrangeProductToProgram(product, numberOfProductsToArrange, program);
+            ArrangeProductToProgram(product, numberOfProductsToArrange, program, orderId);
             existingProgramsProductsShouldBeArrangedTo.Add(program);
         }
 
-        private void ArrangeProductToProgram(OrderProduct product, int numberOfProductsToArrange, BakingProgram program)
+        private void ArrangeProductToProgram(OrderProduct product, int numberOfProductsToArrange, BakingProgram program, Guid orderId)
         {
             BakingProgramProduct programProduct = new BakingProgramProduct
             {
                 Id = new Guid(),
                 Product = product.Product,
-                Order = null,
-                QuantityТoBake = numberOfProductsToArrange
+                QuantityТoBake = numberOfProductsToArrange,
+                OrderId = orderId
             };
             program.AddProductToProgram(programProduct);
             product.QuantityToBake -= numberOfProductsToArrange;
@@ -400,7 +402,7 @@ namespace SAP_API.Services
         }
         #endregion getAvailableProgramsForOvens
 
-        private void ArrangeProductsFromGroupToNewPrograms(List<BakingProgram> bakingPrograms, List<OrderProduct> products, TimeAndTempGroup group)
+        private void ArrangeProductsFromGroupToNewPrograms(List<BakingProgram> bakingPrograms, List<OrderProduct> products, TimeAndTempGroup group, Guid orderId)
         {
             int currentProgramIndex = 0;
             int currentProductIndex = 0;
@@ -418,7 +420,7 @@ namespace SAP_API.Services
                         FinishArrangingCurrentProgram(bakingPrograms);
                         break;
                     }
-                    ArrangeProductToNewProgram(product, numberOfProductsThatCanBeArrangedToProgram, program, group);
+                    ArrangeProductToNewProgram(product, numberOfProductsThatCanBeArrangedToProgram, program, group, orderId);
 
                     if (product.QuantityToBake == 0)
                     {
@@ -430,11 +432,11 @@ namespace SAP_API.Services
             FinishArrangingProductsFromGroupToPrograms(bakingPrograms, group);
         }
 
-        private void ArrangeProductToNewProgram(OrderProduct product, int numberOfProductsToArrange, BakingProgram program, TimeAndTempGroup group)
+        private void ArrangeProductToNewProgram(OrderProduct product, int numberOfProductsToArrange, BakingProgram program, TimeAndTempGroup group, Guid orderId)
         {
             program.SetTimeAndTemp(group);
             newProgramsProductsShouldBeArrangedTo.Remove(program);
-            ArrangeProductToProgram(product, numberOfProductsToArrange, program);
+            ArrangeProductToProgram(product, numberOfProductsToArrange, program, orderId);
             newProgramsProductsShouldBeArrangedTo.Add(program);
         }
 

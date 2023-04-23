@@ -7,6 +7,7 @@ namespace SAP_API.Models
 {
     public class BakingProgram: IEntity
     {
+        
         public Guid Id { get; set; }
         public string Code { get; set; }
         public DateTime CreatedAt { get; set; }
@@ -16,10 +17,12 @@ namespace SAP_API.Models
         public DateTime BakingProgrammedAt { get; set; }
         public DateTime? BakingStartedAt { get; set; }
         public DateTime? BakingEndsAt { get; set; }
-        public Oven Oven { get; set; }
-        public User PreparedBy { get; set; }
-        public int RemainingOvenCapacity { get; set; }
+        public Guid OvenId { get; set; }
 
+        public Oven Oven { get; set; }
+        public Guid? PreparedByUserId { get; set; }
+        public User PreparedByUser { get; set; }
+        public int RemainingOvenCapacity { get; set; }
         public List<BakingProgramProduct> Products { get; set; }
 
         public void AddProductToProgram(BakingProgramProduct product)
@@ -46,7 +49,7 @@ namespace SAP_API.Models
             }
                 
             Status = BakingProgramStatus.Preparing;
-            PreparedBy = user;
+            PreparedByUser = user;
         }
 
         private string CreateUnableToTransitionErrorMessage(BakingProgramStatus statusToTransitionTo)
@@ -72,7 +75,7 @@ namespace SAP_API.Models
                 throw new BadProgramStatusException(message);
             }
             Status = BakingProgramStatus.Created;
-            PreparedBy = null;
+            PreparedByUser = null;
         }
 
         //TODO minutes as params
@@ -111,6 +114,16 @@ namespace SAP_API.Models
                 throw new BadProgramStatusException(message);
             }
             Status = BakingProgramStatus.Done;
+        }
+
+        internal void Finish()
+        {
+            if (!Status.Equals(BakingProgramStatus.Done))
+            {
+                string message = CreateUnableToTransitionErrorMessage(BakingProgramStatus.Finished);
+                throw new BadProgramStatusException(message);
+            }
+            Status = BakingProgramStatus.Finished;
         }
     }
 }

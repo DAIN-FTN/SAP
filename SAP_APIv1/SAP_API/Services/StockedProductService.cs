@@ -1,7 +1,7 @@
-﻿using SAP_API.DTOs;
+﻿using SAP_API.DataAccess.Repositories;
+using SAP_API.DTOs;
 using SAP_API.Exceptions;
 using SAP_API.Models;
-using SAP_API.Repositories;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -54,8 +54,10 @@ namespace SAP_API.Services
             return quantityToBake <= 0;
         }
 
-        public void reserveStockedProducts(List<OrderProductRequest> orderProducts)
+        public List<ReservedOrderProduct> reserveStockedProducts(List<OrderProductRequest> orderProducts, Guid orderId)
         {
+            List<ReservedOrderProduct> reservedOrderProducts= new List<ReservedOrderProduct>();
+
             if(this.IsThereEnoughStockForProducts(orderProducts) == false)
             {
                 throw new NotEnoughStockedProductException();
@@ -82,10 +84,20 @@ namespace SAP_API.Services
                         quantityToReserve -= stockedProduct.GetAvailableQuantity();
                         stockedProduct.ReservedQuantity += stockedProduct.GetAvailableQuantity();
                     }
+
+                    new ReservedOrderProduct
+                    {
+                        OrderId = orderId,
+                        ProductId = orderProduct.ProductId.Value,
+                        StockLocationId = stockedProduct.LocationId,
+                        ReservedQuantity = stockedProduct.ReservedQuantity,
+                    };
+
                     _stockedProductRepository.Update(stockedProduct);
                 }
             }
 
+            return reservedOrderProducts;
         }
     }
 }

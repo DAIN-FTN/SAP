@@ -14,8 +14,8 @@ namespace SAP_API.Services
 
         public void PrepareProductsForArranging(List<OrderProductRequest> orderProducts);
 
-        public List<BakingProgram> GetExistingProgramsProductShouldBeArrangedInto();
-        public List<BakingProgram> GetNewProgramsProductsShouldBeArrangedInto();
+        public List<BakingProgram> GetExistingProgramsProductShouldBeArrangedInto(Guid orderId);
+        public List<BakingProgram> GetNewProgramsProductsShouldBeArrangedInto(Guid orderId);
         public bool ThereAreProductsLeftForArranging();
     }
 }

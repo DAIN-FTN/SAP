@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
 
 namespace SAP_API.Models
@@ -10,5 +11,7 @@ namespace SAP_API.Models
         public string Code { get; set; }
         public int MaxTempInC { get; set; }
         public int Capacity { get; set; }
+        public List<BakingProgram> BakingProgramsPreparedInOven { get; set; }
+
     }
 }

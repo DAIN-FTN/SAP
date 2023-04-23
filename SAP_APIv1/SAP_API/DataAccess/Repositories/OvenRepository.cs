@@ -2,31 +2,39 @@
 using System.Collections.Generic;
 using System;
 using System.Linq;
+using Microsoft.EntityFrameworkCore;
+using SAP_API.DataAccess.DbContexts;
 
-namespace SAP_API.Repositories
+namespace SAP_API.DataAccess.Repositories
 {
-    public class OvenRepository: IOvenRepository
+    public class OvenRepository : IOvenRepository
     {
-        private List<Oven> _ovens = new List<Oven>();
+        private readonly BakeryContext _context;
+        private readonly DbSet<Oven> _ovens;
 
-        public OvenRepository()
+        public OvenRepository(BakeryContext context)
         {
-            SeedData();
+            this._context = context;
+            this._ovens = context.Set<Oven>();
         }
 
         public IEnumerable<Oven> GetAll()
         {
-            return _ovens;
+            return _ovens
+                .ToList();
         }
 
         public Oven GetById(Guid id)
         {
-            return _ovens.SingleOrDefault(o => o.Id == id);
+            return _ovens
+                .SingleOrDefault(o => o.Id == id);
         }
 
         public Oven Create(Oven entity)
         {
             _ovens.Add(entity);
+            _context.SaveChanges();
+
             return entity;
         }
 
@@ -38,9 +46,11 @@ namespace SAP_API.Repositories
                 oven.Code = entity.Code;
                 oven.MaxTempInC = entity.MaxTempInC;
                 oven.Capacity = entity.Capacity;
+
+                _context.SaveChanges();
             }
 
-            return oven;
+            throw new Exception("Oven not found");
         }
 
         public bool Delete(Guid id)
@@ -49,20 +59,13 @@ namespace SAP_API.Repositories
             if (oven != null)
             {
                 _ovens.Remove(oven);
+                _context.SaveChanges();
+
                 return true;
             }
 
             return false;
         }
 
-        private void SeedData()
-        {
-            _ovens = new List<Oven>
-            {
-                new Oven { Id = Guid.NewGuid(), Code = "Oven1", MaxTempInC = 250, Capacity = 20 },
-                new Oven { Id = Guid.NewGuid(), Code = "Oven2", MaxTempInC = 300, Capacity = 25 },
-                new Oven { Id = Guid.NewGuid(), Code = "Oven3", MaxTempInC = 350, Capacity = 30 }
-            };
-        }
     }
 }

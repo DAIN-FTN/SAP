@@ -1,9 +1,9 @@
-﻿using SAP_API.DTOs;
+﻿using SAP_API.DataAccess.Repositories;
+using SAP_API.DTOs;
 using SAP_API.DTOs.Requests;
 using SAP_API.DTOs.Responses;
 using SAP_API.Mappers;
 using SAP_API.Models;
-using SAP_API.Repositories;
 using System;
 using System.Collections.Generic;
 
@@ -28,7 +28,7 @@ namespace SAP_API.Services
         }
 
 
-        public ArrangingResult GetExistingOrNewProgramsProductShouldBeArrangedInto(DateTime timeOrderShouldBeDone, List<OrderProductRequest> orderProducts)
+        public ArrangingResult GetExistingOrNewProgramsProductShouldBeArrangedInto(DateTime timeOrderShouldBeDone, List<OrderProductRequest> orderProducts, Guid orderId)
         {
 
             bool thereIsEnoughStock = _stockedProductService.IsThereEnoughStockForProducts(orderProducts);
@@ -38,7 +38,7 @@ namespace SAP_API.Services
             _arrangingService.SetTimeOrderShouldBeDone(timeOrderShouldBeDone);
             _arrangingService.PrepareProductsForArranging(orderProducts);
 
-            List<BakingProgram> existingPrograms = _arrangingService.GetExistingProgramsProductShouldBeArrangedInto();
+            List<BakingProgram> existingPrograms = _arrangingService.GetExistingProgramsProductShouldBeArrangedInto(orderId);
             programsProductsShouldBeArrangedTo.AddRange(existingPrograms);
 
             bool allProductsSuccessfullyArranged = !_arrangingService.ThereAreProductsLeftForArranging();
@@ -51,7 +51,7 @@ namespace SAP_API.Services
                 };
             }
 
-            List<BakingProgram> newPrograms = _arrangingService.GetNewProgramsProductsShouldBeArrangedInto();
+            List<BakingProgram> newPrograms = _arrangingService.GetNewProgramsProductsShouldBeArrangedInto(orderId);
             programsProductsShouldBeArrangedTo.AddRange(newPrograms);
 
             allProductsSuccessfullyArranged = !_arrangingService.ThereAreProductsLeftForArranging();
@@ -94,9 +94,9 @@ namespace SAP_API.Services
            _bakingProgramRepository.Update(bakingProgram); 
         }
 
-        public AvailableProgramsResponse FindAvailableBakingPrograms(FindAvailableBakingProgramsRequest body)
+        public AvailableProgramsResponse FindAvailableBakingPrograms(FindAvailableBakingProgramsRequest body, Guid orderId)
         {
-            ArrangingResult result = GetExistingOrNewProgramsProductShouldBeArrangedInto((DateTime)body.ShouldBeDoneAt, body.OrderProducts);
+            ArrangingResult result = GetExistingOrNewProgramsProductShouldBeArrangedInto((DateTime)body.ShouldBeDoneAt, body.OrderProducts, orderId);
             AvailableProgramsResponse resultResponse = BakingProgramMapper.CreateAvailableProgramResponse(result);
             return resultResponse;
         }
@@ -125,12 +125,14 @@ namespace SAP_API.Services
             DateTime bakingProgrammedAtTime = bakingProgram.BakingProgrammedAt;
             DateTime timeNow = DateTime.Now;
             int numberOfMinutesBeforeProgrammedTimePreparingIsAllowed = 25;
-            DateTime earliestTimeToStartPreparing = timeNow.AddMinutes(-numberOfMinutesBeforeProgrammedTimePreparingIsAllowed);
+            DateTime earliestTimeToStartPreparing = bakingProgrammedAtTime.AddMinutes(-numberOfMinutesBeforeProgrammedTimePreparingIsAllowed);
 
-            if (bakingProgrammedAtTime < earliestTimeToStartPreparing)
+            bool isTooEarlyToPrepareProgram = timeNow.CompareTo(earliestTimeToStartPreparing) < 0;
+
+            if (isTooEarlyToPrepareProgram)
                 return false;
 
-            List<BakingProgram> bakingProgramsThatShouldBePrepared = _bakingProgramRepository.GetProgramsWithBakingProgrammedAtBetweenDateTimes(earliestTimeToStartPreparing, timeNow.AddMinutes(numberOfMinutesBeforeProgrammedTimePreparingIsAllowed));
+            List<BakingProgram> bakingProgramsThatShouldBePrepared = _bakingProgramRepository.GetProgramsWithBakingProgrammedAtBetweenDateTimes(timeNow.AddDays(-1), timeNow.AddMinutes(-numberOfMinutesBeforeProgrammedTimePreparingIsAllowed));
             if (bakingProgramsThatShouldBePrepared.Count == 0)
                 return false;
 
@@ -174,7 +176,7 @@ namespace SAP_API.Services
             List<BakingProgramStatus> statusesToExclude = new List<BakingProgramStatus> { BakingProgramStatus.Cancelled, BakingProgramStatus.Finished };
             ExcludeProgramsWithStatuses(bakingPrograms, statusesToExclude);
             ChangeStatusToDoneIfBakingIsDone(bakingPrograms);
-            List<BakingProgram> programsUserIsPreparing = bakingPrograms.FindAll(bp => bp.Status.Equals(BakingProgramStatus.Preparing) && bp.PreparedBy.Id == user.Id);
+            List<BakingProgram> programsUserIsPreparing = bakingPrograms.FindAll(bp => bp.Status.Equals(BakingProgramStatus.Preparing) && bp.PreparedByUser.Id == user.Id);
 
             if (programsUserIsPreparing.Count == 0)
                 return BakingProgramMapper.CreateAllBakingProgramsResponse(bakingPrograms, null);
@@ -268,13 +270,19 @@ namespace SAP_API.Services
             DateTime startTime = timeNow.AddDays(-1);
             DateTime endTime = timeNow.AddHours(4);
             List<BakingProgram> bakingPrograms = _bakingProgramRepository.GetProgramsWithBakingProgrammedAtBetweenDateTimes(startTime, endTime);
-            List<BakingProgram> programsBeingPreparedByUser = bakingPrograms.FindAll(bp => bp.Status.Equals(BakingProgramStatus.Preparing) && bp.PreparedBy.Id.Equals(user.Id));
+            List<BakingProgram> programsBeingPreparedByUser = bakingPrograms.FindAll(bp => bp.Status.Equals(BakingProgramStatus.Preparing) && bp.PreparedByUser.Id.Equals(user.Id));
             return programsBeingPreparedByUser.Count > 0;
         }
 
         public BakingProgram GetById(Guid bakingProgramId)
         {
             return _bakingProgramRepository.GetById(bakingProgramId);
+        }
+
+        public void Finish(BakingProgram bakingProgram)
+        {
+            bakingProgram.Finish();
+            _bakingProgramRepository.Update(bakingProgram);
         }
     }
 }
