@@ -132,7 +132,7 @@ namespace SAP_API.Services
             if (isTooEarlyToPrepareProgram)
                 return false;
 
-            List<BakingProgram> bakingProgramsThatShouldBePrepared = _bakingProgramRepository.GetProgramsWithBakingProgrammedAtBetweenDateTimes(timeNow.AddMinutes(-numberOfMinutesBeforeProgrammedTimePreparingIsAllowed), timeNow);
+            List<BakingProgram> bakingProgramsThatShouldBePrepared = _bakingProgramRepository.GetProgramsWithBakingProgrammedAtBetweenDateTimes(timeNow.AddDays(-1), timeNow.AddMinutes(-numberOfMinutesBeforeProgrammedTimePreparingIsAllowed));
             if (bakingProgramsThatShouldBePrepared.Count == 0)
                 return false;
 
