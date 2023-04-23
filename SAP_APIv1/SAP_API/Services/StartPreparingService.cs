@@ -12,15 +12,17 @@ namespace SAP_API.Services
     {
         private readonly IReservedOrderProductRepository _reservedOrderProductRepository;
         private readonly IProductToPrepareRepository _productToPrepareRepository;
+        private readonly IStockLocationRepository _stockLocationRepository;
         Dictionary<Guid, List<ProductToPrepare>> productsToBePreparedGroupedByLocationDict = new Dictionary<Guid, List<ProductToPrepare>>();
         private BakingProgram bakingProgramToPrepare;
 
 
 
-        public StartPreparingService(IReservedOrderProductRepository reservedOrderProductRepository, IProductToPrepareRepository productToPrepareRepository)
+        public StartPreparingService(IReservedOrderProductRepository reservedOrderProductRepository, IProductToPrepareRepository productToPrepareRepository, IStockLocationRepository stockLocationRepository)
         {
             _reservedOrderProductRepository = reservedOrderProductRepository;
             _productToPrepareRepository = productToPrepareRepository;
+            _stockLocationRepository = stockLocationRepository;
         }
         public void SetProgramToPrepare(BakingProgram bakingProgram)
         {
@@ -38,8 +40,8 @@ namespace SAP_API.Services
 
             foreach (BakingProgramProduct productFromProgram in productsFromProgram)
             {
-                Guid productToBePreparedId = productFromProgram.Product.Id;
-                Guid orderInWhichProductWasOrderedId = productFromProgram.Order.Id;
+                Guid productToBePreparedId = productFromProgram.ProductId;
+                Guid orderInWhichProductWasOrderedId = productFromProgram.OrderId;
                 int quantityToBePrepared = productFromProgram.QuantityТoBake;
                 List<ReservedOrderProduct> reservedProductQuantitiesOnLocations = GetInfoAboutReservedProductFromOrder(orderInWhichProductWasOrderedId, productToBePreparedId);
 
@@ -70,7 +72,7 @@ namespace SAP_API.Services
                 Guid locationId = locationWithProducts.Key;
                 List<ProductToPrepare> products = locationWithProducts.Value;
 
-                StockLocation location = products[0].LocationToPrepareFrom;
+                StockLocation location =  _stockLocationRepository.GetById(products[0].StockLocationId); 
 
                 List<ProductToPrepareResponse> productsToPrepareResponse = ProductToPrepareMapper.CreateProductsToPrepareResponse(products);
 
@@ -101,7 +103,7 @@ namespace SAP_API.Services
         {
             foreach(ProductToPrepare product in productsToPrepare)
             {
-                Guid locationToPrepareFromId = product.LocationToPrepareFrom.Id;
+                Guid locationToPrepareFromId = product.StockLocationId;
                 if (!productsToBePreparedGroupedByLocationDict.ContainsKey(locationToPrepareFromId))
                 {
                     productsToBePreparedGroupedByLocationDict[locationToPrepareFromId] = new List<ProductToPrepare>();
@@ -136,16 +138,13 @@ namespace SAP_API.Services
         {
             ProductToPrepare productToPrepare = new ProductToPrepare
             {
-                Product = productReservedOnLocation.Product,
-                Order = productReservedOnLocation.Order,
-                BakingProgram = bakingProgramToPrepare,
-                LocationToPrepareFrom = productReservedOnLocation.LocationWhereProductIsReserved,
+                ProductId = productReservedOnLocation.ProductId,
+                OrderId = productReservedOnLocation.OrderId,
+                BakingProgramId = bakingProgramToPrepare.Id,
+                StockLocationId = productReservedOnLocation.StockLocationId,
                 QuantityToPrepare = quantityToPrepareFromLocation
             };
-
-            //TODO SaveChanges
              _productToPrepareRepository.Create(productToPrepare);
-
         }
 
     }

@@ -23,6 +23,7 @@ namespace SAP_API.DataAccess.Repositories
         {
             entity.Id = Guid.NewGuid();
             _productsToPrepare.Add(entity);
+            _context.SaveChanges();
             return entity;
         }
 
