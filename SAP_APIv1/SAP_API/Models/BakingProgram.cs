@@ -115,5 +115,15 @@ namespace SAP_API.Models
             }
             Status = BakingProgramStatus.Done;
         }
+
+        internal void Finish()
+        {
+            if (!Status.Equals(BakingProgramStatus.Done))
+            {
+                string message = CreateUnableToTransitionErrorMessage(BakingProgramStatus.Finished);
+                throw new BadProgramStatusException(message);
+            }
+            Status = BakingProgramStatus.Finished;
+        }
     }
 }

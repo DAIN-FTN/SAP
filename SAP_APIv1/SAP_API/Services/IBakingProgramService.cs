@@ -23,6 +23,7 @@ namespace SAP_API.Services
         void StartBaking(BakingProgram bakingProgram);
         bool CheckIfUserIsAlreadyPreparingAnotherProgram();
         BakingProgram GetById(Guid bakingProgramId);
+        void Finish(BakingProgram bakingProgram);
     }
 }
 
