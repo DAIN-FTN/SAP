@@ -24,7 +24,7 @@ namespace SAP_API.DataAccess.Repositories
             _stockedProducts.Add(entity);
             _context.SaveChanges();
 
-            return entity;
+            return GetById(entity.Id);
         }
 
         public bool Delete(Guid id)
@@ -51,7 +51,10 @@ namespace SAP_API.DataAccess.Repositories
 
         public StockedProduct GetById(Guid id)
         {
-            return _stockedProducts.FirstOrDefault(x => x.Id == id);
+            return _stockedProducts
+                 .Include(x => x.Location)
+                .Include(x => x.Product)
+                .FirstOrDefault(x => x.Id == id);
         }
 
         public List<StockedProduct> GetByProductId(Guid productId)
@@ -64,15 +67,13 @@ namespace SAP_API.DataAccess.Repositories
 
         public StockedProduct Update(StockedProduct updatedStockProduct)
         {
-            StockedProduct stockedProduct = _stockedProducts.FirstOrDefault(x => x.Id == updatedStockProduct.Id);
+            StockedProduct stockedProduct = _stockedProducts.FirstOrDefault(x => x.LocationId.Equals(updatedStockProduct.LocationId) && x.ProductId.Equals(updatedStockProduct.ProductId));
             if (stockedProduct != null)
             {
-                _stockedProducts.Remove(stockedProduct);
-                _context.SaveChanges();
-                _stockedProducts.Add(updatedStockProduct);
+                _stockedProducts.Update(updatedStockProduct);
                 _context.SaveChanges();
 
-                return updatedStockProduct;
+                return GetById(stockedProduct.Id);
             }
             throw new Exception("Stocked product not found");
         }

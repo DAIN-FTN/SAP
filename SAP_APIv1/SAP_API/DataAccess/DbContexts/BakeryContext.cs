@@ -25,10 +25,15 @@ namespace SAP_API.DataAccess.DbContexts
                 .HasAlternateKey(x => x.Code);
 
             modelBuilder.Entity<Product>()
-                .HasAlternateKey(x => x.Name);
+                .HasIndex(x => x.Name).IsUnique();
 
             modelBuilder.Entity<StockLocation>()
                .HasAlternateKey(x => x.Code);
+
+            modelBuilder.Entity<StockedProduct>()
+                .HasAlternateKey(x => new { x.ProductId, x.LocationId })
+                .HasName("UQ_ProductId_LocationId");
+
         }
 
         public DbSet<BakingProgram> BakingProgram { get; }
