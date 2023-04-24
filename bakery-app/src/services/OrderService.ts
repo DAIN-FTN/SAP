@@ -3,6 +3,7 @@ import { BakingTimeSlot } from "../models/BakingTimeSlot";
 import NewOrderRequest from "../models/NewOrderRequest";
 import Order from "../models/Order";
 import ProductBasicInfo from "../models/ProductBasicInfo";
+import { AvailableBakingPrograms } from "../models/Responses/AvailableBakingPrograms";
 
 export async function fetchProductsBasicInfo(name: string): Promise<ProductBasicInfo[]> {
     try {
@@ -27,9 +28,10 @@ export async function fetchBakingTimeSlots(deliveryDateTime: Date, products: Pro
     };
     console.log(bakingTimeSlotRequest);
 
-    const temp = await postData<BakingTimeSlot[]>(`/api/baking-programs/available`, bakingTimeSlotRequest);
+    const temp = await postData<AvailableBakingPrograms>(`/api/baking-programs/available`, bakingTimeSlotRequest);
 
-    return temp.map((bakingTimeSlot) => ({
+    // debugger;
+    return temp.bakingPrograms.map((bakingTimeSlot) => ({
         ...bakingTimeSlot,
         bakingStartedAt: bakingTimeSlot.bakingStartedAt ? new Date(bakingTimeSlot.bakingStartedAt) : null,
         bakingProgrammedAt: new Date(bakingTimeSlot.bakingProgrammedAt),
