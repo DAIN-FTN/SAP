@@ -12,7 +12,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
-
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using JwtAuth.Middlewares;
 
 namespace SAP_API
 {
@@ -23,12 +24,35 @@ namespace SAP_API
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
+
+            services.AddAuthentication(x =>
+            {
+                x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+                x.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+            }).AddJwtBearer(x =>
+            {
+                x.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters
+                {
+                    ValidateIssuer = true,
+                    ValidateAudience = true,
+                    ValidateLifetime = true,
+                    ValidAudience = Configuration["Jwt:Audience"],
+                    ValidIssuer = Configuration["Jwt:Issuer"],
+                    IssuerSigningKey = new Microsoft.IdentityModel.Tokens.SymmetricSecurityKey(System.Text.Encoding.UTF8.GetBytes(Configuration["Jwt:Key"]))
+                };
+            });
+
+            services.AddAuthorization();
+
+
             services.AddControllers();
             services.AddDbContext<BakeryContext>(options =>
             {
                 options.UseNpgsql(Configuration.GetConnectionString("DefaultConnection"));
             });
 
+            services.AddScoped<ITokenService, TokenService>();
             services.AddScoped<IProductRepository, ProductRepository>();
             services.AddScoped<IStockedProductRepository, StockedProductRepository>();
             services.AddScoped<IOvenRepository, OvenRepository>();
@@ -60,7 +84,9 @@ namespace SAP_API
     public IConfiguration Configuration { get; }
     public Startup(IConfiguration configuration)
     {
-        Configuration = configuration;
+          
+
+            Configuration = configuration;
     }
 
     // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -73,8 +99,11 @@ namespace SAP_API
                 app.UseDeveloperExceptionPage();
             }
 
+            app.UseAuthentication();
+
             app.UseRouting();
 
+            app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
             {
