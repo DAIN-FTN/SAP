@@ -73,12 +73,14 @@ namespace SAP_API
             services.AddScoped<IProductToPrepareRepository, ProductToPrepareRepository>();
             services.AddScoped<IStockLocationRepository, StockLocationRepository>();
             services.AddScoped<IOrderRepository, OrderRepository>();
+            services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<IProductService, ProductService>();
             services.AddScoped<IBakingProgramService, BakingProgramService>();
             services.AddScoped<IArrangingProductsToProgramsService, ArrangingProductsToProgramsService>();
             services.AddScoped<IStartPreparingService, StartPreparingService>();
             services.AddScoped<IStockedProductService, StockedProductService>();
             services.AddScoped<IOrderService, OrderService>();
+            services.AddScoped<IUserService, UserService>();
             services.AddScoped<IOrderTransactionsOrchestrator, OrderTransactionsOrchestrator>();
 
             services.AddCors(options =>

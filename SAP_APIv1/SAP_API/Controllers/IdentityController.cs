@@ -3,11 +3,15 @@ using SAP_API.DTOs.Requests;
 
 using SAP_API.Services;
 using SAP_API.Models;
+using System;
+using Microsoft.AspNetCore.Http;
+using SAP_API.DTOs.Responses;
+using SAP_API.Exceptions;
 
 namespace SAP_API.Controllers
 {
     [ApiController]
-    [Route("api/login")]
+    [Route("api/auth")]
     public class IdentityController : ControllerBase
     {
         private readonly ITokenService _tokenService;
@@ -21,21 +25,45 @@ namespace SAP_API.Controllers
             _userService = userService;
         }
 
-        [HttpPost]
-        public IActionResult Login(
-            [FromBody] LoginRequest request
-            )
+        [HttpPost("login")]
+        public IActionResult Login([FromBody] LoginRequest request)
         {
-            User user = _userService.AuthenticateUser(request.UserName, request.Password);
-
-            if(user == null)
+            try
             {
-                return Unauthorized();
+                User user = _userService.AuthenticateUser(request.UserName, request.Password);
+
+                if (user == null)
+                {
+                    return Unauthorized();
+                }
+
+                string token = _tokenService.GenerateToken(user);
+
+                return Ok(token);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
             }
 
-            string token = _tokenService.GenerateToken(user);
+        }
 
-            return Ok(token);
+        [HttpPost("register")]
+        public IActionResult Register([FromBody] RegisterRequest body)
+        {
+            try
+            {
+                RegisterResponse user = _userService.RegisterUser(body.UserName, body.Password);
+                return Ok();
+            }
+            catch(UniqueConstraintViolationException ex)
+            {
+                return StatusCode(StatusCodes.Status422UnprocessableEntity, ex.Message);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+            }
         }
     }
 }
