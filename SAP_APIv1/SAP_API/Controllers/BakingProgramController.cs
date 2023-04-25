@@ -7,6 +7,7 @@ using SAP_API.DTOs.Responses;
 using SAP_API.Exceptions;
 using SAP_API.Models;
 using SAP_API.Services;
+using SAP_API.Validation;
 using System;
 using System.Collections.Generic;
 namespace SAP_API.Controllers
@@ -38,10 +39,17 @@ namespace SAP_API.Controllers
         }
 
         [HttpPost("available")]
-        public IActionResult FindAvailableBakingPrograms([FromBody] FindAvailableBakingProgramsRequest body)
+        public IActionResult FindAvailableBakingPrograms([FromBody] FindAvailableBakingProgramsRequest body, [FromServices] IOptions<ApiBehaviorOptions> apiBehaviorOptions)
         {
             try
             {
+                CustomValidationResult validationResult = body.IsValid();
+                if (!validationResult.Success)
+                {
+                    ModelState.AddModelError("ErrorToDisplay", validationResult.ErrorMessage);
+                    return apiBehaviorOptions.Value.InvalidModelStateResponseFactory(ControllerContext);
+                }
+
                 AvailableProgramsResponse response = _bakingProgramService.FindAvailableBakingPrograms(body);
                 return Ok(response);
             }
