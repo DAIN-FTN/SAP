@@ -2,11 +2,11 @@ import { useState } from "react";
 import { FC } from "react";
 import styled from "styled-components";
 import ProductBasicInfo from "../../models/ProductBasicInfo";
-import { fetchBakingTimeSlots, fetchProductsBasicInfo } from "../../services/OrderService";
+import { createNewOrder, fetchBakingTimeSlots, fetchProductsBasicInfo } from "../../services/OrderService";
 import AvailableProductsList from "../CreateOrderPage/AvailableProductsList";
 import Button from '@mui/material/Button';
 import TextField from "@mui/material/TextField";
-import NewOrderRequest from "../../models/NewOrderRequest";
+import NewOrderRequest, { OrderProductRequest } from "../../models/Requests/NewOrderRequest";
 import { BakingTimeSlot } from "../../models/BakingTimeSlot";
 import BakingTimeSlotsList from "./BakingTimeSlotsList";
 import NewOrderProductsList from "./NewOrderProductsList";
@@ -42,23 +42,27 @@ const SearchWrapper = styled.div`
 `;
 
 const CreateOrderPage: FC = () => {
-    const [productsOnStock, setProductsOnStock] = useState<ProductBasicInfo[] | []>([]);
-    const [orderProducts, setOrderProducts] = useState<ProductBasicInfo[] | []>([]);
-    const [bakingTimeSlots, setBakingTimeSlots] = useState<BakingTimeSlot[] | []>([]);
-    const [newOrderRequest, setNewOrderRequest] = useState<NewOrderRequest | null>(null);
+    const [productsOnStock, setProductsOnStock] = useState<ProductBasicInfo[]>([]);
+    const [orderProducts, setOrderProducts] = useState<OrderProductRequest[]>([]);
+    const [bakingTimeSlots, setBakingTimeSlots] = useState<BakingTimeSlot[]>([]);
 
-    const setDateTimeHandler = (e: any) => {
+    function setDateTimeHandler(e: any) {
         let dateTime = new Date(e.target.value);
+
         console.log("setDateTimeHandler", dateTime);
-        fetchBakingTimeSlots(dateTime, orderProducts).then((bakingTimeSlots) => {
-            console.log('fetch finished for fetchBakingTimeSlots() in CreateOrderPage');
-            setBakingTimeSlots(bakingTimeSlots);
-        });
+
+        fetchBakingTimeSlots(dateTime, orderProducts)
+            .then((bakingTimeSlots) => {
+                console.log('fetch finished for fetchBakingTimeSlots() in CreateOrderPage');
+                setBakingTimeSlots(bakingTimeSlots);
+            });
     };
 
-    const productNameSearchChangeHandler = (e: { target: { value: string; }; }) => {
+    function productNameSearchChangeHandler(e: { target: { value: string; }; }) {
         const productName = e.target.value;
+
         console.log(productName);
+
         if (!productName) {
             setProductsOnStock([]);
         } else {
@@ -69,27 +73,28 @@ const CreateOrderPage: FC = () => {
         }
     };
 
-    const createOrderHandler = () => {
+    async function createOrderHandler() {
+        
+
         console.log(newOrderRequest);
 
+        await createNewOrder(newOrderRequest);
     };
-
-    console.log('rendered CreateOrderPage');
 
     return (
         <Container>
             <Panel>
                 <Label>Search products in stock to add to order</Label>
                 <SearchWrapper>
-                    <TextField id="standard-basic" label="Product name" variant="standard" fullWidth sx={{ paddingRight: '16px' }} 
-                    onChange={productNameSearchChangeHandler}/>
+                    <TextField id="standard-basic" label="Product name" variant="standard" fullWidth sx={{ paddingRight: '16px' }}
+                        onChange={productNameSearchChangeHandler} />
                     <Button variant="contained">Search</Button>
 
                 </SearchWrapper>
                 <Label>Products in stock</Label>
-                <AvailableProductsList props={{availableProducts: productsOnStock, orderProducts, setOrderProducts}} />
+                <AvailableProductsList props={{ availableProducts: productsOnStock, orderProducts, setOrderProducts }} />
                 <Label>Products for the new order</Label>
-                <NewOrderProductsList props={{products: orderProducts}} />
+                <NewOrderProductsList props={{ products: orderProducts }} />
             </Panel>
             <Panel>
                 <Label>Order delivery date and time</Label>
@@ -104,7 +109,7 @@ const CreateOrderPage: FC = () => {
                     onChange={(e) => setDateTimeHandler(e)}
                 />
                 <Label>Available baking time slots</Label>
-                <BakingTimeSlotsList props={{bakingTimeSlots}} />
+                <BakingTimeSlotsList props={{ bakingTimeSlots }} />
                 <Button variant="contained" onClick={createOrderHandler}>Create order</Button>
             </Panel>
         </Container>
