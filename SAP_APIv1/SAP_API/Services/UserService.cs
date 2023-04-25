@@ -1,4 +1,5 @@
 ﻿using SAP_API.DataAccess.Repositories;
+using SAP_API.DTOs.Requests;
 using SAP_API.DTOs.Responses;
 using SAP_API.Exceptions;
 using SAP_API.Mappers;
@@ -19,11 +20,12 @@ namespace SAP_API.Services
             throw new System.NotImplementedException();
         }
 
-        public RegisterResponse RegisterUser(string username, string password)
+        public RegisterResponse RegisterUser(RegisterRequest body)
         {
-            CheckIfUsernameUnique(username);
+            CheckIfUsernameUnique(body.Username);
 
-            User user = _userRepository.Create(new User { Username = username, Password = password });
+            User userToCreate = UserMapper.RegisterRequestToUser(body);
+            User user = _userRepository.Create(userToCreate);
             return UserMapper.UserToRegisterResponse(user);
         }
 

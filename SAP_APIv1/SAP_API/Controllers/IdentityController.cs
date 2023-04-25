@@ -7,6 +7,7 @@ using System;
 using Microsoft.AspNetCore.Http;
 using SAP_API.DTOs.Responses;
 using SAP_API.Exceptions;
+using Microsoft.Extensions.Options;
 
 namespace SAP_API.Controllers
 {
@@ -30,7 +31,7 @@ namespace SAP_API.Controllers
         {
             try
             {
-                User user = _userService.AuthenticateUser(request.UserName, request.Password);
+                User user = _userService.AuthenticateUser(request.Username, request.Password);
 
                 if (user == null)
                 {
@@ -49,16 +50,17 @@ namespace SAP_API.Controllers
         }
 
         [HttpPost("register")]
-        public IActionResult Register([FromBody] RegisterRequest body)
+        public IActionResult Register([FromBody] RegisterRequest body, [FromServices] IOptions<ApiBehaviorOptions> apiBehaviorOptions)
         {
             try
             {
-                RegisterResponse user = _userService.RegisterUser(body.UserName, body.Password);
-                return Ok();
+                RegisterResponse response = _userService.RegisterUser(body);
+                return Ok(response);
             }
             catch(UniqueConstraintViolationException ex)
             {
-                return StatusCode(StatusCodes.Status422UnprocessableEntity, ex.Message);
+                ModelState.AddModelError("ErrorToDisplay", ex.Message);
+                return apiBehaviorOptions.Value.InvalidModelStateResponseFactory(ControllerContext);
             }
             catch (Exception ex)
             {

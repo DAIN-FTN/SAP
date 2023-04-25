@@ -5,9 +5,9 @@ namespace SAP_API.DTOs.Requests
     public class LoginRequest
     {
         [Required]
-        public readonly string? UserName;
+        public string? Username { get; set; }
         [Required]
-        public readonly string? Password;
+        public string? Password { get; set; }
     }
 
 }
