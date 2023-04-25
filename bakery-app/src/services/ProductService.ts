@@ -1,6 +1,6 @@
 import { getData, postData } from "./DataService";
 import { BakingTimeSlot } from "../models/BakingTimeSlot";
-import NewOrderRequest from "../models/NewOrderRequest";
+import NewOrderRequest from "../models/Requests/NewOrderRequest";
 import Order from "../models/Order";
 import ProductBasicInfo from "../models/ProductBasicInfo";
 import ProductDetails from "../models/ProductDetails";

@@ -1,9 +1,9 @@
 import { getData, postData } from "./DataService";
 import { BakingTimeSlot } from "../models/BakingTimeSlot";
-import NewOrderRequest from "../models/NewOrderRequest";
+import NewOrderRequest from "../models/Requests/NewOrderRequest";
 import Order from "../models/Order";
 import ProductBasicInfo from "../models/ProductBasicInfo";
-import { AvailableBakingPrograms } from "../models/Responses/AvailableBakingPrograms";
+import CreateOrderResponse from "../models/Responses/CreateOrderResponse";
 
 export async function fetchProductsBasicInfo(name: string): Promise<ProductBasicInfo[]> {
     try {
@@ -28,9 +28,8 @@ export async function fetchBakingTimeSlots(deliveryDateTime: Date, products: Pro
     };
     console.log(bakingTimeSlotRequest);
 
-    const temp = await postData<AvailableBakingPrograms>(`/api/baking-programs/available`, bakingTimeSlotRequest);
+    const temp = await postData<AvailableBakingPrograms.AvailableBakingPrograms>(`/api/baking-programs/available`, bakingTimeSlotRequest);
 
-    // debugger;
     return temp.bakingPrograms.map((bakingTimeSlot) => ({
         ...bakingTimeSlot,
         bakingStartedAt: bakingTimeSlot.bakingStartedAt ? new Date(bakingTimeSlot.bakingStartedAt) : null,
@@ -39,6 +38,6 @@ export async function fetchBakingTimeSlots(deliveryDateTime: Date, products: Pro
     }));
 }
 
-export async function createNewOrder(name: string, newOrderRequest: NewOrderRequest): Promise<Order> {
-    return await postData<Order>(`/api/products/stock?name=${name}`, newOrderRequest);
+export async function createNewOrder(newOrderRequest: NewOrderRequest): Promise<CreateOrderResponse> {
+    return await postData<CreateOrderResponse>(`/api/orders`, newOrderRequest);
 }

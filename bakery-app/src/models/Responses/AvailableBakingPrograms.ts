@@ -1,7 +1,7 @@
-import { BakingTimeSlot } from "../BakingTimeSlot";
+import AvailableBakingProgramResponse from "./AvailableBakingProgramResponse";
 
-export interface AvailableBakingPrograms {
+export default interface AvailableProgramsResponse {
+    bakingPrograms: AvailableBakingProgramResponse[];
     allProductsCanBeSuccessfullyArranged: boolean;
     isThereEnoughStockedProducts: boolean;
-    bakingPrograms: BakingTimeSlot[];
 }
