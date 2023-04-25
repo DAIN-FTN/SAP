@@ -7,10 +7,10 @@ import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import { FC } from "react";
 import styled from "styled-components";
-import { StockedLocationProductQuantity } from "../../models/ProductDetails";
+import StockOnLocationResponse from "../../models/Responses/StockOnLocationResponse";
 
 export interface StockedLocationProductQuantitiesList {
-    locationsWithStock: StockedLocationProductQuantity[];
+    locationsWithStock: StockOnLocationResponse[];
 }
 
 const TableRowStyled = styled(TableRow)`

@@ -7,14 +7,14 @@ import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import { FC, useState } from "react";
 import styled from "styled-components";
-import { BakingTimeSlot as BakingProgram } from "../../models/BakingTimeSlot";
 import { startPreparingBakingProgram } from "../../services/BakingProgramService";
 import ErrorDialogue from "./ErrorDialogue";
 import DetailsModal from "./DetailsModal";
 import { DateUtils } from "../../services/Utils";
+import BakingProgramResponse from "../../models/Responses/BakingProgramResponse";
 
 export interface PrepareForOvenListProps {
-    prepareForOven: BakingProgram[];
+    prepareForOven: BakingProgramResponse[];
     refreshView: Function;
 }
 
@@ -55,7 +55,7 @@ const PrepareForOvenList: FC<{ props: PrepareForOvenListProps }> = ({ props: { p
     const [open, setOpen] = useState(false);
     const [errorMessage, setErrorMessage] = useState("");
     const [showDetails, setShowDetails] = useState(false);
-    const [selectedBakingProgram, setSelectedBakingProgram] = useState<BakingProgram | null>(null);
+    const [selectedBakingProgram, setSelectedBakingProgram] = useState<BakingProgramResponse | null>(null);
 
     async function prepareClickHandler(id: string, callback: Function) {
         try {
@@ -68,7 +68,7 @@ const PrepareForOvenList: FC<{ props: PrepareForOvenListProps }> = ({ props: { p
         callback();
     }
 
-    function rowClickHandler(bakingProgram: BakingProgram) {
+    function rowClickHandler(bakingProgram: BakingProgramResponse) {
         setSelectedBakingProgram(bakingProgram);
         setShowDetails(true);
     }

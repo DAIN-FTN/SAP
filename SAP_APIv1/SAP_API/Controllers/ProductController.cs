@@ -10,7 +10,6 @@ using SAP_API.Services;
 using SAP_API.Validation;
 using System;
 using System.Collections.Generic;
-using System.Data.SqlClient;
 
 namespace SAP_API.Controllers
 {

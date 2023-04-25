@@ -7,10 +7,10 @@ import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import { FC } from "react";
 import styled from "styled-components";
-import ProductBasicInfo from "../../models/ProductBasicInfo";
+import ProductStockResponse from "../../models/Responses/ProductStockResponse";
 
 export interface ProductsInStockListProps {
-    products: ProductBasicInfo[];
+    products: ProductStockResponse[];
     setSelectedProductId: Function;
 }
 
@@ -39,7 +39,7 @@ const ProductsInStockList: FC<{ props: ProductsInStockListProps }> = ({props: { 
                     {products.map((product) => (
                         <TableRowStyled key={product.id} sx={{ '&:last-child td, &:last-child th': { border: 0 } }} onClick={() => setSelectedProductId(product.id)}>
                             <TableCell component="th" scope="row">{product.name}</TableCell>
-                            <TableCell align="right">{product.quantity}</TableCell>
+                            <TableCell align="right">{product.availableQuantity}</TableCell>
                         </TableRowStyled>
                     ))}
                 </TableBody>

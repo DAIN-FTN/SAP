@@ -1,13 +1,9 @@
 import { useState } from "react";
 import { FC } from "react";
 import styled from "styled-components";
-import ProductBasicInfo from "../../models/ProductBasicInfo";
-import { createNewOrder, fetchBakingTimeSlots, fetchProductsBasicInfo } from "../../services/OrderService";
 import AvailableProductsList from "../CreateOrderPage/AvailableProductsList";
 import Button from '@mui/material/Button';
 import TextField from "@mui/material/TextField";
-import NewOrderRequest, { OrderProductRequest } from "../../models/Requests/NewOrderRequest";
-import { BakingTimeSlot } from "../../models/BakingTimeSlot";
 import BakingTimeSlotsList from "./BakingTimeSlotsList";
 import NewOrderProductsList from "./NewOrderProductsList";
 

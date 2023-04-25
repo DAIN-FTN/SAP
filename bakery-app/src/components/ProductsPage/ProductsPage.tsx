@@ -1,12 +1,12 @@
 import { useState } from "react";
 import { FC } from "react";
 import styled from "styled-components";
-import ProductBasicInfo from "../../models/ProductBasicInfo";
-import { fetchProductsBasicInfo } from "../../services/OrderService";
 import Button from '@mui/material/Button';
 import TextField from "@mui/material/TextField";
 import ProductsInStockList from "./ProductsInStockList";
 import ProductDetailsView from "./ProductDetailsView";
+import { getProductStock } from "../../services/ProductService";
+import ProductStockResponse from "../../models/Responses/ProductStockResponse";
 
 const Container = styled.div`
     width: 100%;
@@ -38,7 +38,7 @@ const SearchWrapper = styled.div`
 `;
 
 const ProductsPage: FC = () => {
-    const [productsOnStock, setProductsOnStock] = useState<ProductBasicInfo[] | []>([]);
+    const [productsOnStock, setProductsOnStock] = useState<ProductStockResponse[] | []>([]);
     const [selectedProductId, setSelectedProductId] = useState<string | null>(null);
 
     const productNameSearchChangeHandler = (e: { target: { value: string; }; }) => {
@@ -47,7 +47,9 @@ const ProductsPage: FC = () => {
             setProductsOnStock([]);
             setSelectedProductId(null);
         } else {
-            fetchProductsBasicInfo(productName).then((products) => {
+            getProductStock(productName).then((products) => {
+                if (!products) throw new Error('No products found');
+
                 console.log('fetch finished for fetchProductsBasicInfo() in CreateOrderPage');
                 setProductsOnStock(products);
             });

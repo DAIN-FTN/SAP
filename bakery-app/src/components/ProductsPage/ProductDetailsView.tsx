@@ -1,8 +1,8 @@
 import { FC, useEffect, useState } from "react";
 import styled from "styled-components";
-import ProductDetails from "../../models/ProductDetails";
-import { fetchProductDetails } from "../../services/ProductService";
+import { getDetails } from "../../services/ProductService";
 import StockedLocationProductQuantitiesList from "./StockedLocationProductQuantitiesList";
+import ProductDetailsResponse from "../../models/Responses/Product/ProductDetailsResponse";
 
 export interface ProductDetailsViewProps {
     productId: string | null;
@@ -37,12 +37,12 @@ const ProductPropertyValue = styled.p`
 `;
 
 const ProductDetailsView: FC<ProductDetailsViewProps> = ({ productId }) => {
-    const [product, setProduct] = useState<ProductDetails | null>(null);
+    const [product, setProduct] = useState<ProductDetailsResponse | null>(null);
 
     useEffect(() => {
         const fetchProduct = async () => {
             if (productId) {
-                const product = await fetchProductDetails(productId);
+                const product = await getDetails(productId);
                 setProduct(product);
             }
         };

@@ -1,15 +1,16 @@
 import { getData, putDataWithoutResponse } from "./DataService";
-import { BakingTimeSlot as BakingProgram } from "../models/BakingTimeSlot";
-import AllBakingPrograms from "../models/AllBakingPrograms";
-import { StartPreparing } from "../models/Responses/StartPreparing";
+import AllBakingPrograms from "../models/Responses/AllBakingProgramsResponse";
+import StartPreparingResponse from "../models/Responses/StartPreparing/StartPreparingResponse";
+import AllBakingProgramsResponse from "../models/Responses/AllBakingProgramsResponse";
+import BakingProgramResponse from "../models/Responses/BakingProgramResponse";
 
-export async function fetchAllBakingPrograms(): Promise<AllBakingPrograms> {
-    const response = await getData<AllBakingPrograms>(`/api/baking-programs`);
+export async function fetchAllBakingPrograms(): Promise<AllBakingProgramsResponse> {
+    const response = await getData<AllBakingProgramsResponse>(`/api/baking-programs`);
     return mapAllBakingPrograms(response);
 }
 
-export async function startPreparingBakingProgram(id: string): Promise<BakingProgram> {
-    return await getData<BakingProgram>(`/api/baking-programs/start-preparing/${id}`);
+export async function startPreparingBakingProgram(id: string): Promise<StartPreparingResponse> {
+    return await getData<StartPreparingResponse>(`/api/baking-programs/start-preparing/${id}`);
 }
 
 export async function cancellBakingProgram(id: string) {
@@ -33,7 +34,7 @@ function mapAllBakingPrograms(allBakingPrograms: AllBakingPrograms): AllBakingPr
         done: mapBakingPrograms(allBakingPrograms.done),
     }
 
-    function mapPreparingInProgress(preparingInProgress: StartPreparing | null): StartPreparing | null{
+    function mapPreparingInProgress(preparingInProgress: StartPreparingResponse | null): StartPreparingResponse | null{
         if (preparingInProgress === null) return null;    
 
         return {
@@ -42,7 +43,7 @@ function mapAllBakingPrograms(allBakingPrograms: AllBakingPrograms): AllBakingPr
         };
     }
 
-    function mapBakingPrograms(bakingPrograms: BakingProgram[]): BakingProgram[] {
+    function mapBakingPrograms(bakingPrograms: BakingProgramResponse[]): BakingProgramResponse[] {
         return bakingPrograms.map((bakingProgram) => ({
             ...bakingProgram,
             createdAt: new Date(bakingProgram.createdAt),

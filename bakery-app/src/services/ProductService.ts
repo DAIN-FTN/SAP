@@ -1,38 +1,36 @@
-import { getData, postData } from "./DataService";
-import { BakingTimeSlot } from "../models/BakingTimeSlot";
-import NewOrderRequest from "../models/Requests/NewOrderRequest";
-import Order from "../models/Order";
-import ProductBasicInfo from "../models/ProductBasicInfo";
-import ProductDetails from "../models/ProductDetails";
+import { getData, postData, putData } from "./DataService";
+import ProductDetailsResponse from "../models/Responses/Product/ProductDetailsResponse";
+import ProductResponse from "../models/Responses/Product/ProductResponse";
+import ProductStockResponse from "../models/Responses/ProductStockResponse";
+import CreateProductRequest from "../models/Requests/Products/CreateProductRequest";
+import CreateProductResponse from "../models/Responses/Product/CreateProductResponse";
+import UpdateProductRequest from "../models/Requests/Products/UpdateProductRequest";
+import UpdateProductResponse from "../models/Responses/Product/UpdateProductResponse";
 
-export async function fetchProductDetails(productId: string): Promise<null | ProductDetails> {
+export async function getAll(): Promise<ProductResponse> {
+    return await getData<ProductResponse>(`/api/products`);
+}
+
+export async function getDetails(productId: string): Promise<ProductDetailsResponse | null> {
     try {
-        return await getData<ProductDetails>(`/api/products/${productId}`);
+        return await getData<ProductDetailsResponse>(`/api/products/${productId}`);
     } catch (error) {
-        return null as unknown as ProductDetails;
+        return null as unknown as ProductDetailsResponse;
     }
 }
 
-export async function fetchBakingTimeSlots(deliveryDateTime: Date, products: ProductBasicInfo[]): Promise<BakingTimeSlot[]> {
-    const bakingTimeSlotRequest = {
-        shouldBeDoneAt: deliveryDateTime.toISOString(),
-        orderProducts: products.map((product) => ({
-            productId: product.id,
-            quantity: product.quantity,
-        }))
-    };
-    console.log(bakingTimeSlotRequest);
-
-    const temp = await postData<BakingTimeSlot[]>(`/api/baking-programs/available`, bakingTimeSlotRequest);
-
-    return temp.map((bakingTimeSlot) => ({
-        ...bakingTimeSlot,
-        bakingStartedAt: bakingTimeSlot.bakingStartedAt ? new Date(bakingTimeSlot.bakingStartedAt) : null,
-        bakingProgrammedAt: new Date(bakingTimeSlot.bakingProgrammedAt),
-        createdAt: new Date(bakingTimeSlot.createdAt)
-    }));
+export async function getProductStock(name: string): Promise<ProductStockResponse[] | null> {
+    try {
+        return await getData<ProductStockResponse[]>(`/api/products/stock/${name}`);
+    } catch (error) {
+        return null as unknown as ProductStockResponse[];
+    }
 }
 
-export async function createNewOrder(name: string, newOrderRequest: NewOrderRequest): Promise<Order> {
-    return await postData<Order>(`/api/products/stock?name=${name}`, newOrderRequest);
+export async function create(createRequest: CreateProductRequest): Promise<CreateProductResponse> {
+    return await postData<CreateProductResponse>(`/api/products`, createRequest);
+}
+
+export async function update(productId: string, updateRequest: UpdateProductRequest): Promise<UpdateProductResponse> {
+    return await putData<UpdateProductResponse>(`/api/products/${productId}`, updateRequest);
 }

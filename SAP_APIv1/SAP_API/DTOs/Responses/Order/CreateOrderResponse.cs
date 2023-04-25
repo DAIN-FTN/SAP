@@ -1,5 +1,4 @@
-﻿using SAP_API.Models;
-using System;
+﻿using System;
 
 namespace SAP_API.DTOs.Responses
 {
