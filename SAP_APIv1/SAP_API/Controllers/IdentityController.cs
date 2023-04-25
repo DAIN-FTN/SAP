@@ -10,15 +10,15 @@ namespace SAP_API.Controllers
     [Route("api/login")]
     public class IdentityController : ControllerBase
     {
-        private readonly ITokenService tokenService;
-        private readonly IUserService userService;
+        private readonly ITokenService _tokenService;
+        private readonly IUserService _userService;
 
         public IdentityController(
             ITokenService tokenService, 
             IUserService userService)
         {
-            this.tokenService = tokenService;
-            this.userService = userService;
+            _tokenService = tokenService;
+            _userService = userService;
         }
 
         [HttpPost]
@@ -26,14 +26,14 @@ namespace SAP_API.Controllers
             [FromBody] LoginRequest request
             )
         {
-            User user = this.userService.AuthenticateUser(request.UserName, request.Password);
+            User user = _userService.AuthenticateUser(request.UserName, request.Password);
 
             if(user == null)
             {
                 return Unauthorized();
             }
 
-            string token = this.tokenService.GenerateToken(user);
+            string token = _tokenService.GenerateToken(user);
 
             return Ok(token);
         }

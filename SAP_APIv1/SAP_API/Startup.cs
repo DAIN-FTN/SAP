@@ -14,6 +14,7 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using JwtAuth.Middlewares;
+using SAP_API.Options;
 
 namespace SAP_API
 {
@@ -22,8 +23,19 @@ namespace SAP_API
         readonly string MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
         // This method gets called by the runtime. Use this method to add services to the container.
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
+
+
         public void ConfigureServices(IServiceCollection services)
         {
+            #region options
+            var jwtOptions = new JwtOptions();
+            Configuration.Bind(nameof(jwtOptions), jwtOptions);
+            services.AddSingleton(jwtOptions);
+
+            var encriptionOptions = new EncriptionOptions();
+            Configuration.Bind(nameof(encriptionOptions), encriptionOptions);
+            services.AddSingleton(encriptionOptions);
+            #endregion options
 
             services.AddAuthentication(x =>
             {
@@ -34,12 +46,12 @@ namespace SAP_API
             {
                 x.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters
                 {
-                    ValidateIssuer = true,
-                    ValidateAudience = true,
-                    ValidateLifetime = true,
-                    ValidAudience = Configuration["Jwt:Audience"],
-                    ValidIssuer = Configuration["Jwt:Issuer"],
-                    IssuerSigningKey = new Microsoft.IdentityModel.Tokens.SymmetricSecurityKey(System.Text.Encoding.UTF8.GetBytes(Configuration["Jwt:Key"]))
+                    ValidateIssuer = jwtOptions.ValidateIssuer,
+                    ValidateAudience = jwtOptions.ValidateAudience,
+                    ValidateLifetime = jwtOptions.ValidateLifetime,
+                    ValidAudience = jwtOptions.Audience,
+                    ValidIssuer = jwtOptions.Issuer,
+                    IssuerSigningKey = new Microsoft.IdentityModel.Tokens.SymmetricSecurityKey(System.Text.Encoding.UTF8.GetBytes(jwtOptions.Key))
                 };
             });
 
