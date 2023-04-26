@@ -10,10 +10,12 @@ import AddCircleIcon from '@mui/icons-material/AddCircle';
 import RemoveCircleIcon from '@mui/icons-material/RemoveCircle';
 import IconButton from "@mui/material/IconButton";
 import TextField from "@mui/material/TextField";
+import ProductStockResponse from "../../models/Responses/ProductStockResponse";
+import OrderProductRequest from "../../models/Requests/OrderProductRequest";
 
 export interface AvailableProductsListProps {
-    availableProducts: ProductBasicInfo[];
-    orderProducts: ProductBasicInfo[];
+    availableProducts: ProductStockResponse[];
+    orderProducts: OrderProductRequest[];
     setOrderProducts: Function;
 }
 
@@ -24,7 +26,7 @@ const AvailableProductsList: FC<{ props: AvailableProductsListProps }> = ({ prop
 
     function removeProductHandler(productId: string) {
         console.log("removeProductHandler", productId);
-        const productInOrderProducts = props.orderProducts.find((product) => product.id === productId) as ProductBasicInfo;
+        const productInOrderProducts = props.orderProducts.find((product) => product.productId === productId) as OrderProductRequest;
 
 
         if (!productInOrderProducts) return;
@@ -32,7 +34,7 @@ const AvailableProductsList: FC<{ props: AvailableProductsListProps }> = ({ prop
         productInOrderProducts.quantity -= 1;
 
         if (productInOrderProducts.quantity === 0) {
-            props.setOrderProducts(props.orderProducts.filter((product) => product.id !== productId));
+            props.setOrderProducts(props.orderProducts.filter((product) => product.productId !== productId));
         } else {
             props.setOrderProducts([...props.orderProducts]);
         }
@@ -40,12 +42,12 @@ const AvailableProductsList: FC<{ props: AvailableProductsListProps }> = ({ prop
 
     function addProductHandler(productId: string) {
         console.log("addProductHandler", productId);
-        const productBasicInfo = props.availableProducts.find((product) => product.id === productId) as ProductBasicInfo;
-        const productInOrderProducts = props.orderProducts.find((product) => product.id === productId)
+        const productBasicInfo = props.availableProducts.find((product) => product.id === productId) as ProductStockResponse;
+        const productInOrderProducts = props.orderProducts.find((product) => product.productId === productId)
         if (productInOrderProducts) {
             console.log("product already added");
             
-            if (productInOrderProducts.quantity + 1 > productBasicInfo.quantity) {
+            if (productInOrderProducts.quantity + 1 > productBasicInfo.availableQuantity) {
                 console.log("Can't add more products than available");
                 return;
             }
@@ -81,7 +83,7 @@ const AvailableProductsList: FC<{ props: AvailableProductsListProps }> = ({ prop
                             <TableCell component="th" scope="row">
                                 {product.name}
                             </TableCell>
-                            <TableCell align="right">{product.quantity}</TableCell>
+                            <TableCell align="right">{product.availableQuantity}</TableCell>
                             <TableCell align="right">
                                 <IconButton aria-label="delete" onClick={() => removeProductHandler(product.id)}>
                                     <RemoveCircleIcon />

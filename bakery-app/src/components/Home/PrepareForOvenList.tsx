@@ -54,7 +54,7 @@ const AvailableActionsTableCell = styled(TableCell)`
 const PrepareForOvenList: FC<{ props: PrepareForOvenListProps }> = ({ props: { prepareForOven, refreshView } }) => {
     const [open, setOpen] = useState(false);
     const [errorMessage, setErrorMessage] = useState("");
-    const [showDetails, setShowDetails] = useState(false);
+    const [showDetails, setShowDetails] = useState<boolean>(false);
     const [selectedBakingProgram, setSelectedBakingProgram] = useState<BakingProgramResponse | null>(null);
 
     async function prepareClickHandler(id: string, callback: Function) {

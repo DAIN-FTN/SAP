@@ -7,13 +7,13 @@ import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import { FC, useState } from "react";
 import styled from "styled-components";
-import { BakingTimeSlot as BakingProgram } from "../../models/BakingTimeSlot";
 import { cancellBakingProgram } from "../../services/BakingProgramService";
 import ErrorDialogue from "./ErrorDialogue";
 import DetailsModal from "./DetailsModal";
+import BakingProgramResponse from "../../models/Responses/BakingProgramResponse";
 
 export interface DoneListProps {
-    doneBakingPrograms: BakingProgram[];
+    doneBakingPrograms: BakingProgramResponse[];
     refreshView: Function;
 }
 
@@ -55,9 +55,9 @@ const DoneList: FC<{ props: DoneListProps }> = ({ props: { doneBakingPrograms, r
     const [open, setOpen] = useState(false);
     const [errorMessage, setErrorMessage] = useState("");
     const [showDetails, setShowDetails] = useState(false);
-    const [selectedBakingProgram, setSelectedBakingProgram] = useState<BakingProgram | null>(null);
+    const [selectedBakingProgram, setSelectedBakingProgram] = useState<BakingProgramResponse | null>(null);
 
-    function rowClickHandler(bakingProgram: BakingProgram) {
+    function rowClickHandler(bakingProgram: BakingProgramResponse) {
         setSelectedBakingProgram(bakingProgram);
         setShowDetails(true);
     }

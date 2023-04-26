@@ -7,17 +7,17 @@ import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import { FC, useState } from "react";
 import styled from "styled-components";
-import { BakingTimeSlot as BakingProgram, BakingProgramStatus } from "../../models/BakingTimeSlot";
 import { cancellBakingProgram, finishPreparingBakingProgram, startBakingBakingProgram } from "../../services/BakingProgramService";
 import ErrorDialogue from "./ErrorDialogue";
-import DetailsModal from "./DetailsModal";
 import { DateUtils } from "../../services/Utils";
-import { StartPreparing } from "../../models/Responses/StartPreparing";
 import SuperDetailsModal from "./SuperDetailsModal/SuperDetailsModal";
+import StartPreparingResponse from "../../models/Responses/StartPreparing/StartPreparingResponse";
+import BakingProgramResponse from "../../models/Responses/BakingProgramResponse";
+import { BakingProgramStatus } from "../../models/Enums/BakingProgramStatus";
 
 export interface PreparingListProps {
-    preparingBakingPrograms: BakingProgram[];
-    preparingInProgress: StartPreparing | null;
+    preparingBakingPrograms: BakingProgramResponse[];
+    preparingInProgress: StartPreparingResponse | null;
     refreshView: Function;
 }
 
@@ -76,9 +76,9 @@ const PreparingList: FC<{ props: PreparingListProps }> = ({ props: { preparingBa
     const [errorMessage, setErrorDialogMessage] = useState("");
     const [showDetails, setShowDetails] = useState(false);
     const [showPreparingDetails, setShowPreparingDetails] = useState(false);
-    const [selectedBakingProgram, setSelectedBakingProgram] = useState<BakingProgram | null>(null);
+    const [selectedBakingProgram, setSelectedBakingProgram] = useState<BakingProgramResponse | null>(null);
 
-    function rowClickHandler(bakingProgram: BakingProgram) {
+    function rowClickHandler(bakingProgram: BakingProgramResponse) {
         setSelectedBakingProgram(bakingProgram);
         setShowDetails(true);
     }

@@ -1,4 +1,4 @@
-import { BakingProgramStatus } from "../../BakingTimeSlot";
+import { BakingProgramStatus } from "../../Enums/BakingProgramStatus";
 import OrderProductResponse from "./OrderProductResponse";
 
 export default interface OrderBakingProgramResponse {

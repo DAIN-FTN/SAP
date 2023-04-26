@@ -6,6 +6,11 @@ import Button from '@mui/material/Button';
 import TextField from "@mui/material/TextField";
 import BakingTimeSlotsList from "./BakingTimeSlotsList";
 import NewOrderProductsList from "./NewOrderProductsList";
+import { getAvailable } from "../../services/BakingProgramService";
+import AvailableBakingProgramResponse from "../../models/Responses/AvailableBakingProgramResponse";
+import OrderProductRequest from "../../models/Requests/OrderProductRequest";
+import { getProductStock } from "../../services/ProductService";
+import ProductStockResponse from "../../models/Responses/ProductStockResponse";
 
 const Container = styled.div`
     width: 100%;
@@ -38,19 +43,19 @@ const SearchWrapper = styled.div`
 `;
 
 const CreateOrderPage: FC = () => {
-    const [productsOnStock, setProductsOnStock] = useState<ProductBasicInfo[]>([]);
+    const [productsOnStock, setProductsOnStock] = useState<ProductStockResponse[]>([]);
     const [orderProducts, setOrderProducts] = useState<OrderProductRequest[]>([]);
-    const [bakingTimeSlots, setBakingTimeSlots] = useState<BakingTimeSlot[]>([]);
+    const [bakingTimeSlots, setBakingTimeSlots] = useState<AvailableBakingProgramResponse[]>([]);
 
     function setDateTimeHandler(e: any) {
         let dateTime = new Date(e.target.value);
 
         console.log("setDateTimeHandler", dateTime);
 
-        fetchBakingTimeSlots(dateTime, orderProducts)
-            .then((bakingTimeSlots) => {
-                console.log('fetch finished for fetchBakingTimeSlots() in CreateOrderPage');
-                setBakingTimeSlots(bakingTimeSlots);
+        getAvailable(dateTime, orderProducts)
+            .then((availableProgramsResponse) => {
+                console.log('fetch finished for getAvailable() in CreateOrderPage');
+                setBakingTimeSlots(availableProgramsResponse.bakingPrograms);
             });
     };
 
@@ -62,7 +67,7 @@ const CreateOrderPage: FC = () => {
         if (!productName) {
             setProductsOnStock([]);
         } else {
-            fetchProductsBasicInfo(productName).then((products) => {
+            getProductStock(productName).then((products) => {
                 console.log('fetch finished for fetchProductsBasicInfo() in CreateOrderPage');
                 setProductsOnStock(products);
             });
@@ -72,9 +77,9 @@ const CreateOrderPage: FC = () => {
     async function createOrderHandler() {
         
 
-        console.log(newOrderRequest);
+        console.log("new order request");
 
-        await createNewOrder(newOrderRequest);
+        // await createNewOrder(newOrderRequest);
     };
 
     return (

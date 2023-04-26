@@ -1,12 +1,26 @@
-import { getData, putDataWithoutResponse } from "./DataService";
+import { getData, postData, putDataWithoutResponse } from "./DataService";
 import AllBakingPrograms from "../models/Responses/AllBakingProgramsResponse";
 import StartPreparingResponse from "../models/Responses/StartPreparing/StartPreparingResponse";
 import AllBakingProgramsResponse from "../models/Responses/AllBakingProgramsResponse";
 import BakingProgramResponse from "../models/Responses/BakingProgramResponse";
+import AvailableProgramsResponse from "../models/Requests/AvailableProgramsResponse";
+import FindAvailableBakingProgramsRequest from "../models/Requests/FindAvailableBakingProgramsRequest";
+import AvailableBakingProgramResponse from "../models/Responses/AvailableBakingProgramResponse";
+import OrderProductRequest from "../models/Requests/OrderProductRequest";
 
-export async function fetchAllBakingPrograms(): Promise<AllBakingProgramsResponse> {
+export async function getAll(): Promise<AllBakingProgramsResponse> {
     const response = await getData<AllBakingProgramsResponse>(`/api/baking-programs`);
     return mapAllBakingPrograms(response);
+}
+
+export async function getAvailable(shouldBeDoneAt: Date, orderProducts: OrderProductRequest[]): Promise<AvailableProgramsResponse> {
+    const requestBody: FindAvailableBakingProgramsRequest = {
+        shouldBeDoneAt,
+        orderProducts
+    };
+    const response = await postData<AvailableProgramsResponse>(`/api/baking-programs/available`, requestBody);
+
+    return mapAvailableProgramsResponse(response);
 }
 
 export async function startPreparingBakingProgram(id: string): Promise<StartPreparingResponse> {
@@ -50,6 +64,22 @@ function mapAllBakingPrograms(allBakingPrograms: AllBakingPrograms): AllBakingPr
             bakingProgrammedAt: new Date(bakingProgram.bakingProgrammedAt),
             canBePreparedAt: new Date(bakingProgram.canBePreparedAt),
             canBeBakedAt: new Date(bakingProgram.canBeBakedAt),
+            bakingStartedAt: bakingProgram.bakingStartedAt ? new Date(bakingProgram.bakingStartedAt) : null,
+        }))
+    }
+}
+
+function mapAvailableProgramsResponse(response: AvailableProgramsResponse): AvailableProgramsResponse {
+    return {
+        ...response,
+        bakingPrograms: mapBakingPrograms(response.bakingPrograms)
+    }
+
+    function mapBakingPrograms(bakingPrograms: AvailableBakingProgramResponse[]): AvailableBakingProgramResponse[] {
+        return bakingPrograms.map((bakingProgram) => ({
+            ...bakingProgram,
+            createdAt: new Date(bakingProgram.createdAt),
+            bakingProgrammedAt: new Date(bakingProgram.bakingProgrammedAt),
             bakingStartedAt: bakingProgram.bakingStartedAt ? new Date(bakingProgram.bakingStartedAt) : null,
         }))
     }

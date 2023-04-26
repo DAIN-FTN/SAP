@@ -1,4 +1,4 @@
 export default interface OrderProductRequest {
-    propuctId: string;
+    productId: string;
     quantity: number;
 }

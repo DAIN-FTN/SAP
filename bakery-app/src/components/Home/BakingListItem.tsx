@@ -2,13 +2,13 @@ import TableCell from "@mui/material/TableCell";
 import TableRow from "@mui/material/TableRow";
 import { FC, useEffect, useState } from "react";
 import styled from "styled-components";
-import { BakingTimeSlot as BakingProgram, BakingProgramStatus } from "../../models/BakingTimeSlot";
 import { DateUtils } from "../../services/Utils";
 import add from "date-fns/add";
 import intervalToDuration from "date-fns/intervalToDuration";
+import BakingProgramResponse from "../../models/Responses/BakingProgramResponse";
 
 export interface BakingListItemProps {
-    bakingBakingProgram: BakingProgram;
+    bakingBakingProgram: BakingProgramResponse;
     refreshView: Function;
     rowClickHandler: Function;
 }

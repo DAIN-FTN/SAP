@@ -2,11 +2,11 @@ import styled from 'styled-components';
 import TableRow from '@mui/material/TableRow';
 import { FC, useState } from 'react';
 import TableCell from '@mui/material/TableCell';
-import { LocationToPrepareFrom } from '../../../models/Responses/StartPreparing';
 import ProductToPrepareList from './ProductToPrepareList';
+import LocationToPrepareFromResponse from '../../../models/Responses/StartPreparing/LocationToPrepareFromResponse';
 
 export interface LocationsToPrepareFromListItemProps {
-    location: LocationToPrepareFrom;
+    location: LocationToPrepareFromResponse;
 }
 
 const TableRowStyled = styled(TableRow)`

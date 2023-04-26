@@ -7,10 +7,10 @@ import Table from '@mui/material/Table';
 import TableHead from '@mui/material/TableHead';
 import TableCell from '@mui/material/TableCell';
 import TableBody from '@mui/material/TableBody';
-import { ProductToPrepare } from '../../../models/Responses/StartPreparing';
+import ProductToPrepareResponse from '../../../models/Responses/StartPreparing/ProductToPrepareResponse';
 
 export interface ProductToPrepareListProps {
-    products: ProductToPrepare[];
+    products: ProductToPrepareResponse[];
 }
 
 const TableRowStyled = styled(TableRow)`
@@ -36,7 +36,7 @@ const ProductToPrepareList: FC<ProductToPrepareListProps> = ({ products }) => {
                     </TableRow>
                 </TableHead>
                 <TableBody>
-                    {products.map((product: ProductToPrepare) => (
+                    {products.map((product: ProductToPrepareResponse) => (
                         <TableRowStyled>
                             <TableCell>{product.name}</TableCell>
                             <TableCell align="right">{product.quantity}</TableCell>

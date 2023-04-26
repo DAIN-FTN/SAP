@@ -7,11 +7,11 @@ import Table from '@mui/material/Table';
 import TableHead from '@mui/material/TableHead';
 import TableCell from '@mui/material/TableCell';
 import TableBody from '@mui/material/TableBody';
-import { LocationToPrepareFrom } from '../../../models/Responses/StartPreparing';
 import LocationsToPrepareFromListItem from './LocationsToPrepareFromListItem';
+import LocationToPrepareFromResponse from '../../../models/Responses/StartPreparing/LocationToPrepareFromResponse';
 
 export interface LocationsToPrepareFromListProps {
-    locations: LocationToPrepareFrom[];
+    locations: LocationToPrepareFromResponse[];
 }
 
 const Container = styled.div`
@@ -41,7 +41,7 @@ const LocationsToPrepareFromList: FC<LocationsToPrepareFromListProps> = ({ locat
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        {locations.map((location: LocationToPrepareFrom) => (
+                        {locations.map((location: LocationToPrepareFromResponse) => (
                             <LocationsToPrepareFromListItem key={location.locationId} location={location} />
                         ))}
                     </TableBody>

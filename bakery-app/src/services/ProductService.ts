@@ -19,11 +19,11 @@ export async function getDetails(productId: string): Promise<ProductDetailsRespo
     }
 }
 
-export async function getProductStock(name: string): Promise<ProductStockResponse[] | null> {
+export async function getProductStock(name: string): Promise<ProductStockResponse[]> {
     try {
         return await getData<ProductStockResponse[]>(`/api/products/stock/${name}`);
     } catch (error) {
-        return null as unknown as ProductStockResponse[];
+        return [];
     }
 }
 

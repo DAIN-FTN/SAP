@@ -6,14 +6,14 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import { FC } from "react";
-import ProductBasicInfo from "../../models/ProductBasicInfo";
 import AddCircleIcon from '@mui/icons-material/AddCircle';
 import RemoveCircleIcon from '@mui/icons-material/RemoveCircle';
 import IconButton from "@mui/material/IconButton";
 import TextField from "@mui/material/TextField";
+import OrderProductRequest from "../../models/Requests/OrderProductRequest";
 
 export interface NewOrderProductsListProps {
-    products: ProductBasicInfo[];
+    products: OrderProductRequest[];
 }
 
 const NewOrderProductsList: FC<{ props: NewOrderProductsListProps }> = ({ props }) => {
@@ -34,18 +34,18 @@ const NewOrderProductsList: FC<{ props: NewOrderProductsListProps }> = ({ props 
                 <TableBody>
                     {props.products.map((product) => (
                         <TableRow
-                            key={product.id}
+                            key={product.productId}
                             sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
                         >
                             <TableCell component="th" scope="row">
-                                {product.name}
+                                {"ERROR: missing product name from request model"}
                             </TableCell>
                             <TableCell align="right">{product.quantity}</TableCell>
                             <TableCell align="right">
                                 <IconButton aria-label="delete">
                                     <RemoveCircleIcon />
                                 </IconButton>
-                                <TextField id={`standard-basic-${product.id}`} label="Quantity" variant="standard" size="small" sx={{width: '70px'}} />
+                                <TextField id={`standard-basic-${product.productId}`} label="Quantity" variant="standard" size="small" sx={{width: '70px'}} />
                                 <IconButton aria-label="delete">
                                     <AddCircleIcon />
                                 </IconButton>

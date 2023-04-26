@@ -1,13 +1,14 @@
 import DialogTitle from '@mui/material/DialogTitle';
 import Dialog from '@mui/material/Dialog';
 import styled from 'styled-components';
-import { BakingTimeSlot as BakingProgram, BakingProgramStatus } from '../../models/BakingTimeSlot';
 import { DateUtils } from '../../services/Utils';
 import TableRow from '@mui/material/TableRow';
+import { BakingProgramStatus } from '../../models/Enums/BakingProgramStatus';
+import BakingProgramResponse from '../../models/Responses/BakingProgramResponse';
 
 export interface DetailsModalProps {
     isOpen: boolean;
-    bakingProgram: BakingProgram | null;
+    bakingProgram: BakingProgramResponse | null;
     onClose: Function;
 }
 

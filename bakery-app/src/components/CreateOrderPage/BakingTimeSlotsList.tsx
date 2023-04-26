@@ -1,5 +1,4 @@
 import { FC, useState } from "react";
-import { BakingTimeSlot } from "../../models/BakingTimeSlot";
 import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
 import ListItemButton from "@mui/material/ListItemButton";
@@ -7,9 +6,10 @@ import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
 import RadioButtonUncheckedIcon from '@mui/icons-material/RadioButtonUnchecked';
 import RadioButtonCheckedIcon from '@mui/icons-material/RadioButtonChecked';
+import AvailableBakingProgramResponse from "../../models/Responses/AvailableBakingProgramResponse";
 
 export interface BakingTimeSlotsListProps {
-    bakingTimeSlots: BakingTimeSlot[];
+    bakingTimeSlots: AvailableBakingProgramResponse[];
 }
 
 const BakingTimeSlotsList: FC<{ props: BakingTimeSlotsListProps }> = ({ props }) => {

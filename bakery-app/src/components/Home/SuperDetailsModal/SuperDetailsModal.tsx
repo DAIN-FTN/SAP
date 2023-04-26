@@ -4,11 +4,11 @@ import styled from 'styled-components';
 import { DateUtils } from '../../../services/Utils';
 import { FC } from 'react';
 import LocationsToPrepareFromList from './LocationsToPrepareFromList';
-import { StartPreparing } from '../../../models/Responses/StartPreparing';
+import StartPreparingResponse from '../../../models/Responses/StartPreparing/StartPreparingResponse';
 
 export interface SuperDetailsModalProps {
     isOpen: boolean;
-    bakingProgram: StartPreparing | null;
+    bakingProgram: StartPreparingResponse | null;
     onClose: Function;
 }
 
