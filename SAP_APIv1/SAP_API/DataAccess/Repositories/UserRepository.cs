@@ -50,6 +50,8 @@ namespace SAP_API.DataAccess.Repositories
         {
             return _users
                 .Include("Role")
+                .Include(user => user.BakingProgramsMade)
+                    .ThenInclude(bp => bp.Oven)
                 .FirstOrDefault(u => u.Id == id);
         }
 
@@ -58,6 +60,13 @@ namespace SAP_API.DataAccess.Repositories
             return _users
                  .Include("Role")
                 .Where(p => p.Username.Equals(username)).FirstOrDefault();
+        }
+
+        public List<User> GetUsersByUsername(string name)
+        {
+            return _users
+                 .Include("Role")                
+                .Where(u => u.Username.Contains(name)).ToList();
         }
 
         public User Update(User updatedUser)

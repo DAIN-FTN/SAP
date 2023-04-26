@@ -6,6 +6,7 @@ using SAP_API.Mappers;
 using SAP_API.Models;
 using SAP_API.Utils;
 using System;
+using System.Collections.Generic;
 
 namespace SAP_API.Services
 {
@@ -31,6 +32,25 @@ namespace SAP_API.Services
             (bool verified, bool needsUpgrade) = _hasher.Check(user.Password, password);
 
             return verified ? user : null;
+        }
+
+        public List<UserResponse> GetAll(string name)
+        {
+            if (String.IsNullOrEmpty(name))
+            {
+                List<User> users = (List<User>)_userRepository.GetAll();
+                return UserMapper.UserListToUserResponseList(users);
+            }
+
+            return UserMapper.UserListToUserResponseList(_userRepository.GetUsersByUsername(name));
+        }
+
+        public UserDetailsResponse GetById(Guid userId)
+        {
+            User user = _userRepository.GetById(userId);
+            if (user == null)
+                return null;
+            return UserMapper.UserToUserDetailsResponse(user);
         }
 
         public RegisterResponse RegisterUser(RegisterRequest body)
