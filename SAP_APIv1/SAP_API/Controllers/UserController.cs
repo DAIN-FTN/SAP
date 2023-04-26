@@ -15,6 +15,11 @@ namespace SAP_API.Controllers
     {
         private readonly IUserService _userService;
 
+        public UserController(IUserService userService)
+        {
+            _userService = userService;
+        }
+
         [HttpPost]
         public IActionResult Register([FromBody] RegisterRequest body, [FromServices] IOptions<ApiBehaviorOptions> apiBehaviorOptions)
         {
@@ -24,6 +29,11 @@ namespace SAP_API.Controllers
                 return Ok(response);
             }
             catch (UniqueConstraintViolationException ex)
+            {
+                ModelState.AddModelError("ErrorToDisplay", ex.Message);
+                return apiBehaviorOptions.Value.InvalidModelStateResponseFactory(ControllerContext);
+            }
+            catch(ForeignKeyViolationException ex)
             {
                 ModelState.AddModelError("ErrorToDisplay", ex.Message);
                 return apiBehaviorOptions.Value.InvalidModelStateResponseFactory(ControllerContext);

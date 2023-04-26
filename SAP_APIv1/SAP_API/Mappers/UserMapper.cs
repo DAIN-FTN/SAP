@@ -13,7 +13,9 @@ namespace SAP_API.Mappers
             {
                 Id = user.Id,
                 Username = user.Username,
-                Password = user.Password
+                Password = user.Password,
+                RoleId = user.RoleId,
+                Role = user.Role.Name
             };
         }
 
@@ -23,7 +25,8 @@ namespace SAP_API.Mappers
             {
                 Id = new Guid(),
                 Username = body.Username,
-                Password = body.Password
+                Password = body.Password,
+                RoleId = (Guid)body.RoleId
             };
         }
     }
