@@ -1,4 +1,5 @@
 ﻿using SAP_API.DTOs;
+using SAP_API.DTOs.Requests;
 using SAP_API.DTOs.Responses;
 using SAP_API.Models;
 using System;
@@ -13,5 +14,7 @@ namespace SAP_API.Services
         public ProductDetailsResponse GetProductDetails(Guid id);
         public List<ProductResponse> GetAll(string name);
         public Product GetById(Guid productId);
+        CreateProductResponse CreateProduct(CreateProductRequest body);
+        UpdateProductResponse UpdateProduct(Product product, UpdateProductRequest body);
     }
 }

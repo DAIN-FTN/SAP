@@ -1,6 +1,10 @@
 ﻿using SAP_API.DataAccess.Repositories;
 using SAP_API.DTOs;
+using SAP_API.DTOs.Requests;
+using SAP_API.DTOs.Responses;
+using SAP_API.DTOs.Responses.StockedProduct;
 using SAP_API.Exceptions;
+using SAP_API.Mappers;
 using SAP_API.Models;
 using System;
 using System.Collections.Generic;
@@ -98,6 +102,33 @@ namespace SAP_API.Services
             }
 
             return reservedOrderProducts;
+        }
+
+        public CreateStockedProductResponse Create(CreateStockedProductRequest body)
+        {
+            StockedProduct stockedProduct = StockedProductMapper.CreateStockedProductFromCreateStockedProductRequest(body);
+            StockedProduct created = _stockedProductRepository.Create(stockedProduct);
+            return StockedProductMapper.CreateCreateStockedProductResponseFromStockedProduct(created);
+
+        }
+
+        public UpdateStockedProductResponse Update(StockedProduct stockedProduct, UpdateStockedProductRequest body)
+        {
+            UpdateProductFields(stockedProduct, body);
+            StockedProduct updated = _stockedProductRepository.Update(stockedProduct);
+            return StockedProductMapper.CreateUpdateStockedProductResponseFromStockedProduct(updated);
+        }
+
+        private void UpdateProductFields(StockedProduct stockedProduct, UpdateStockedProductRequest body)
+        {
+            stockedProduct.Quantity = (int)body.Quantity;
+            stockedProduct.ReservedQuantity = (int)body.ReservedQuantity;
+        }
+
+
+        public StockedProduct GetByLocationIdProductId(Guid locationId, Guid productId)
+        {
+            return _stockedProductRepository.GetByLocationAndProduct(locationId, productId);
         }
     }
 }

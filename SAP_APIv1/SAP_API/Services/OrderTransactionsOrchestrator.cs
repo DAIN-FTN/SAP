@@ -72,7 +72,7 @@ namespace SAP_API.Services
 
                 scope.Complete();
 
-                return OrderMapper.OrderToOrderResponse(order);
+                return OrderMapper.OrderToCreateOrderResponse(order);
             }
             catch(NotEnoughStockedProductException exception)
             {

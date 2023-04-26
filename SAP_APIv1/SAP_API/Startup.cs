@@ -75,6 +75,7 @@ namespace SAP_API
             services.AddScoped<IOrderRepository, OrderRepository>();
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<IRoleRepository, RoleRepository>();
+            services.AddScoped<IBakingProgramProductRepository, BakingProgramProductRepository>();
 
             services.AddScoped<ITokenService, TokenService>();
             services.AddScoped<IProductService, ProductService>();
@@ -84,6 +85,7 @@ namespace SAP_API
             services.AddScoped<IStockedProductService, StockedProductService>();
             services.AddScoped<IOrderService, OrderService>();
             services.AddScoped<IUserService, UserService>();
+            services.AddScoped<IStockLocationService, StockLocationService>();
 
             services.AddScoped<IOrderTransactionsOrchestrator, OrderTransactionsOrchestrator>();
             services.AddSingleton<IHasher, Hasher>();

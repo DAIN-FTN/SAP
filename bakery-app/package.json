@@ -36,7 +36,8 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "reseed-db": "cd ../SAP_APIv1/ && dotnet-ef --project=SAP_API database update 0 && --project=SAP_API database update && cd ../bakery-app "
   },
   "eslintConfig": {
     "extends": [
