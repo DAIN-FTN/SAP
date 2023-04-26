@@ -41,17 +41,23 @@ namespace SAP_API.DataAccess.Repositories
 
         public IEnumerable<User> GetAll()
         {
-            return _users.ToList();
+            return _users
+                 .Include("Role")
+                .ToList();
         }
 
         public User GetById(Guid id)
         {
-            return _users.FirstOrDefault(u => u.Id == id);
+            return _users
+                .Include("Role")
+                .FirstOrDefault(u => u.Id == id);
         }
 
         public User GetByUsername(string username)
         {
-            return _users.Where(p => p.Username.Equals(username)).FirstOrDefault();
+            return _users
+                 .Include("Role")
+                .Where(p => p.Username.Equals(username)).FirstOrDefault();
         }
 
         public User Update(User updatedUser)

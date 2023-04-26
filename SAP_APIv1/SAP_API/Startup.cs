@@ -65,7 +65,6 @@ namespace SAP_API
                 options.UseNpgsql(Configuration.GetConnectionString("DefaultConnection"));
             });
 
-            services.AddScoped<ITokenService, TokenService>();
             services.AddScoped<IProductRepository, ProductRepository>();
             services.AddScoped<IStockedProductRepository, StockedProductRepository>();
             services.AddScoped<IOvenRepository, OvenRepository>();
@@ -75,6 +74,9 @@ namespace SAP_API
             services.AddScoped<IStockLocationRepository, StockLocationRepository>();
             services.AddScoped<IOrderRepository, OrderRepository>();
             services.AddScoped<IUserRepository, UserRepository>();
+            services.AddScoped<IRoleRepository, RoleRepository>();
+
+            services.AddScoped<ITokenService, TokenService>();
             services.AddScoped<IProductService, ProductService>();
             services.AddScoped<IBakingProgramService, BakingProgramService>();
             services.AddScoped<IArrangingProductsToProgramsService, ArrangingProductsToProgramsService>();
@@ -82,6 +84,7 @@ namespace SAP_API
             services.AddScoped<IStockedProductService, StockedProductService>();
             services.AddScoped<IOrderService, OrderService>();
             services.AddScoped<IUserService, UserService>();
+
             services.AddScoped<IOrderTransactionsOrchestrator, OrderTransactionsOrchestrator>();
             services.AddSingleton<IHasher, Hasher>();
 

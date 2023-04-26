@@ -49,23 +49,5 @@ namespace SAP_API.Controllers
 
         }
 
-        [HttpPost("register")]
-        public IActionResult Register([FromBody] RegisterRequest body, [FromServices] IOptions<ApiBehaviorOptions> apiBehaviorOptions)
-        {
-            try
-            {
-                RegisterResponse response = _userService.RegisterUser(body);
-                return Ok(response);
-            }
-            catch(UniqueConstraintViolationException ex)
-            {
-                ModelState.AddModelError("ErrorToDisplay", ex.Message);
-                return apiBehaviorOptions.Value.InvalidModelStateResponseFactory(ControllerContext);
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
-            }
-        }
     }
 }

@@ -30,9 +30,6 @@ namespace SAP_API.Services
             return verified ? user : null;
         }
 
-
-
-
         public RegisterResponse RegisterUser(RegisterRequest body)
         {
             CheckIfUsernameUnique(body.Username);
