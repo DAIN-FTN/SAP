@@ -50,7 +50,8 @@ namespace SAP_API.Mappers
                 Username = user.Username,
                 Password = user.Password,
                 Role = user.Role.Name,
-                RoleId = user.RoleId
+                RoleId = user.RoleId,
+                Active = user.Active
             };
         }
 
@@ -63,6 +64,7 @@ namespace SAP_API.Mappers
                 Password = user.Password,
                 Role = user.Role.Name,
                 RoleId = user.RoleId,
+                Active = user.Active,
                 PreparedPrograms = BakingProgramListToPreparedProgramResponseList(user.BakingProgramsMade)
             };
         }
@@ -103,7 +105,8 @@ namespace SAP_API.Mappers
                 Username = user.Username,
                 Password = user.Password,
                 Role = user.Role.Name,
-                RoleId = user.RoleId
+                RoleId = user.RoleId,
+                Active = user.Active
             };
         }
     }

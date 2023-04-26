@@ -343,6 +343,7 @@ namespace SAP_API.DataAccess
                        Username = "AleksandarAdmin",
                        Password = "10.Dq24kqmfYfyJ/ZM90uQt3A==.VRQEd9C+pfkWA/sHxLZO9+wEYVMWYMww0MZZIy0nEkQ=",
                        RoleId = Guid.Parse("00000000-0000-0000-0000-000000000001"),
+                       Active = true
                    },
                     new User
                     {
@@ -350,6 +351,7 @@ namespace SAP_API.DataAccess
                         Username = "AleksandarStaff",
                         Password = "10.Dq24kqmfYfyJ/ZM90uQt3A==.VRQEd9C+pfkWA/sHxLZO9+wEYVMWYMww0MZZIy0nEkQ=",
                         RoleId = Guid.Parse("00000000-0000-0000-0000-000000000002"),
+                        Active = true
                     }
                 );
         }
