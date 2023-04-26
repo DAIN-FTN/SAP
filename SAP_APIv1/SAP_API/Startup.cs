@@ -86,6 +86,7 @@ namespace SAP_API
             services.AddScoped<IOrderService, OrderService>();
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IStockLocationService, StockLocationService>();
+            services.AddScoped<IRoleService, RoleService>();
 
             services.AddScoped<IOrderTransactionsOrchestrator, OrderTransactionsOrchestrator>();
             services.AddSingleton<IHasher, Hasher>();

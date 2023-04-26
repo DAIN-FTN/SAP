@@ -50,6 +50,11 @@ namespace SAP_API.DataAccess.Repositories
             return _roles.FirstOrDefault(r => r.Id == id);
         }
 
+        public Role GetByName(string name)
+        {
+            return _roles.FirstOrDefault(r => r.Name.Equals(name));
+        }
+
         public Role Update(Role updatedRole)
         {
             Role role = GetById(updatedRole.Id);
