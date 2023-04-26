@@ -77,7 +77,7 @@ namespace SAP_API.DataAccess.Repositories
                 _users.Update(updatedUser);
                 _context.SaveChanges();
 
-                GetById(updatedUser.Id);
+                return GetById(updatedUser.Id);
             }
             throw new Exception("User not found");
         }

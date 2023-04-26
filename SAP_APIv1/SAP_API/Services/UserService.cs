@@ -1,6 +1,8 @@
 ﻿using SAP_API.DataAccess.Repositories;
 using SAP_API.DTOs.Requests;
+using SAP_API.DTOs.Requests.User;
 using SAP_API.DTOs.Responses;
+using SAP_API.DTOs.Responses.User;
 using SAP_API.Exceptions;
 using SAP_API.Mappers;
 using SAP_API.Models;
@@ -64,6 +66,28 @@ namespace SAP_API.Services
 
             User user = _userRepository.Create(userToCreate);
             return UserMapper.UserToRegisterResponse(user);
+        }
+
+        public UpdateUserResponse UpdateUser(UpdateUserRequest body, Guid userId)
+        {
+            User user = _userRepository.GetById(userId);
+            if (user == null)
+                return null;
+
+            if (!user.Username.Equals(body.Username))
+                CheckIfUsernameUnique(body.Username);
+            CheckIfRoleValid((Guid)body.RoleId);
+
+            UpdateUserFields(body, user);
+            User updatedUser = _userRepository.Update(user);
+            return UserMapper.UserToUpdateUserResponse(updatedUser);
+
+        }
+
+        private void UpdateUserFields(UpdateUserRequest body, User user)
+        {
+            user.RoleId = (Guid)body.RoleId;
+            user.Username = body.Username;
         }
 
         private void CheckIfRoleValid(Guid roleId)

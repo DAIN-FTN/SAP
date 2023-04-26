@@ -2,7 +2,9 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using SAP_API.DTOs.Requests;
+using SAP_API.DTOs.Requests.User;
 using SAP_API.DTOs.Responses;
+using SAP_API.DTOs.Responses.User;
 using SAP_API.Exceptions;
 using SAP_API.Services;
 using System;
@@ -82,6 +84,36 @@ namespace SAP_API.Controllers
 
             }
         }
+
+        [HttpPut("{userId}")]
+        public IActionResult UpdateUser([FromBody] UpdateUserRequest body, Guid userId, [FromServices] IOptions<ApiBehaviorOptions> apiBehaviorOptions)
+        {
+            try
+            {
+                UpdateUserResponse response = _userService.UpdateUser(body, userId);
+
+                if (response == null)
+                    return NotFound();
+
+                return Ok(response);
+            }
+            catch (UniqueConstraintViolationException ex)
+            {
+                ModelState.AddModelError("ErrorToDisplay", ex.Message);
+                return apiBehaviorOptions.Value.InvalidModelStateResponseFactory(ControllerContext);
+            }
+            catch (ForeignKeyViolationException ex)
+            {
+                ModelState.AddModelError("ErrorToDisplay", ex.Message);
+                return apiBehaviorOptions.Value.InvalidModelStateResponseFactory(ControllerContext);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+
+            }
+        }
+
 
     }
 }

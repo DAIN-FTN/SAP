@@ -94,5 +94,17 @@ namespace SAP_API.Mappers
                 OvenId = program.Oven.Id,
             };
         }
+
+        internal static UpdateUserResponse UserToUpdateUserResponse(User user)
+        {
+            return new UpdateUserResponse
+            {
+                Id = user.Id,
+                Username = user.Username,
+                Password = user.Password,
+                Role = user.Role.Name,
+                RoleId = user.RoleId
+            };
+        }
     }
 }
