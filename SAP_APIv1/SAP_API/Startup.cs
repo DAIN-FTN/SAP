@@ -15,6 +15,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using JwtAuth.Middlewares;
 using SAP_API.Options;
+using SAP_API.Utils;
 
 namespace SAP_API
 {
@@ -82,6 +83,7 @@ namespace SAP_API
             services.AddScoped<IOrderService, OrderService>();
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IOrderTransactionsOrchestrator, OrderTransactionsOrchestrator>();
+            services.AddSingleton<IHasher, Hasher>();
 
             services.AddCors(options =>
             {
