@@ -107,6 +107,11 @@ namespace SAP_API.Controllers
                 ModelState.AddModelError("ErrorToDisplay", ex.Message);
                 return apiBehaviorOptions.Value.InvalidModelStateResponseFactory(ControllerContext);
             }
+            catch(UnableToDeactivateUserException ex)
+            {
+                ModelState.AddModelError("ErrorToDisplay", ex.Message);
+                return apiBehaviorOptions.Value.InvalidModelStateResponseFactory(ControllerContext);
+            }
             catch (Exception ex)
             {
                 return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
