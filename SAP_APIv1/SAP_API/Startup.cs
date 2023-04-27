@@ -56,7 +56,11 @@ namespace SAP_API
                 };
             });
 
-            services.AddAuthorization();
+            services.AddAuthorization(config =>
+            {
+                    config.AddPolicy(Policies.Admin, Policies.AdminPolicy());
+                    config.AddPolicy(Policies.Staff, Policies.UserPolicy());
+            });
 
 
             services.AddControllers();
@@ -105,8 +109,6 @@ namespace SAP_API
     public IConfiguration Configuration { get; }
     public Startup(IConfiguration configuration)
     {
-          
-
             Configuration = configuration;
     }
 
@@ -124,10 +126,8 @@ namespace SAP_API
 
             app.UseRouting();
 
-            app.UseAuthorization(config => {
-                config.AddPolicy(Policies.Admin, Policies.AdminPolicy());
-                config.AddPolicy(Policies.User, Policies.UserPolicy());
-            });
+
+            app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
             {

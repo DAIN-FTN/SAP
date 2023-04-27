@@ -1,4 +1,6 @@
-public Policies {
+using Microsoft.AspNetCore.Authorization;
+
+public class Policies {
     public const string Admin = "Admin";
     public const string Staff = "Staff";
 

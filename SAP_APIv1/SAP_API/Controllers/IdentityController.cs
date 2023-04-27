@@ -8,6 +8,8 @@ using Microsoft.AspNetCore.Http;
 using SAP_API.DTOs.Responses;
 using SAP_API.Exceptions;
 using Microsoft.Extensions.Options;
+using Microsoft.AspNetCore.Authorization;
+using System.IdentityModel.Tokens.Jwt;
 
 namespace SAP_API.Controllers
 {
@@ -54,11 +56,11 @@ namespace SAP_API.Controllers
         [HttpGet("Me")]
         public IActionResult Me() {
             //TODO: in case we need this logic elsewhere, implement middleware
-            var authorizationHeader = Request.Headers["Authorization"];
-            var token = authorizationHeader.Substring("Bearer ".Length).Trim();
+            string authorizationHeader = Request.Headers["Authorization"].ToString();
+            string token = authorizationHeader.Substring("Bearer ".Length).Trim();
             try {
-                 JwtPayload payload = this.tokenService.ExtractPayloadFromToken(token);
-                 var user = _userService.GetById(payload.sub);
+                 JwtPayload payload = _tokenService.ExtractPayloadFromToken(token);
+                 UserDetailsResponse user = _userService.GetById(Guid.Parse(payload.Sub));
                  return Ok(user);
             } catch (Exception ex ) {
                 return StatusCode(StatusCodes.Status401Unauthorized, ex.Message);
