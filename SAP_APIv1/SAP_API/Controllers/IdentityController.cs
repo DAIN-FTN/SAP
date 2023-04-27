@@ -26,7 +26,9 @@ namespace SAP_API.Controllers
             _userService = userService;
         }
 
+    
         [HttpPost("login")]
+        [AllowAnonymous]
         public IActionResult Login([FromBody] LoginRequest request)
         {
             try
@@ -47,6 +49,21 @@ namespace SAP_API.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
             }
 
+        }
+
+        [HttpGet("Me")]
+        public IActionResult Me() {
+            //TODO: in case we need this logic elsewhere, implement middleware
+            var authorizationHeader = Request.Headers["Authorization"];
+            var token = authorizationHeader.Substring("Bearer ".Length).Trim();
+            try {
+                 JwtPayload payload = this.tokenService.ExtractPayloadFromToken(token);
+                 var user = _userService.GetById(payload.sub);
+                 return Ok(user);
+            } catch (Exception ex ) {
+                return StatusCode(StatusCodes.Status401Unauthorized, ex.Message);
+            }
+           
         }
 
     }

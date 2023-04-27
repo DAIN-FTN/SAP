@@ -12,7 +12,5 @@ namespace SAP_API.DTOs.Requests.User
 
         [Required]
         public Guid? RoleId { get; set; }
-        [Required]
-        public bool? Active { get; set; }
     }
 }

@@ -12,7 +12,7 @@ namespace SAP_API.Services
     {
         public User AuthenticateUser(string username, string password);
         public RegisterResponse RegisterUser(RegisterRequest body);
-        List<UserResponse> GetAll(string name, bool? active);
+        List<UserResponse> GetAll(string name);
         UserDetailsResponse GetById(Guid userId);
         UpdateUserResponse UpdateUser(UpdateUserRequest body, Guid userId);
     }

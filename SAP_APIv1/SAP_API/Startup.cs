@@ -86,7 +86,6 @@ namespace SAP_API
             services.AddScoped<IOrderService, OrderService>();
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IStockLocationService, StockLocationService>();
-            services.AddScoped<IRoleService, RoleService>();
 
             services.AddScoped<IOrderTransactionsOrchestrator, OrderTransactionsOrchestrator>();
             services.AddSingleton<IHasher, Hasher>();
@@ -125,7 +124,10 @@ namespace SAP_API
 
             app.UseRouting();
 
-            app.UseAuthorization();
+            app.UseAuthorization(config => {
+                config.AddPolicy(Policies.Admin, Policies.AdminPolicy());
+                config.AddPolicy(Policies.User, Policies.UserPolicy());
+            });
 
             app.UseEndpoints(endpoints =>
             {

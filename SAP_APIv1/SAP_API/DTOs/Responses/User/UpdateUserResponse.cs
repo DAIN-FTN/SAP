@@ -9,6 +9,5 @@ namespace SAP_API.DTOs.Responses.User
         public string Password { get; set; }
         public Guid RoleId { get; set; }
         public string Role { get; set; }
-        public bool Active { get; set; }
     }
 }

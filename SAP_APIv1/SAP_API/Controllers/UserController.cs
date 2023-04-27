@@ -24,6 +24,7 @@ namespace SAP_API.Controllers
         }
 
         [HttpPost]
+        [AllowAnonymous]
         public IActionResult Register([FromBody] RegisterRequest body, [FromServices] IOptions<ApiBehaviorOptions> apiBehaviorOptions)
         {
             try
@@ -48,11 +49,12 @@ namespace SAP_API.Controllers
         }
 
         [HttpGet]
-        public IActionResult GetAll([FromQuery] string name, [FromQuery] bool? active)
+        [Authorize(Policy = Policies.Admin)]
+        public IActionResult GetAll([FromQuery] string name)
         {
             try
             {
-                List<UserResponse> response = _userService.GetAll(name, active);
+                List<UserResponse> response = _userService.GetAll(name);
 
                 if (response == null || response.Count == 0)
                     return NoContent();
@@ -67,6 +69,7 @@ namespace SAP_API.Controllers
         }
 
         [HttpGet("{userId}")]
+        [Authorize]
         public IActionResult GetById(Guid userId)
         {
             try
@@ -86,6 +89,7 @@ namespace SAP_API.Controllers
         }
 
         [HttpPut("{userId}")]
+        [Authorize]
         public IActionResult UpdateUser([FromBody] UpdateUserRequest body, Guid userId, [FromServices] IOptions<ApiBehaviorOptions> apiBehaviorOptions)
         {
             try
@@ -103,11 +107,6 @@ namespace SAP_API.Controllers
                 return apiBehaviorOptions.Value.InvalidModelStateResponseFactory(ControllerContext);
             }
             catch (ForeignKeyViolationException ex)
-            {
-                ModelState.AddModelError("ErrorToDisplay", ex.Message);
-                return apiBehaviorOptions.Value.InvalidModelStateResponseFactory(ControllerContext);
-            }
-            catch(UnableToDeactivateUserException ex)
             {
                 ModelState.AddModelError("ErrorToDisplay", ex.Message);
                 return apiBehaviorOptions.Value.InvalidModelStateResponseFactory(ControllerContext);

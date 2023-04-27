@@ -27,6 +27,7 @@ namespace SAP_API.Services
             {
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
                 new Claim(JwtRegisteredClaimNames.Sub, user.Id.ToString()),
+                new Claim("role", user.Role.id),
              };
 
             var token = new JwtSecurityToken(
@@ -38,6 +39,28 @@ namespace SAP_API.Services
         );
             return new JwtSecurityTokenHandler().WriteToken(token);
         }
-    }
 
+        public static async JwtPayload ExtractPayloadFromToken(string token)
+        {
+            var tokenHandler = new JwtSecurityTokenHandler();
+
+            var validationParameters = new TokenValidationParameters
+            {
+                    ValidateIssuer = jwtOptions.ValidateIssuer,
+                    ValidateAudience = jwtOptions.ValidateAudience,
+                    ValidateLifetime = jwtOptions.ValidateLifetime,
+                    ValidAudience = jwtOptions.Audience,
+                    ValidIssuer = jwtOptions.Issuer,
+                    IssuerSigningKey = new Microsoft.IdentityModel.Tokens.SymmetricSecurityKey(System.Text.Encoding.UTF8.GetBytes(jwtOptions.Key))
+            };
+
+            // Validate and decode the token
+            var claimsPrincipal = tokenHandler.ValidateToken(token, validationParameters, out var securityToken);
+
+            // Get the payload from the validated security token
+            var jwtPayload = ((JwtSecurityToken)securityToken).Payload;
+
+            return jwtPayload;
+        }
+    }
 }

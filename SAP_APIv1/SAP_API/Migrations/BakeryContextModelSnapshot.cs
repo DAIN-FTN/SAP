@@ -73,7 +73,7 @@ namespace SAP_API.Migrations
                         new
                         {
                             Id = new Guid("00000000-0000-0000-0000-000000000008"),
-                            BakingProgrammedAt = new DateTime(2023, 4, 26, 12, 44, 54, 951, DateTimeKind.Local).AddTicks(9883),
+                            BakingProgrammedAt = new DateTime(2023, 4, 26, 10, 34, 40, 538, DateTimeKind.Local).AddTicks(7787),
                             BakingTempInC = 120,
                             BakingTimeInMins = 30,
                             Code = "Code1",
@@ -85,7 +85,7 @@ namespace SAP_API.Migrations
                         new
                         {
                             Id = new Guid("00000000-0000-0000-0000-000000000001"),
-                            BakingProgrammedAt = new DateTime(2023, 4, 26, 12, 44, 54, 952, DateTimeKind.Local).AddTicks(3612),
+                            BakingProgrammedAt = new DateTime(2023, 4, 26, 10, 34, 40, 538, DateTimeKind.Local).AddTicks(9406),
                             BakingTempInC = 140,
                             BakingTimeInMins = 30,
                             Code = "Code2",
@@ -98,14 +98,14 @@ namespace SAP_API.Migrations
                         {
                             Id = new Guid("00000000-0000-0000-0000-000000000002"),
                             BakingEndsAt = new DateTime(2023, 12, 2, 11, 17, 0, 0, DateTimeKind.Unspecified),
-                            BakingProgrammedAt = new DateTime(2023, 4, 26, 12, 44, 54, 952, DateTimeKind.Local).AddTicks(3988),
+                            BakingProgrammedAt = new DateTime(2023, 4, 26, 10, 34, 40, 538, DateTimeKind.Local).AddTicks(9592),
                             BakingStartedAt = new DateTime(2023, 12, 2, 11, 5, 0, 0, DateTimeKind.Unspecified),
                             BakingTempInC = 190,
                             BakingTimeInMins = 12,
                             Code = "Code3",
                             CreatedAt = new DateTime(2020, 3, 1, 12, 0, 0, 0, DateTimeKind.Unspecified),
                             OvenId = new Guid("00000000-0000-0000-0000-000000000002"),
-                            PreparedByUserId = new Guid("00000000-0000-0000-0000-000000000002"),
+                            PreparedByUserId = new Guid("00000000-0000-0000-0000-000000000008"),
                             RemainingOvenCapacity = 10,
                             Status = 5
                         });
@@ -214,7 +214,7 @@ namespace SAP_API.Migrations
                             CustomerEmail = "janesmith@example.com",
                             CustomerFullName = "Jane Smith",
                             CustomerTelephone = "+44 20 5555 5555",
-                            ShouldBeDoneAt = new DateTime(2023, 4, 26, 12, 44, 54, 934, DateTimeKind.Local).AddTicks(6799),
+                            ShouldBeDoneAt = new DateTime(2023, 4, 26, 10, 34, 40, 526, DateTimeKind.Local).AddTicks(1432),
                             Status = 0
                         },
                         new
@@ -223,7 +223,7 @@ namespace SAP_API.Migrations
                             CustomerEmail = "janesmith@example.com",
                             CustomerFullName = "Jane Smith",
                             CustomerTelephone = "+44 20 5555 5555",
-                            ShouldBeDoneAt = new DateTime(2023, 4, 27, 12, 44, 54, 943, DateTimeKind.Local).AddTicks(8188),
+                            ShouldBeDoneAt = new DateTime(2023, 4, 27, 10, 34, 40, 534, DateTimeKind.Local).AddTicks(5862),
                             Status = 1
                         },
                         new
@@ -232,7 +232,7 @@ namespace SAP_API.Migrations
                             CustomerEmail = "janesmith@example.com",
                             CustomerFullName = "Jane Smith",
                             CustomerTelephone = "+44 20 5555 5555",
-                            ShouldBeDoneAt = new DateTime(2023, 4, 28, 12, 44, 54, 943, DateTimeKind.Local).AddTicks(8563),
+                            ShouldBeDoneAt = new DateTime(2023, 4, 28, 10, 34, 40, 534, DateTimeKind.Local).AddTicks(6026),
                             Status = 1
                         });
                 });
@@ -598,9 +598,6 @@ namespace SAP_API.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
-                    b.Property<bool>("Active")
-                        .HasColumnType("boolean");
-
                     b.Property<string>("Password")
                         .HasColumnType("text");
 
@@ -620,7 +617,6 @@ namespace SAP_API.Migrations
                         new
                         {
                             Id = new Guid("00000000-0000-0000-0000-000000000001"),
-                            Active = true,
                             Password = "10.Dq24kqmfYfyJ/ZM90uQt3A==.VRQEd9C+pfkWA/sHxLZO9+wEYVMWYMww0MZZIy0nEkQ=",
                             RoleId = new Guid("00000000-0000-0000-0000-000000000001"),
                             Username = "AleksandarAdmin"
@@ -628,7 +624,6 @@ namespace SAP_API.Migrations
                         new
                         {
                             Id = new Guid("00000000-0000-0000-0000-000000000002"),
-                            Active = true,
                             Password = "10.Dq24kqmfYfyJ/ZM90uQt3A==.VRQEd9C+pfkWA/sHxLZO9+wEYVMWYMww0MZZIy0nEkQ=",
                             RoleId = new Guid("00000000-0000-0000-0000-000000000002"),
                             Username = "AleksandarStaff"
