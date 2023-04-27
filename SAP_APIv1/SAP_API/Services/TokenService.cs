@@ -2,25 +2,24 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using SAP_API.Models;
-using System.Data;
-using System.Net;
 using System.Security.Claims;
 using System;
 using System.Text;
 using System.IdentityModel.Tokens.Jwt;
+using SAP_API.Options;
 
 namespace SAP_API.Services
 {
     public class TokenService : ITokenService
     {
-        private readonly IConfiguration configuration;
-        public TokenService(IConfiguration configuration)
+        private readonly JwtOptions _jwtOptions;
+        public TokenService(JwtOptions jwtOptions)
         {
-            this.configuration = configuration;
+            _jwtOptions = jwtOptions;
         }
         public string GenerateToken(User user)
         {
-            var key = configuration["Jwt:Key"];
+            var key = _jwtOptions.Key;
             var encodedKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(key));
             var signingCredentials = new SigningCredentials(encodedKey, SecurityAlgorithms.HmacSha256);
 
@@ -31,10 +30,10 @@ namespace SAP_API.Services
              };
 
             var token = new JwtSecurityToken(
-                issuer: configuration["Jwt:Issuer"],
-                audience: configuration["Jwt:Audience"],
+                issuer: _jwtOptions.Issuer,
+                audience: _jwtOptions.Audience,
                 claims: claims,
-                expires: DateTime.Now.AddHours(int.Parse((configuration["Jwt:ExpirationTimeInHours"]))),
+                expires: DateTime.Now.AddHours(_jwtOptions.ExpirationTimeInHours),
                 signingCredentials: signingCredentials
         );
             return new JwtSecurityTokenHandler().WriteToken(token);

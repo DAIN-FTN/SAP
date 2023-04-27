@@ -18,8 +18,24 @@ namespace SAP_API.DataAccess
             SeedReservedOrderProducts(modelBuilder.Entity<ReservedOrderProduct>());
             SeedStockedProducts(modelBuilder.Entity<StockedProduct>());
             SeedStockLocations(modelBuilder.Entity<StockLocation>());
+            SeedRoles(modelBuilder.Entity<Role>());
             SeedUsers(modelBuilder.Entity<User>());
             SeedBakingProgramProducts(modelBuilder.Entity<BakingProgramProduct>());
+        }
+
+        private static void SeedRoles(EntityTypeBuilder<Role> entityTypeBuilder)
+        {
+            entityTypeBuilder.HasData(
+                new Role
+                {
+                    Id = Guid.Parse("00000000-0000-0000-0000-000000000001"),
+                    Name = "Admin",
+                },
+                new Role
+                {
+                    Id = Guid.Parse("00000000-0000-0000-0000-000000000002"),
+                    Name = "Staff",
+                });
         }
 
         private static void SeedBakingProgramProducts(EntityTypeBuilder<BakingProgramProduct> bakingProgramProducts)
@@ -139,7 +155,7 @@ namespace SAP_API.DataAccess
                 new BakingProgram
                 {
                     Id = new Guid("00000000-0000-0000-0000-000000000002"),
-                    PreparedByUserId = new Guid("00000000-0000-0000-0000-000000000008"),
+                    PreparedByUserId = new Guid("00000000-0000-0000-0000-000000000002"),
                     OvenId = new Guid("00000000-0000-0000-0000-000000000002"),
                     Code = "Code3",
                     CreatedAt = new DateTime(2020, 3, 1, 12, 0, 0),
@@ -320,12 +336,23 @@ namespace SAP_API.DataAccess
         private static void SeedUsers(EntityTypeBuilder<User> users)
         {
             users.HasData(
+                   
                    new User
                    {
-                       Id = Guid.Parse("00000000-0000-0000-0000-000000000008"),
-                       Username = "username",
-                       Password = "12ik12k0",
-                   }
+                       Id = Guid.Parse("00000000-0000-0000-0000-000000000001"),
+                       Username = "AleksandarAdmin",
+                       Password = "10.Dq24kqmfYfyJ/ZM90uQt3A==.VRQEd9C+pfkWA/sHxLZO9+wEYVMWYMww0MZZIy0nEkQ=",
+                       RoleId = Guid.Parse("00000000-0000-0000-0000-000000000001"),
+                       Active = true
+                   },
+                    new User
+                    {
+                        Id = Guid.Parse("00000000-0000-0000-0000-000000000002"),
+                        Username = "AleksandarStaff",
+                        Password = "10.Dq24kqmfYfyJ/ZM90uQt3A==.VRQEd9C+pfkWA/sHxLZO9+wEYVMWYMww0MZZIy0nEkQ=",
+                        RoleId = Guid.Parse("00000000-0000-0000-0000-000000000002"),
+                        Active = true
+                    }
                 );
         }
     }
