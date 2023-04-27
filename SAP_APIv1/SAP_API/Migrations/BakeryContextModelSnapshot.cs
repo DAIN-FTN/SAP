@@ -73,24 +73,26 @@ namespace SAP_API.Migrations
                         new
                         {
                             Id = new Guid("00000000-0000-0000-0000-000000000008"),
-                            BakingProgrammedAt = new DateTime(2023, 4, 26, 10, 34, 40, 538, DateTimeKind.Local).AddTicks(7787),
+                            BakingProgrammedAt = new DateTime(2020, 2, 1, 12, 0, 0, 0, DateTimeKind.Unspecified),
                             BakingTempInC = 120,
                             BakingTimeInMins = 30,
                             Code = "Code1",
                             CreatedAt = new DateTime(2020, 1, 1, 12, 0, 0, 0, DateTimeKind.Unspecified),
                             OvenId = new Guid("00000000-0000-0000-0000-000000000008"),
+                            PreparedByUserId = new Guid("00000000-0000-0000-0000-000000000001"),
                             RemainingOvenCapacity = 10,
                             Status = 1
                         },
                         new
                         {
                             Id = new Guid("00000000-0000-0000-0000-000000000001"),
-                            BakingProgrammedAt = new DateTime(2023, 4, 26, 10, 34, 40, 538, DateTimeKind.Local).AddTicks(9406),
+                            BakingProgrammedAt = new DateTime(2020, 2, 1, 12, 0, 0, 0, DateTimeKind.Unspecified),
                             BakingTempInC = 140,
                             BakingTimeInMins = 30,
                             Code = "Code2",
                             CreatedAt = new DateTime(2020, 2, 1, 12, 0, 0, 0, DateTimeKind.Unspecified),
                             OvenId = new Guid("00000000-0000-0000-0000-000000000001"),
+                            PreparedByUserId = new Guid("00000000-0000-0000-0000-000000000001"),
                             RemainingOvenCapacity = 10,
                             Status = 1
                         },
@@ -98,14 +100,14 @@ namespace SAP_API.Migrations
                         {
                             Id = new Guid("00000000-0000-0000-0000-000000000002"),
                             BakingEndsAt = new DateTime(2023, 12, 2, 11, 17, 0, 0, DateTimeKind.Unspecified),
-                            BakingProgrammedAt = new DateTime(2023, 4, 26, 10, 34, 40, 538, DateTimeKind.Local).AddTicks(9592),
-                            BakingStartedAt = new DateTime(2023, 12, 2, 11, 5, 0, 0, DateTimeKind.Unspecified),
+                            BakingProgrammedAt = new DateTime(2020, 1, 1, 1, 0, 0, 0, DateTimeKind.Unspecified),
+                            BakingStartedAt = new DateTime(2020, 2, 1, 12, 0, 0, 0, DateTimeKind.Unspecified),
                             BakingTempInC = 190,
                             BakingTimeInMins = 12,
                             Code = "Code3",
                             CreatedAt = new DateTime(2020, 3, 1, 12, 0, 0, 0, DateTimeKind.Unspecified),
                             OvenId = new Guid("00000000-0000-0000-0000-000000000002"),
-                            PreparedByUserId = new Guid("00000000-0000-0000-0000-000000000008"),
+                            PreparedByUserId = new Guid("00000000-0000-0000-0000-000000000002"),
                             RemainingOvenCapacity = 10,
                             Status = 5
                         });
@@ -214,7 +216,7 @@ namespace SAP_API.Migrations
                             CustomerEmail = "janesmith@example.com",
                             CustomerFullName = "Jane Smith",
                             CustomerTelephone = "+44 20 5555 5555",
-                            ShouldBeDoneAt = new DateTime(2023, 4, 26, 10, 34, 40, 526, DateTimeKind.Local).AddTicks(1432),
+                            ShouldBeDoneAt = new DateTime(2020, 2, 1, 12, 0, 0, 0, DateTimeKind.Unspecified),
                             Status = 0
                         },
                         new
@@ -223,7 +225,7 @@ namespace SAP_API.Migrations
                             CustomerEmail = "janesmith@example.com",
                             CustomerFullName = "Jane Smith",
                             CustomerTelephone = "+44 20 5555 5555",
-                            ShouldBeDoneAt = new DateTime(2023, 4, 27, 10, 34, 40, 534, DateTimeKind.Local).AddTicks(5862),
+                            ShouldBeDoneAt = new DateTime(2023, 2, 1, 12, 0, 0, 0, DateTimeKind.Unspecified),
                             Status = 1
                         },
                         new
@@ -232,7 +234,7 @@ namespace SAP_API.Migrations
                             CustomerEmail = "janesmith@example.com",
                             CustomerFullName = "Jane Smith",
                             CustomerTelephone = "+44 20 5555 5555",
-                            ShouldBeDoneAt = new DateTime(2023, 4, 28, 10, 34, 40, 534, DateTimeKind.Local).AddTicks(6026),
+                            ShouldBeDoneAt = new DateTime(2020, 2, 1, 12, 0, 0, 0, DateTimeKind.Unspecified),
                             Status = 1
                         });
                 });

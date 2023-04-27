@@ -91,7 +91,7 @@ namespace SAP_API.DataAccess
                 new Order
                 {
                     Id = new Guid("00000000-0000-0000-0000-000000000008"),
-                    ShouldBeDoneAt = DateTime.Now,
+                    ShouldBeDoneAt = new DateTime(2020, 2, 1, 12, 0, 0),
                     Status = OrderStatus.Created,
                     CustomerFullName = "Jane Smith",
                     CustomerEmail = "janesmith@example.com",
@@ -100,7 +100,7 @@ namespace SAP_API.DataAccess
                new Order
                {
                    Id = new Guid("00000000-0000-0000-0000-000000000001"),
-                   ShouldBeDoneAt = DateTime.Now.AddDays(1),
+                   ShouldBeDoneAt = new DateTime(2023, 2, 1, 12, 0, 0),
                    Status = OrderStatus.Cancelled,
                    CustomerFullName = "Jane Smith",
                    CustomerEmail = "janesmith@example.com",
@@ -109,7 +109,7 @@ namespace SAP_API.DataAccess
                new Order
                {
                    Id = new Guid("00000000-0000-0000-0000-000000000002"),
-                   ShouldBeDoneAt = DateTime.Now.AddDays(2),
+                   ShouldBeDoneAt = new DateTime(2020, 2, 1, 12, 0, 0),
                    Status = OrderStatus.Cancelled,
                    CustomerFullName = "Jane Smith",
                    CustomerEmail = "janesmith@example.com",
@@ -124,14 +124,14 @@ namespace SAP_API.DataAccess
                 new BakingProgram
                 {
                     Id = new Guid("00000000-0000-0000-0000-000000000008"),
-                    PreparedByUserId = null,
+                    PreparedByUserId = new Guid("00000000-0000-0000-0000-000000000001"),
                     OvenId = new Guid("00000000-0000-0000-0000-000000000008"),
                     Code = "Code1",
                     CreatedAt = new DateTime(2020, 1, 1, 12, 0, 0),
                     Status = BakingProgramStatus.Created,
                     BakingTimeInMins = 30,
                     BakingTempInC = 120,
-                    BakingProgrammedAt = DateTime.Now,
+                    BakingProgrammedAt = new DateTime(2020, 2, 1, 12, 0, 0),
                     BakingStartedAt = null,
                     BakingEndsAt = null,
                     RemainingOvenCapacity = 10,
@@ -140,14 +140,14 @@ namespace SAP_API.DataAccess
                 new BakingProgram
                 {
                     Id = new Guid("00000000-0000-0000-0000-000000000001"),
-                    PreparedByUserId = null,
+                    PreparedByUserId = new Guid("00000000-0000-0000-0000-000000000001"),
                     OvenId = new Guid("00000000-0000-0000-0000-000000000001"),
                     Code = "Code2",
                     CreatedAt = new DateTime(2020, 2, 1, 12, 0, 0),
                     Status = BakingProgramStatus.Created,
                     BakingTimeInMins = 30,
                     BakingTempInC = 140,
-                    BakingProgrammedAt = DateTime.Now,
+                    BakingProgrammedAt = new DateTime(2020, 2, 1, 12, 0, 0),
                     BakingStartedAt = null,
                     BakingEndsAt = null,
                     RemainingOvenCapacity = 10
@@ -162,8 +162,8 @@ namespace SAP_API.DataAccess
                     Status = BakingProgramStatus.Done,
                     BakingTimeInMins = 12,
                     BakingTempInC = 190,
-                    BakingProgrammedAt = DateTime.Now,
-                    BakingStartedAt = new DateTime(2023, 12, 2, 11, 5, 0),
+                    BakingProgrammedAt = new DateTime(2020, 1, 1, 1, 0, 0),
+                    BakingStartedAt =new DateTime(2020, 2, 1, 12, 0, 0),
                     BakingEndsAt = new DateTime(2023, 12, 2, 11, 17, 0),
                     RemainingOvenCapacity = 10,
                 }
