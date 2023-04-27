@@ -1,4 +1,5 @@
 ﻿using SAP_API.DTOs;
+using SAP_API.DTOs.Requests;
 using SAP_API.DTOs.Responses;
 using SAP_API.Models;
 using System;
@@ -59,8 +60,8 @@ namespace SAP_API.Mappers
 
             return response;
         }
-        
-        
+
+
         public static ReservedOrderProduct OrderProductRequestToReservedOrderProduct(OrderProductRequest orderProductRequest, Order order, Product product)
         {
             return new ReservedOrderProduct
@@ -70,6 +71,43 @@ namespace SAP_API.Mappers
                 Product = product,
                 //TODO: check if this cast can be handled differently int? -> int
                 ReservedQuantity = (int)orderProductRequest.Quantity
+            };
+        }
+
+
+        public static Product CreateProductFromCreateProductRequest(CreateProductRequest body)
+        {
+            return new Product
+            {
+                Id = Guid.NewGuid(),
+                BakingTempInC = (int)body.BakingTempInC,
+                BakingTimeInMins = (int)body.BakingTimeInMins,
+                Name = body.Name,
+                Size = (int)body.Size,
+            };
+        }
+
+        public static CreateProductResponse CreateCreateProductResponseFromProduct(Product body)
+        {
+            return new CreateProductResponse
+            {
+                Id = body.Id,
+                Name = body.Name,
+                BakingTempInC = body.BakingTempInC,
+                BakingTimeInMins = body.BakingTimeInMins,
+                Size = body.Size,
+                Stock = null
+            };
+        }
+
+        internal static UpdateProductResponse CreateUpdateProductResponseFromProduct(Product updated)
+        {
+            return new UpdateProductResponse
+            {
+                Name = updated.Name,
+                BakingTempInC = updated.BakingTempInC,
+                Size = updated.Size,
+                BakingTimeInMins = updated.BakingTimeInMins
             };
         }
     }

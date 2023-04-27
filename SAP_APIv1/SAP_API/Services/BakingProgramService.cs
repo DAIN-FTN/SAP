@@ -72,11 +72,8 @@ namespace SAP_API.Services
             if (bakingProgram.Status.Equals(BakingProgramStatus.Created))
             {
                 _startPreparingService.UseReservedProductsFromOrdersForPreparing();
-                bakingProgram.StartPreparing(new User {
-                    Id = new Guid("00000000-0000-0000-0000-000000000001"),
-                    Username = "Natalija",
-                    Password = "pass123"
-                });
+                bakingProgram.StartPreparing(new Guid("00000000-0000-0000-0000-000000000008"));
+                _bakingProgramRepository.Update(bakingProgram);
             }
 
             return _startPreparingService.CreateStartPreparingResponse();
@@ -114,7 +111,7 @@ namespace SAP_API.Services
             }
 
             bakingProgram.FinishPreparing();
-            //TODO saveChanges
+            _bakingProgramRepository.Update(bakingProgram);
 
         }
 
@@ -155,18 +152,13 @@ namespace SAP_API.Services
         public void CancellPreparing(BakingProgram bakingProgram)
         {
             bakingProgram.CancellPreparing();
-            //TODO SaveChanges
+            _bakingProgramRepository.Update(bakingProgram);
         }
 
         //TODO user from req
         public AllBakingProgramsResponse GetBakingProgramsForUser()
         {
-            User user = new User
-            {
-                Id = new Guid("00000000-0000-0000-0000-000000000001"),
-                Username = "Natalija",
-                Password = "pass123"
-            };
+            Guid userId = new Guid("00000000-0000-0000-0000-000000000008");
 
             DateTime timeNow = DateTime.Now;
             DateTime startTime = timeNow.AddDays(-1);
@@ -176,7 +168,7 @@ namespace SAP_API.Services
             List<BakingProgramStatus> statusesToExclude = new List<BakingProgramStatus> { BakingProgramStatus.Cancelled, BakingProgramStatus.Finished };
             ExcludeProgramsWithStatuses(bakingPrograms, statusesToExclude);
             ChangeStatusToDoneIfBakingIsDone(bakingPrograms);
-            List<BakingProgram> programsUserIsPreparing = bakingPrograms.FindAll(bp => bp.Status.Equals(BakingProgramStatus.Preparing) && bp.PreparedByUser.Id == user.Id);
+            List<BakingProgram> programsUserIsPreparing = bakingPrograms.FindAll(bp => bp.Status.Equals(BakingProgramStatus.Preparing) && bp.PreparedByUser.Id == userId);
 
             if (programsUserIsPreparing.Count == 0)
                 return BakingProgramMapper.CreateAllBakingProgramsResponse(bakingPrograms, null);
@@ -205,6 +197,7 @@ namespace SAP_API.Services
                 if(program.IsBakingDone())
                 {
                     program.FinishBaking();
+                    _bakingProgramRepository.Update(program);
                 }
             }
         }
@@ -254,23 +247,20 @@ namespace SAP_API.Services
         public void StartBaking(BakingProgram bakingProgram)
         {
             bakingProgram.StartBaking();
-            //TODO save changes
+            _bakingProgramRepository.Update(bakingProgram);
+
         }
 
         public bool CheckIfUserIsAlreadyPreparingAnotherProgram()
         {
-            User user = new User
-            {
-                Id = new Guid("00000000-0000-0000-0000-000000000001"),
-                Username = "Natalija",
-                Password = "pass123"
-            };
+            //TODO user from request
+            Guid userId = new Guid("00000000-0000-0000-0000-000000000008");
 
             DateTime timeNow = DateTime.Now;
             DateTime startTime = timeNow.AddDays(-1);
             DateTime endTime = timeNow.AddHours(4);
             List<BakingProgram> bakingPrograms = _bakingProgramRepository.GetProgramsWithBakingProgrammedAtBetweenDateTimes(startTime, endTime);
-            List<BakingProgram> programsBeingPreparedByUser = bakingPrograms.FindAll(bp => bp.Status.Equals(BakingProgramStatus.Preparing) && bp.PreparedByUser.Id.Equals(user.Id));
+            List<BakingProgram> programsBeingPreparedByUser = bakingPrograms.FindAll(bp => bp.Status.Equals(BakingProgramStatus.Preparing) && bp.PreparedByUser.Id.Equals(userId));
             return programsBeingPreparedByUser.Count > 0;
         }
 

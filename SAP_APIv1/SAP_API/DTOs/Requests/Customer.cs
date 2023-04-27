@@ -8,12 +8,9 @@ namespace SAP_API.Models
 {
     public class Customer
     {
-        public Guid OrderId { get; set; }
         public string FullName { get; set; }
 
-        [EmailAddress]
         public string Email { get; set; }
-        [Phone]
         public string Telephone { get; set; }
     }
 }

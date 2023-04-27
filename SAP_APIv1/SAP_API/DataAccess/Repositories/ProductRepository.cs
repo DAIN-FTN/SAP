@@ -60,8 +60,7 @@ namespace SAP_API.DataAccess.Repositories
             Product product = GetById(updatedProduct.Id);
             if(product != null)
             {
-                _products.Remove(product);
-                _products.Add(updatedProduct);
+                _products.Update(updatedProduct);
                 _context.SaveChanges();
 
                 return updatedProduct;

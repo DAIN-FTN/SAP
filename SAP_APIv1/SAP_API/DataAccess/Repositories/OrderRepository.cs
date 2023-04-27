@@ -28,7 +28,9 @@ namespace SAP_API.DataAccess.Repositories
 
         public Order GetById(Guid id)
         {
-            return _orders.SingleOrDefault(o => o.Id == id);
+            return _orders.Include(o => o.Products)
+                .ThenInclude(prod => prod.Product)
+                .SingleOrDefault(o => o.Id == id);
         }
 
         public Order Create(Order entity)
