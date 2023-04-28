@@ -4,9 +4,13 @@ import styled from "styled-components";
 import ProductSearch from "./ProductSearch";
 import Button from '@mui/material/Button';
 import OrderProductsList from "./OrderProductsList";
-import AvailableBakingProgramResponse from "../../../models/Responses/AvailableBakingProgramResponse";
+import ProductRequestItem from "./Models/ProductRequestItem";
+import CheckDeliveryTime from "./CheckDeliveryTime";
+import { create } from "../../../services/OrderService";
+import CreateOrderRequest from "../../../models/Requests/CreateOrderRequest";
 import OrderProductRequest from "../../../models/Requests/OrderProductRequest";
-import ProductStockResponse from "../../../models/Responses/ProductStockResponse";
+import CreateOrderResponse from "../../../models/Responses/Order/CreateOrderResponse";
+import { useNavigate } from "react-router-dom";
 
 const Container = styled.div`
     width: 100%;
@@ -29,47 +33,66 @@ const Panel = styled.div`
     box-sizing: border-box;
 `;
 
-const Label = styled.p`
-    font-size: 24px;
-`;
-
 const CreateOrderPage: FC = () => {
-    const [productsOnStock, setProductsOnStock] = useState<ProductStockResponse[]>([]);
-    const [orderProducts, setOrderProducts] = useState<OrderProductRequest[]>([]);
-    const [bakingTimeSlots, setBakingTimeSlots] = useState<AvailableBakingProgramResponse[]>([]);
+    const [orderProducts, setOrderProducts] = useState<ProductRequestItem[]>([]);
+    const [deliveryTime, setDeliveryTime] = useState<Date | null>(null);
+    const [creationPossible, setCreationPossible] = useState<boolean>(false);
+    const navigate = useNavigate();
 
-    
-    
+    function changeRequestedQuantityHandler(productId: string, productName: string, quantity: number) {
+        if (orderProducts.length === 0 && quantity > 0) {
+            setOrderProducts([{ id: productId, name: productName, requestedQuantity: quantity }]);
+            return;
+        }
+
+        const productInOrderProducts = orderProducts.find((product) => product.id === productId) as ProductRequestItem;
+
+        if (!productInOrderProducts || quantity === 0) return;
+
+        productInOrderProducts.requestedQuantity += quantity;
+
+        if (productInOrderProducts.requestedQuantity === 0) {
+            setOrderProducts(orderProducts.filter((product) => product.id !== productId));
+        } else {
+            setOrderProducts([...orderProducts]);
+        }
+    }
 
     async function createOrderHandler() {
-        
-
         console.log("new order request");
-
-        // await createNewOrder(newOrderRequest);
+        const orderRequest: CreateOrderRequest = {
+            shouldBeDoneAt: deliveryTime as Date,
+            customer: {
+                fullName: "John Smith",
+                email: "email@example.com",
+                telephone: "+3811234567"
+            },
+            products: mapProductRequestItemsToProductRequest(orderProducts)
+        };
+        create(orderRequest).then((response: CreateOrderResponse) => {
+            console.log(response);
+            navigate(`/orders/view/${response.id}`);
+        });
     };
+
+    function mapProductRequestItemsToProductRequest(productRequestItems: ProductRequestItem[]): OrderProductRequest[] {
+        return productRequestItems.map((productRequestItem) => {
+            return {
+                productId: productRequestItem.id,
+                quantity: productRequestItem.requestedQuantity
+            } as OrderProductRequest;
+        });
+    }
 
     return (
         <Container>
             <Panel>
-                <ProductSearch requestedQuantityChangeHandler={() => console.log} />
-                <OrderProductsList props={{ products: orderProducts }} />
+                <ProductSearch requestedQuantityChangeHandler={changeRequestedQuantityHandler} />
+                <OrderProductsList requestedQuantityChangeHandler={changeRequestedQuantityHandler} products={orderProducts} />
             </Panel>
             <Panel>
-                {/* <Label>Order delivery date and time</Label>
-                <TextField
-                    id="datetime-local"
-                    type="datetime-local"
-                    defaultValue={new Date().toISOString().slice(0, 16)}
-                    sx={{ width: 250 }}
-                    InputLabelProps={{
-                        shrink: true,
-                    }}
-                    onChange={(e) => setDateTimeHandler(e)}
-                />
-                <Label>Available baking time slots</Label> */}
-                {/* <BakingTimeSlotsList props={{ bakingTimeSlots }} />  */}
-                <Button variant="contained" onClick={createOrderHandler}>Create order</Button>
+                {orderProducts.length > 0 && <CheckDeliveryTime orderProducts={orderProducts} setCreationPossible={setCreationPossible} setDeliveryTime={setDeliveryTime} /> }
+                {creationPossible && <Button variant="contained" onClick={createOrderHandler}>Create order</Button>}
             </Panel>
         </Container>
     );

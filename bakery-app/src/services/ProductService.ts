@@ -21,7 +21,7 @@ export async function getDetails(productId: string): Promise<ProductDetailsRespo
 
 export async function getProductStock(name: string): Promise<ProductStockResponse[]> {
     try {
-        return await getData<ProductStockResponse[]>(`/api/products/stock/${name}`);
+        return await getData<ProductStockResponse[]>(`/api/products/stock?name=${name}`);
     } catch (error) {
         return [];
     }

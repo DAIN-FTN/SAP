@@ -9,52 +9,50 @@ import { FC } from "react";
 import AddCircleIcon from '@mui/icons-material/AddCircle';
 import RemoveCircleIcon from '@mui/icons-material/RemoveCircle';
 import IconButton from "@mui/material/IconButton";
-import TextField from "@mui/material/TextField";
-import OrderProductRequest from "../../../models/Requests/OrderProductRequest";
+import ProductRequestItem from "./Models/ProductRequestItem";
+import styled from "styled-components";
 
 export interface OrderProductsListProps {
-    products: OrderProductRequest[];
+    products: ProductRequestItem[];
+    requestedQuantityChangeHandler: (productId: string, productName: string, quantity: number) => void;
 }
 
-const OrderProductsList: FC<{ props: OrderProductsListProps }> = ({ props }) => {
-    if (props.products.length === 0) {
+const Label = styled.p`
+    font-size: 24px;
+`;
+
+const OrderProductsList: FC<OrderProductsListProps> = ({ products, requestedQuantityChangeHandler }) => {
+    if (!products || products.length === 0) {
         return <p>No products added</p>;
     }
 
     return (
-        <TableContainer component={Paper}>
-            <Table sx={{ minWidth: 150 }} size="small" aria-label="simple table">
-                <TableHead>
-                    <TableRow>
-                        <TableCell>Product name</TableCell>
-                        <TableCell align="right">Available</TableCell>
-                        <TableCell align="right">Quantity for ordering</TableCell>
-                    </TableRow>
-                </TableHead>
-                <TableBody>
-                    {props.products.map((product) => (
-                        <TableRow
-                            key={product.productId}
-                            sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-                        >
-                            <TableCell component="th" scope="row">
-                                {"ERROR: missing product name from request model"}
-                            </TableCell>
-                            <TableCell align="right">{product.quantity}</TableCell>
-                            <TableCell align="right">
-                                <IconButton aria-label="delete">
-                                    <RemoveCircleIcon />
-                                </IconButton>
-                                <TextField id={`standard-basic-${product.productId}`} label="Quantity" variant="standard" size="small" sx={{width: '70px'}} />
-                                <IconButton aria-label="delete">
-                                    <AddCircleIcon />
-                                </IconButton>
-                            </TableCell>
+        <>
+            <Label>Products for order</Label>
+            <TableContainer component={Paper}>
+                <Table sx={{ minWidth: 150 }} size="small" aria-label="simple table">
+                    <TableHead>
+                        <TableRow>
+                            <TableCell>Product name</TableCell>
+                            <TableCell align="right">Quantity for ordering</TableCell>
+                            <TableCell align="right">Incerease/decrease</TableCell>
                         </TableRow>
-                    ))}
-                </TableBody>
-            </Table>
-        </TableContainer>
+                    </TableHead>
+                    <TableBody>
+                        {products.map((product) => (
+                            <TableRow key={product.id} sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
+                                <TableCell component="th" scope="row">{product.name}</TableCell>
+                                <TableCell align="right">{product.requestedQuantity}</TableCell>
+                                <TableCell align="right">
+                                    <IconButton onClick={() => requestedQuantityChangeHandler(product.id, product.name, -1)}><RemoveCircleIcon /></IconButton>
+                                    <IconButton onClick={() => requestedQuantityChangeHandler(product.id, product.name, 1)}><AddCircleIcon /></IconButton>
+                                </TableCell>
+                            </TableRow>
+                        ))}
+                    </TableBody>
+                </Table>
+            </TableContainer>
+        </>
     );
 };
 

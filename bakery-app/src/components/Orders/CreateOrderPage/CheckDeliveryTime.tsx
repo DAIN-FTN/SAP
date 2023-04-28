@@ -1,33 +1,40 @@
-import { FC, useState } from "react";
+import { FC } from "react";
 import List from "@mui/material/List";
-import ListItem from "@mui/material/ListItem";
-import ListItemButton from "@mui/material/ListItemButton";
-import ListItemIcon from "@mui/material/ListItemIcon";
-import ListItemText from "@mui/material/ListItemText";
-import RadioButtonUncheckedIcon from '@mui/icons-material/RadioButtonUnchecked';
-import RadioButtonCheckedIcon from '@mui/icons-material/RadioButtonChecked';
 import { Label } from "@mui/icons-material";
 import TextField from "@mui/material/TextField";
+import { getAvailable } from "../../../services/BakingProgramService";
+import ProductRequestItem from "./Models/ProductRequestItem";
 
 export interface CheckDeliveryTimeProps {
-    setDeliveryTime: (deliveryTime: Date) => void;
+    orderProducts: ProductRequestItem[];
+    setDeliveryTime: (deliveryTime: Date | null) => void;
     setCreationPossible: (creationPossible: boolean) => void;
 }
 
-const CheckDeliveryTime: FC<CheckDeliveryTimeProps> = ({ setDeliveryTime, setCreationPossible }) => {
-    const [selectedTimeSlotId, setSelectedTimeSlotId] = useState<string | null>(null);
-
-    function setDateTimeHandler(e: any) {
-        let dateTime = new Date(e.target.value);
+const CheckDeliveryTime: FC<CheckDeliveryTimeProps> = ({ orderProducts, setDeliveryTime, setCreationPossible }) => {
+    
+    function setDateTimeHandler(value: any) {
+        let dateTime = new Date(value);
 
         console.log("setDateTimeHandler", dateTime);
 
-        // getAvailable(dateTime, orderProducts)
-        //     .then((availableProgramsResponse) => {
-        //         console.log('fetch finished for getAvailable() in CreateOrderPage');
-        //         setBakingTimeSlots(availableProgramsResponse.bakingPrograms);
-        //     });
+        getAvailable(dateTime, mapProductRequestItemsToProductRequest(orderProducts))
+            .then((availableProgramsResponse) => {
+                console.log('fetch finished for getAvailable() in CreateOrderPage', availableProgramsResponse);
+                const createPossible = availableProgramsResponse.allProductsCanBeSuccessfullyArranged && availableProgramsResponse.isThereEnoughStockedProducts;
+                setCreationPossible(createPossible);
+                setDeliveryTime(createPossible ? dateTime : null);
+            });
     };
+
+    function mapProductRequestItemsToProductRequest(productRequestItems: ProductRequestItem[]) {
+        return productRequestItems.map((productRequestItem) => {
+            return {
+                productId: productRequestItem.id,
+                quantity: productRequestItem.requestedQuantity
+            };
+        });
+    }
 
     // console.log('props.bakingTimeSlots', props.bakingTimeSlots)
 
@@ -50,7 +57,7 @@ const CheckDeliveryTime: FC<CheckDeliveryTimeProps> = ({ setDeliveryTime, setCre
                     InputLabelProps={{
                         shrink: true,
                     }}
-                    onChange={(e) => setDateTimeHandler(e)}
+                    onChange={(e) => setDateTimeHandler(e.target.value)}
                 />
                 <Label>Available baking time slots</Label>
                 {/* <BakingTimeSlotsList props={{ bakingTimeSlots }} /> */}
