@@ -1,15 +1,11 @@
 import { useState } from "react";
 import { FC } from "react";
 import styled from "styled-components";
-import AvailableProductsList from "./AvailableProductsList";
+import ProductSearch from "./ProductSearch";
 import Button from '@mui/material/Button';
-import TextField from "@mui/material/TextField";
-import BakingTimeSlotsList from "./BakingTimeSlotsList";
-import NewOrderProductsList from "./NewOrderProductsList";
-import { getAvailable } from "../../../services/BakingProgramService";
+import OrderProductsList from "./OrderProductsList";
 import AvailableBakingProgramResponse from "../../../models/Responses/AvailableBakingProgramResponse";
 import OrderProductRequest from "../../../models/Requests/OrderProductRequest";
-import { getProductStock } from "../../../services/ProductService";
 import ProductStockResponse from "../../../models/Responses/ProductStockResponse";
 
 const Container = styled.div`
@@ -37,42 +33,13 @@ const Label = styled.p`
     font-size: 24px;
 `;
 
-const SearchWrapper = styled.div`
-    display: flex;
-    flex-direction: row;
-`;
-
 const CreateOrderPage: FC = () => {
     const [productsOnStock, setProductsOnStock] = useState<ProductStockResponse[]>([]);
     const [orderProducts, setOrderProducts] = useState<OrderProductRequest[]>([]);
     const [bakingTimeSlots, setBakingTimeSlots] = useState<AvailableBakingProgramResponse[]>([]);
 
-    function setDateTimeHandler(e: any) {
-        let dateTime = new Date(e.target.value);
-
-        console.log("setDateTimeHandler", dateTime);
-
-        getAvailable(dateTime, orderProducts)
-            .then((availableProgramsResponse) => {
-                console.log('fetch finished for getAvailable() in CreateOrderPage');
-                setBakingTimeSlots(availableProgramsResponse.bakingPrograms);
-            });
-    };
-
-    function productNameSearchChangeHandler(e: { target: { value: string; }; }) {
-        const productName = e.target.value;
-
-        console.log(productName);
-
-        if (!productName) {
-            setProductsOnStock([]);
-        } else {
-            getProductStock(productName).then((products) => {
-                console.log('fetch finished for fetchProductsBasicInfo() in CreateOrderPage');
-                setProductsOnStock(products);
-            });
-        }
-    };
+    
+    
 
     async function createOrderHandler() {
         
@@ -85,20 +52,11 @@ const CreateOrderPage: FC = () => {
     return (
         <Container>
             <Panel>
-                <Label>Search products in stock to add to order</Label>
-                <SearchWrapper>
-                    <TextField id="standard-basic" label="Product name" variant="standard" fullWidth sx={{ paddingRight: '16px' }}
-                        onChange={productNameSearchChangeHandler} />
-                    <Button variant="contained">Search</Button>
-
-                </SearchWrapper>
-                <Label>Products in stock</Label>
-                <AvailableProductsList props={{ availableProducts: productsOnStock, orderProducts, setOrderProducts }} />
-                <Label>Products for the new order</Label>
-                <NewOrderProductsList props={{ products: orderProducts }} />
+                <ProductSearch requestedQuantityChangeHandler={() => console.log} />
+                <OrderProductsList props={{ products: orderProducts }} />
             </Panel>
             <Panel>
-                <Label>Order delivery date and time</Label>
+                {/* <Label>Order delivery date and time</Label>
                 <TextField
                     id="datetime-local"
                     type="datetime-local"
@@ -109,8 +67,8 @@ const CreateOrderPage: FC = () => {
                     }}
                     onChange={(e) => setDateTimeHandler(e)}
                 />
-                <Label>Available baking time slots</Label>
-                <BakingTimeSlotsList props={{ bakingTimeSlots }} />
+                <Label>Available baking time slots</Label> */}
+                {/* <BakingTimeSlotsList props={{ bakingTimeSlots }} />  */}
                 <Button variant="contained" onClick={createOrderHandler}>Create order</Button>
             </Panel>
         </Container>

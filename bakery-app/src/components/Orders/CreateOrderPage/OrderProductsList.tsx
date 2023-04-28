@@ -12,11 +12,11 @@ import IconButton from "@mui/material/IconButton";
 import TextField from "@mui/material/TextField";
 import OrderProductRequest from "../../../models/Requests/OrderProductRequest";
 
-export interface NewOrderProductsListProps {
+export interface OrderProductsListProps {
     products: OrderProductRequest[];
 }
 
-const NewOrderProductsList: FC<{ props: NewOrderProductsListProps }> = ({ props }) => {
+const OrderProductsList: FC<{ props: OrderProductsListProps }> = ({ props }) => {
     if (props.products.length === 0) {
         return <p>No products added</p>;
     }
@@ -58,4 +58,4 @@ const NewOrderProductsList: FC<{ props: NewOrderProductsListProps }> = ({ props 
     );
 };
 
-export default NewOrderProductsList;
+export default OrderProductsList;
