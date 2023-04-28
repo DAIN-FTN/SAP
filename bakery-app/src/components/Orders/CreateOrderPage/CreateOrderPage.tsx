@@ -1,16 +1,16 @@
 import { useState } from "react";
 import { FC } from "react";
 import styled from "styled-components";
-import AvailableProductsList from "../CreateOrderPage/AvailableProductsList";
+import AvailableProductsList from "./AvailableProductsList";
 import Button from '@mui/material/Button';
 import TextField from "@mui/material/TextField";
 import BakingTimeSlotsList from "./BakingTimeSlotsList";
 import NewOrderProductsList from "./NewOrderProductsList";
-import { getAvailable } from "../../services/BakingProgramService";
-import AvailableBakingProgramResponse from "../../models/Responses/AvailableBakingProgramResponse";
-import OrderProductRequest from "../../models/Requests/OrderProductRequest";
-import { getProductStock } from "../../services/ProductService";
-import ProductStockResponse from "../../models/Responses/ProductStockResponse";
+import { getAvailable } from "../../../services/BakingProgramService";
+import AvailableBakingProgramResponse from "../../../models/Responses/AvailableBakingProgramResponse";
+import OrderProductRequest from "../../../models/Requests/OrderProductRequest";
+import { getProductStock } from "../../../services/ProductService";
+import ProductStockResponse from "../../../models/Responses/ProductStockResponse";
 
 const Container = styled.div`
     width: 100%;

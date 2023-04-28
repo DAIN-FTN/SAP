@@ -10,8 +10,8 @@ import AddCircleIcon from '@mui/icons-material/AddCircle';
 import RemoveCircleIcon from '@mui/icons-material/RemoveCircle';
 import IconButton from "@mui/material/IconButton";
 import TextField from "@mui/material/TextField";
-import ProductStockResponse from "../../models/Responses/ProductStockResponse";
-import OrderProductRequest from "../../models/Requests/OrderProductRequest";
+import ProductStockResponse from "../../../models/Responses/ProductStockResponse";
+import OrderProductRequest from "../../../models/Requests/OrderProductRequest";
 
 export interface AvailableProductsListProps {
     availableProducts: ProductStockResponse[];

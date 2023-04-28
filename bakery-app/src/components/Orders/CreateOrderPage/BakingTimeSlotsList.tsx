@@ -6,7 +6,7 @@ import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
 import RadioButtonUncheckedIcon from '@mui/icons-material/RadioButtonUnchecked';
 import RadioButtonCheckedIcon from '@mui/icons-material/RadioButtonChecked';
-import AvailableBakingProgramResponse from "../../models/Responses/AvailableBakingProgramResponse";
+import AvailableBakingProgramResponse from "../../../models/Responses/AvailableBakingProgramResponse";
 
 export interface BakingTimeSlotsListProps {
     bakingTimeSlots: AvailableBakingProgramResponse[];

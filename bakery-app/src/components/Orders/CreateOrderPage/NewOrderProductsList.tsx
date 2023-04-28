@@ -10,7 +10,7 @@ import AddCircleIcon from '@mui/icons-material/AddCircle';
 import RemoveCircleIcon from '@mui/icons-material/RemoveCircle';
 import IconButton from "@mui/material/IconButton";
 import TextField from "@mui/material/TextField";
-import OrderProductRequest from "../../models/Requests/OrderProductRequest";
+import OrderProductRequest from "../../../models/Requests/OrderProductRequest";
 
 export interface NewOrderProductsListProps {
     products: OrderProductRequest[];
