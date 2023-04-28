@@ -4,6 +4,7 @@ import styled from "styled-components";
 import HomeRoundedIcon from '@mui/icons-material/HomeRounded';
 import ProductionQuantityLimitsRoundedIcon from '@mui/icons-material/ProductionQuantityLimitsRounded';
 import Inventory2RoundedIcon from '@mui/icons-material/Inventory2Rounded';
+import { ReceiptLongRounded } from "@mui/icons-material";
 
 const StyledButton = styled.div`
     display: flex;
@@ -48,7 +49,10 @@ const NavMenuButton: FC<{ buttonProps: ButtonProps }> = ({ buttonProps }) => {
         case 'Home':
         icon = <HomeRoundedIcon />;
         break;
-        case 'Order':
+        case 'View orders':
+        icon = <ReceiptLongRounded />;
+        break;
+        case 'Create new order':
         icon = <ProductionQuantityLimitsRoundedIcon />;
         break;
         case 'Products':

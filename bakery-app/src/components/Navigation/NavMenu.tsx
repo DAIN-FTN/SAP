@@ -56,7 +56,8 @@ const NavMenu: FC = () => {
         <Container>
             <NavLinks>
                 <NavMenuButton buttonProps={{to: 'home', name: 'Home'}}></NavMenuButton>
-                <NavMenuButton buttonProps={{to: 'order', name: 'Order'}}></NavMenuButton>
+                <NavMenuButton buttonProps={{to: 'order/view', name: 'View orders'}}></NavMenuButton>
+                <NavMenuButton buttonProps={{to: 'order/create', name: 'Create new order'}}></NavMenuButton>
                 <NavMenuButton buttonProps={{to: 'products', name: 'Products'}}></NavMenuButton>
             </NavLinks>
             <BottomNavigation>

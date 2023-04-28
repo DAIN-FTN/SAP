@@ -12,9 +12,10 @@ import {
   RouterProvider,
 } from "react-router-dom";
 import { ErrorPage } from './components/ErrorPage';
-import CreateOrderPage from './components/CreateOrderPage/CreateOrderPage';
+import CreateOrderPage from './components/Orders/CreateOrderPage/CreateOrderPage';
 import ProductsPage from './components/ProductsPage/ProductsPage';
 import HomePage from './components/Home/HomePage';
+import ViewOrdersPage from './components/Orders/ViewOrders/ViewOrdersPage';
 
 const router = createBrowserRouter([
   {
@@ -31,7 +32,11 @@ const router = createBrowserRouter([
         element: <HomePage />,
       },
       {
-        path: "order",
+        path: "order/view",
+        element: <ViewOrdersPage />,
+      },
+      {
+        path: "order/create",
         element: <CreateOrderPage />,
       },
       {
