@@ -89,7 +89,7 @@ namespace SAP_API.Services
                         stockedProduct.ReservedQuantity += stockedProduct.GetAvailableQuantity();
                     }
 
-                    new ReservedOrderProduct
+                   ReservedOrderProduct reservedOrderProduct = new ReservedOrderProduct
                     {
                         OrderId = orderId,
                         ProductId = orderProduct.ProductId.Value,
@@ -98,6 +98,7 @@ namespace SAP_API.Services
                     };
 
                     _stockedProductRepository.Update(stockedProduct);
+                    reservedOrderProducts.Add(reservedOrderProduct);
                 }
             }
 

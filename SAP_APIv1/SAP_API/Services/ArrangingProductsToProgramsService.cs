@@ -408,7 +408,8 @@ namespace SAP_API.Services
                     RemainingOvenCapacity = oven.Capacity,
                     Oven = oven,
                     BakingProgrammedAt = time,
-                    Products = new List<BakingProgramProduct>()
+                    Products = new List<BakingProgramProduct>(),
+                    Code = Guid.NewGuid().ToString(),
                 };
                 ovenPrograms.Add(newBakingProgram);
             }
