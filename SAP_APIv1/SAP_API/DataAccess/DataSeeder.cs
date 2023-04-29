@@ -18,8 +18,24 @@ namespace SAP_API.DataAccess
             SeedReservedOrderProducts(modelBuilder.Entity<ReservedOrderProduct>());
             SeedStockedProducts(modelBuilder.Entity<StockedProduct>());
             SeedStockLocations(modelBuilder.Entity<StockLocation>());
+            SeedRoles(modelBuilder.Entity<Role>());
             SeedUsers(modelBuilder.Entity<User>());
             SeedBakingProgramProducts(modelBuilder.Entity<BakingProgramProduct>());
+        }
+
+        private static void SeedRoles(EntityTypeBuilder<Role> entityTypeBuilder)
+        {
+            entityTypeBuilder.HasData(
+                new Role
+                {
+                    Id = Guid.Parse("00000000-0000-0000-0000-000000000001"),
+                    Name = "Admin",
+                },
+                new Role
+                {
+                    Id = Guid.Parse("00000000-0000-0000-0000-000000000002"),
+                    Name = "Staff",
+                });
         }
 
         private static void SeedBakingProgramProducts(EntityTypeBuilder<BakingProgramProduct> bakingProgramProducts)
@@ -75,7 +91,7 @@ namespace SAP_API.DataAccess
                 new Order
                 {
                     Id = new Guid("00000000-0000-0000-0000-000000000008"),
-                    ShouldBeDoneAt = DateTime.Now,
+                    ShouldBeDoneAt = new DateTime(2020, 2, 1, 12, 0, 0),
                     Status = OrderStatus.Created,
                     CustomerFullName = "Jane Smith",
                     CustomerEmail = "janesmith@example.com",
@@ -84,7 +100,7 @@ namespace SAP_API.DataAccess
                new Order
                {
                    Id = new Guid("00000000-0000-0000-0000-000000000001"),
-                   ShouldBeDoneAt = DateTime.Now.AddDays(1),
+                   ShouldBeDoneAt = new DateTime(2023, 2, 1, 12, 0, 0),
                    Status = OrderStatus.Cancelled,
                    CustomerFullName = "Jane Smith",
                    CustomerEmail = "janesmith@example.com",
@@ -93,7 +109,7 @@ namespace SAP_API.DataAccess
                new Order
                {
                    Id = new Guid("00000000-0000-0000-0000-000000000002"),
-                   ShouldBeDoneAt = DateTime.Now.AddDays(2),
+                   ShouldBeDoneAt = new DateTime(2020, 2, 1, 12, 0, 0),
                    Status = OrderStatus.Cancelled,
                    CustomerFullName = "Jane Smith",
                    CustomerEmail = "janesmith@example.com",
@@ -108,14 +124,14 @@ namespace SAP_API.DataAccess
                 new BakingProgram
                 {
                     Id = new Guid("00000000-0000-0000-0000-000000000008"),
-                    PreparedByUserId = null,
+                    PreparedByUserId = new Guid("00000000-0000-0000-0000-000000000001"),
                     OvenId = new Guid("00000000-0000-0000-0000-000000000008"),
                     Code = "Code1",
                     CreatedAt = new DateTime(2020, 1, 1, 12, 0, 0),
                     Status = BakingProgramStatus.Created,
                     BakingTimeInMins = 30,
                     BakingTempInC = 120,
-                    BakingProgrammedAt = DateTime.Now,
+                    BakingProgrammedAt = new DateTime(2020, 2, 1, 12, 0, 0),
                     BakingStartedAt = null,
                     BakingEndsAt = null,
                     RemainingOvenCapacity = 10,
@@ -124,14 +140,14 @@ namespace SAP_API.DataAccess
                 new BakingProgram
                 {
                     Id = new Guid("00000000-0000-0000-0000-000000000001"),
-                    PreparedByUserId = null,
+                    PreparedByUserId = new Guid("00000000-0000-0000-0000-000000000001"),
                     OvenId = new Guid("00000000-0000-0000-0000-000000000001"),
                     Code = "Code2",
                     CreatedAt = new DateTime(2020, 2, 1, 12, 0, 0),
                     Status = BakingProgramStatus.Created,
                     BakingTimeInMins = 30,
                     BakingTempInC = 140,
-                    BakingProgrammedAt = DateTime.Now,
+                    BakingProgrammedAt = new DateTime(2020, 2, 1, 12, 0, 0),
                     BakingStartedAt = null,
                     BakingEndsAt = null,
                     RemainingOvenCapacity = 10
@@ -139,15 +155,15 @@ namespace SAP_API.DataAccess
                 new BakingProgram
                 {
                     Id = new Guid("00000000-0000-0000-0000-000000000002"),
-                    PreparedByUserId = new Guid("00000000-0000-0000-0000-000000000008"),
+                    PreparedByUserId = new Guid("00000000-0000-0000-0000-000000000002"),
                     OvenId = new Guid("00000000-0000-0000-0000-000000000002"),
                     Code = "Code3",
                     CreatedAt = new DateTime(2020, 3, 1, 12, 0, 0),
                     Status = BakingProgramStatus.Done,
                     BakingTimeInMins = 12,
                     BakingTempInC = 190,
-                    BakingProgrammedAt = DateTime.Now,
-                    BakingStartedAt = new DateTime(2023, 12, 2, 11, 5, 0),
+                    BakingProgrammedAt = new DateTime(2020, 1, 1, 1, 0, 0),
+                    BakingStartedAt =new DateTime(2020, 2, 1, 12, 0, 0),
                     BakingEndsAt = new DateTime(2023, 12, 2, 11, 17, 0),
                     RemainingOvenCapacity = 10,
                 }
@@ -320,12 +336,21 @@ namespace SAP_API.DataAccess
         private static void SeedUsers(EntityTypeBuilder<User> users)
         {
             users.HasData(
+                   
                    new User
                    {
-                       Id = Guid.Parse("00000000-0000-0000-0000-000000000008"),
-                       Username = "username",
-                       Password = "12ik12k0",
-                   }
+                       Id = Guid.Parse("00000000-0000-0000-0000-000000000001"),
+                       Username = "AleksandarAdmin",
+                       Password = "10.Dq24kqmfYfyJ/ZM90uQt3A==.VRQEd9C+pfkWA/sHxLZO9+wEYVMWYMww0MZZIy0nEkQ=",
+                       RoleId = Guid.Parse("00000000-0000-0000-0000-000000000001"),
+                   },
+                    new User
+                    {
+                        Id = Guid.Parse("00000000-0000-0000-0000-000000000002"),
+                        Username = "AleksandarStaff",
+                        Password = "10.Dq24kqmfYfyJ/ZM90uQt3A==.VRQEd9C+pfkWA/sHxLZO9+wEYVMWYMww0MZZIy0nEkQ=",
+                        RoleId = Guid.Parse("00000000-0000-0000-0000-000000000002"),
+                    }
                 );
         }
     }
