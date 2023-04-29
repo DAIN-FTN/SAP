@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
@@ -16,6 +17,7 @@ namespace SAP_API.Controllers
 {
     [ApiController]
     [Route("api/products")]
+    [Authorize]
     public class ProductController : ControllerBase
     {
         private readonly IProductService _productService;

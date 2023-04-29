@@ -54,6 +54,7 @@ namespace SAP_API.Controllers
         }
 
         [HttpGet("Me")]
+        [Authorize]
         public IActionResult Me() {
             //TODO: in case we need this logic elsewhere, implement middleware
             string authorizationHeader = Request.Headers["Authorization"].ToString();

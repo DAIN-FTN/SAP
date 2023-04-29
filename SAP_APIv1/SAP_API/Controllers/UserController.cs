@@ -15,6 +15,7 @@ namespace SAP_API.Controllers
 {
     [ApiController]
     [Route("api/users")]
+    [Authorize(Policy = Policies.Admin)]
     public class UserController: ControllerBase
     {
         private readonly IUserService _userService;
@@ -25,7 +26,6 @@ namespace SAP_API.Controllers
         }
 
         [HttpPost]
-        [AllowAnonymous]
         public IActionResult Register([FromBody] RegisterRequest body, [FromServices] IOptions<ApiBehaviorOptions> apiBehaviorOptions)
         {
             try
@@ -50,7 +50,6 @@ namespace SAP_API.Controllers
         }
 
         [HttpGet]
-        [Authorize(Policy = Policies.Admin)]
         public IActionResult GetAll([FromQuery] string name)
         {
             try
@@ -70,7 +69,6 @@ namespace SAP_API.Controllers
         }
 
         [HttpGet("{userId}")]
-        [Authorize]
         public IActionResult GetById(Guid userId)
         {
             try
@@ -90,7 +88,6 @@ namespace SAP_API.Controllers
         }
 
         [HttpPut("{userId}")]
-        [Authorize]
         public IActionResult UpdateUser([FromBody] UpdateUserRequest body, Guid userId, [FromServices] IOptions<ApiBehaviorOptions> apiBehaviorOptions)
         {
             try
