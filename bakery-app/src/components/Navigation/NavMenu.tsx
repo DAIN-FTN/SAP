@@ -5,6 +5,7 @@ import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import HomeRoundedIcon from '@mui/icons-material/HomeRounded';
 import ProductionQuantityLimitsRoundedIcon from '@mui/icons-material/ProductionQuantityLimitsRounded';
 import Inventory2RoundedIcon from '@mui/icons-material/Inventory2Rounded';
+import BakeryDiningRoundedIcon from '@mui/icons-material/BakeryDiningRounded';
 import { ReceiptLongRounded } from "@mui/icons-material";
 
 const Container = styled.div`
@@ -63,6 +64,7 @@ const NavMenu: FC = () => {
                 <NavMenuButton to='order/view' name='View orders' icon={<ReceiptLongRounded />} />
                 <NavMenuButton to='order/create' name='Create new order' icon={<ProductionQuantityLimitsRoundedIcon />} />
                 <NavMenuButton to='products' name='Products' icon={<Inventory2RoundedIcon />} />
+                <NavMenuButton to='products/create' name='Create new product' icon={<BakeryDiningRoundedIcon />} />
             </NavLinks>
             <BottomNavigation>
                 <AccountCircleIcon sx={{ color: '#fff', fontSize: '45px', position: 'absolute', top: '-23px', backgroundColor: '#DC3F3F', borderRadius: '50px' }} />

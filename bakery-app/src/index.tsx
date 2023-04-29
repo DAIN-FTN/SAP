@@ -16,6 +16,7 @@ import CreateOrderPage from './components/Orders/CreateOrderPage/CreateOrderPage
 import ProductsPage from './components/Products/ViewProducts/ProductsPage';
 import HomePage from './components/Home/HomePage';
 import ViewOrdersPage from './components/Orders/ViewOrders/ViewOrdersPage';
+import CreateProductPage from './components/Products/CreateProduct/CreateProductPage';
 
 const router = createBrowserRouter([
   {
@@ -46,6 +47,14 @@ const router = createBrowserRouter([
       {
         path: "products",
         element: <ProductsPage />,
+      },
+      {
+        path: "products/:productId",
+        element: <ProductsPage />,
+      },
+      {
+        path: "products/create",
+        element: <CreateProductPage />,
       },
     ],
   },
