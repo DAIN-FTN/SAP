@@ -31,7 +31,7 @@ namespace SAP_API.Services
             using (var scope = new TransactionScope())
             try
             {
-                    Guid orderId = new Guid();
+                    Guid orderId = Guid.NewGuid();
 
                     List<ReservedOrderProduct> reservedOrderProducts = _stockedProductService.reserveStockedProducts(orderCreationRequest.Products, orderId);
 
