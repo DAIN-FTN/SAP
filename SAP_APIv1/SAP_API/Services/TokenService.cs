@@ -27,7 +27,7 @@ namespace SAP_API.Services
             {
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
                 new Claim(JwtRegisteredClaimNames.Sub, user.Id.ToString()),
-                new Claim("role", user.Role.Id.ToString()),
+                new Claim("role", user.Role.Name.ToString()),
              };
 
             var token = new JwtSecurityToken(
