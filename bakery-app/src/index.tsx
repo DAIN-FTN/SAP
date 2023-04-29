@@ -13,7 +13,7 @@ import {
 } from "react-router-dom";
 import { ErrorPage } from './components/ErrorPage';
 import CreateOrderPage from './components/Orders/CreateOrderPage/CreateOrderPage';
-import ProductsPage from './components/ProductsPage/ProductsPage';
+import ProductsPage from './components/Products/ViewProducts/ProductsPage';
 import HomePage from './components/Home/HomePage';
 import ViewOrdersPage from './components/Orders/ViewOrders/ViewOrdersPage';
 

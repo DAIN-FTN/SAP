@@ -1,8 +1,8 @@
 import { FC, useEffect, useState } from "react";
 import styled from "styled-components";
-import { getDetails } from "../../services/ProductService";
+import { getDetails } from "../../../services/ProductService";
 import StockedLocationProductQuantitiesList from "./StockedLocationProductQuantitiesList";
-import ProductDetailsResponse from "../../models/Responses/Product/ProductDetailsResponse";
+import ProductDetailsResponse from "../../../models/Responses/Product/ProductDetailsResponse";
 
 export interface ProductDetailsViewProps {
     productId: string | null;

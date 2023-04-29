@@ -7,7 +7,7 @@ import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import { FC } from "react";
 import styled from "styled-components";
-import ProductStockResponse from "../../models/Responses/ProductStockResponse";
+import ProductStockResponse from "../../../models/Responses/ProductStockResponse";
 
 export interface ProductsInStockListProps {
     products: ProductStockResponse[];
