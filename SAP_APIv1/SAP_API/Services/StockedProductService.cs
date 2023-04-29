@@ -1,7 +1,11 @@
-﻿using SAP_API.DTOs;
+﻿using SAP_API.DataAccess.Repositories;
+using SAP_API.DTOs;
+using SAP_API.DTOs.Requests;
+using SAP_API.DTOs.Responses;
+using SAP_API.DTOs.Responses.StockedProduct;
 using SAP_API.Exceptions;
+using SAP_API.Mappers;
 using SAP_API.Models;
-using SAP_API.Repositories;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -54,8 +58,10 @@ namespace SAP_API.Services
             return quantityToBake <= 0;
         }
 
-        public void reserveStockedProducts(List<OrderProductRequest> orderProducts)
+        public List<ReservedOrderProduct> reserveStockedProducts(List<OrderProductRequest> orderProducts, Guid orderId)
         {
+            List<ReservedOrderProduct> reservedOrderProducts= new List<ReservedOrderProduct>();
+
             if(this.IsThereEnoughStockForProducts(orderProducts) == false)
             {
                 throw new NotEnoughStockedProductException();
@@ -82,10 +88,47 @@ namespace SAP_API.Services
                         quantityToReserve -= stockedProduct.GetAvailableQuantity();
                         stockedProduct.ReservedQuantity += stockedProduct.GetAvailableQuantity();
                     }
+
+                    new ReservedOrderProduct
+                    {
+                        OrderId = orderId,
+                        ProductId = orderProduct.ProductId.Value,
+                        StockLocationId = stockedProduct.LocationId,
+                        ReservedQuantity = stockedProduct.ReservedQuantity,
+                    };
+
                     _stockedProductRepository.Update(stockedProduct);
                 }
             }
 
+            return reservedOrderProducts;
+        }
+
+        public CreateStockedProductResponse Create(CreateStockedProductRequest body)
+        {
+            StockedProduct stockedProduct = StockedProductMapper.CreateStockedProductFromCreateStockedProductRequest(body);
+            StockedProduct created = _stockedProductRepository.Create(stockedProduct);
+            return StockedProductMapper.CreateCreateStockedProductResponseFromStockedProduct(created);
+
+        }
+
+        public UpdateStockedProductResponse Update(StockedProduct stockedProduct, UpdateStockedProductRequest body)
+        {
+            UpdateProductFields(stockedProduct, body);
+            StockedProduct updated = _stockedProductRepository.Update(stockedProduct);
+            return StockedProductMapper.CreateUpdateStockedProductResponseFromStockedProduct(updated);
+        }
+
+        private void UpdateProductFields(StockedProduct stockedProduct, UpdateStockedProductRequest body)
+        {
+            stockedProduct.Quantity = (int)body.Quantity;
+            stockedProduct.ReservedQuantity = (int)body.ReservedQuantity;
+        }
+
+
+        public StockedProduct GetByLocationIdProductId(Guid locationId, Guid productId)
+        {
+            return _stockedProductRepository.GetByLocationAndProduct(locationId, productId);
         }
     }
 }

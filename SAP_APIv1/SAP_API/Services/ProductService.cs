@@ -1,8 +1,9 @@
-﻿using SAP_API.DTOs;
+﻿using SAP_API.DataAccess.Repositories;
+using SAP_API.DTOs;
+using SAP_API.DTOs.Requests;
 using SAP_API.DTOs.Responses;
 using SAP_API.Mappers;
 using SAP_API.Models;
-using SAP_API.Repositories;
 using System;
 using System.Collections.Generic;
 
@@ -12,12 +13,39 @@ namespace SAP_API.Services
     {
         private readonly IProductRepository _productRepository;
         private readonly IStockedProductRepository _stockedProductRepository;
+        private readonly IStockedProductService _stockedProductService;
 
-        public ProductService(IProductRepository productRepository, IStockedProductRepository stockedProductRepository)
+        public ProductService(IProductRepository productRepository, IStockedProductRepository stockedProductRepository, IStockedProductService stockedProductService)
         {
             _productRepository = productRepository;
             _stockedProductRepository = stockedProductRepository;
+            _stockedProductService = stockedProductService;
 
+        }
+
+        public CreateProductResponse CreateProduct(CreateProductRequest body)
+        {
+            Product product = ProductMapper.CreateProductFromCreateProductRequest(body);
+            Product created = _productRepository.Create(product);
+            List<CreateStockedProductResponse> stockedProducts = CreateStockForProduct(body.Stock, created.Id);
+
+            CreateProductResponse response =  ProductMapper.CreateCreateProductResponseFromProduct(created);
+            response.Stock = stockedProducts;
+            return response;
+        }
+
+        private List<CreateStockedProductResponse> CreateStockForProduct(List<CreateStockedProductRequest> body, Guid productId)
+        {
+            List<CreateStockedProductResponse> response = new List<CreateStockedProductResponse>();
+           
+            foreach(CreateStockedProductRequest stockedProduct in body)
+            {
+                stockedProduct.ProductId = productId;
+                CreateStockedProductResponse createdStockedProduct = _stockedProductService.Create(stockedProduct);
+                response.Add(createdStockedProduct);
+            }
+
+            return response;
         }
 
         public List<ProductResponse> GetAll(string name)
@@ -67,6 +95,21 @@ namespace SAP_API.Services
             }
 
             return resultList;
+        }
+
+        public UpdateProductResponse UpdateProduct(Product product, UpdateProductRequest body)
+        {
+            UpdateProductFields(product, body);
+            Product updated = _productRepository.Update(product);
+            return ProductMapper.CreateUpdateProductResponseFromProduct(updated);
+        }
+
+        private void UpdateProductFields(Product product, UpdateProductRequest body)
+        {
+            product.BakingTempInC = (int)body.BakingTempInC;
+            product.BakingTimeInMins = (int)body.BakingTimeInMins;
+            product.Name = body.Name;
+            product.Size = (int)body.Size;
         }
     }
 }

@@ -1,9 +1,9 @@
-﻿using SAP_API.DTOs;
+﻿using SAP_API.DataAccess.Repositories;
+using SAP_API.DTOs;
 using SAP_API.DTOs.Requests;
 using SAP_API.DTOs.Responses;
 using SAP_API.Mappers;
 using SAP_API.Models;
-using SAP_API.Repositories;
 using System;
 using System.Collections.Generic;
 
@@ -28,7 +28,7 @@ namespace SAP_API.Services
         }
 
 
-        public ArrangingResult GetExistingOrNewProgramsProductShouldBeArrangedInto(DateTime timeOrderShouldBeDone, List<OrderProductRequest> orderProducts)
+        public ArrangingResult GetExistingOrNewProgramsProductShouldBeArrangedInto(DateTime timeOrderShouldBeDone, List<OrderProductRequest> orderProducts, Guid orderId)
         {
 
             bool thereIsEnoughStock = _stockedProductService.IsThereEnoughStockForProducts(orderProducts);
@@ -38,7 +38,7 @@ namespace SAP_API.Services
             _arrangingService.SetTimeOrderShouldBeDone(timeOrderShouldBeDone);
             _arrangingService.PrepareProductsForArranging(orderProducts);
 
-            List<BakingProgram> existingPrograms = _arrangingService.GetExistingProgramsProductShouldBeArrangedInto();
+            List<BakingProgram> existingPrograms = _arrangingService.GetExistingProgramsProductShouldBeArrangedInto(orderId);
             programsProductsShouldBeArrangedTo.AddRange(existingPrograms);
 
             bool allProductsSuccessfullyArranged = !_arrangingService.ThereAreProductsLeftForArranging();
@@ -51,7 +51,7 @@ namespace SAP_API.Services
                 };
             }
 
-            List<BakingProgram> newPrograms = _arrangingService.GetNewProgramsProductsShouldBeArrangedInto();
+            List<BakingProgram> newPrograms = _arrangingService.GetNewProgramsProductsShouldBeArrangedInto(orderId);
             programsProductsShouldBeArrangedTo.AddRange(newPrograms);
 
             allProductsSuccessfullyArranged = !_arrangingService.ThereAreProductsLeftForArranging();
@@ -72,11 +72,8 @@ namespace SAP_API.Services
             if (bakingProgram.Status.Equals(BakingProgramStatus.Created))
             {
                 _startPreparingService.UseReservedProductsFromOrdersForPreparing();
-                bakingProgram.StartPreparing(new User {
-                    Id = new Guid("00000000-0000-0000-0000-000000000001"),
-                    Username = "Natalija",
-                    Password = "pass123"
-                });
+                bakingProgram.StartPreparing(new Guid("00000000-0000-0000-0000-000000000008"));
+                _bakingProgramRepository.Update(bakingProgram);
             }
 
             return _startPreparingService.CreateStartPreparingResponse();
@@ -94,9 +91,9 @@ namespace SAP_API.Services
            _bakingProgramRepository.Update(bakingProgram); 
         }
 
-        public AvailableProgramsResponse FindAvailableBakingPrograms(FindAvailableBakingProgramsRequest body)
+        public AvailableProgramsResponse FindAvailableBakingPrograms(FindAvailableBakingProgramsRequest body, Guid orderId)
         {
-            ArrangingResult result = GetExistingOrNewProgramsProductShouldBeArrangedInto((DateTime)body.ShouldBeDoneAt, body.OrderProducts);
+            ArrangingResult result = GetExistingOrNewProgramsProductShouldBeArrangedInto((DateTime)body.ShouldBeDoneAt, body.OrderProducts, orderId);
             AvailableProgramsResponse resultResponse = BakingProgramMapper.CreateAvailableProgramResponse(result);
             return resultResponse;
         }
@@ -114,7 +111,7 @@ namespace SAP_API.Services
             }
 
             bakingProgram.FinishPreparing();
-            //TODO saveChanges
+            _bakingProgramRepository.Update(bakingProgram);
 
         }
 
@@ -125,12 +122,14 @@ namespace SAP_API.Services
             DateTime bakingProgrammedAtTime = bakingProgram.BakingProgrammedAt;
             DateTime timeNow = DateTime.Now;
             int numberOfMinutesBeforeProgrammedTimePreparingIsAllowed = 25;
-            DateTime earliestTimeToStartPreparing = timeNow.AddMinutes(-numberOfMinutesBeforeProgrammedTimePreparingIsAllowed);
+            DateTime earliestTimeToStartPreparing = bakingProgrammedAtTime.AddMinutes(-numberOfMinutesBeforeProgrammedTimePreparingIsAllowed);
 
-            if (bakingProgrammedAtTime < earliestTimeToStartPreparing)
+            bool isTooEarlyToPrepareProgram = timeNow.CompareTo(earliestTimeToStartPreparing) < 0;
+
+            if (isTooEarlyToPrepareProgram)
                 return false;
 
-            List<BakingProgram> bakingProgramsThatShouldBePrepared = _bakingProgramRepository.GetProgramsWithBakingProgrammedAtBetweenDateTimes(earliestTimeToStartPreparing, timeNow.AddMinutes(numberOfMinutesBeforeProgrammedTimePreparingIsAllowed));
+            List<BakingProgram> bakingProgramsThatShouldBePrepared = _bakingProgramRepository.GetProgramsWithBakingProgrammedAtBetweenDateTimes(timeNow.AddDays(-1), timeNow.AddMinutes(-numberOfMinutesBeforeProgrammedTimePreparingIsAllowed));
             if (bakingProgramsThatShouldBePrepared.Count == 0)
                 return false;
 
@@ -153,18 +152,13 @@ namespace SAP_API.Services
         public void CancellPreparing(BakingProgram bakingProgram)
         {
             bakingProgram.CancellPreparing();
-            //TODO SaveChanges
+            _bakingProgramRepository.Update(bakingProgram);
         }
 
         //TODO user from req
         public AllBakingProgramsResponse GetBakingProgramsForUser()
         {
-            User user = new User
-            {
-                Id = new Guid("00000000-0000-0000-0000-000000000001"),
-                Username = "Natalija",
-                Password = "pass123"
-            };
+            Guid userId = new Guid("00000000-0000-0000-0000-000000000008");
 
             DateTime timeNow = DateTime.Now;
             DateTime startTime = timeNow.AddDays(-1);
@@ -174,7 +168,7 @@ namespace SAP_API.Services
             List<BakingProgramStatus> statusesToExclude = new List<BakingProgramStatus> { BakingProgramStatus.Cancelled, BakingProgramStatus.Finished };
             ExcludeProgramsWithStatuses(bakingPrograms, statusesToExclude);
             ChangeStatusToDoneIfBakingIsDone(bakingPrograms);
-            List<BakingProgram> programsUserIsPreparing = bakingPrograms.FindAll(bp => bp.Status.Equals(BakingProgramStatus.Preparing) && bp.PreparedBy.Id == user.Id);
+            List<BakingProgram> programsUserIsPreparing = bakingPrograms.FindAll(bp => bp.Status.Equals(BakingProgramStatus.Preparing) && bp.PreparedByUser.Id == userId);
 
             if (programsUserIsPreparing.Count == 0)
                 return BakingProgramMapper.CreateAllBakingProgramsResponse(bakingPrograms, null);
@@ -203,6 +197,7 @@ namespace SAP_API.Services
                 if(program.IsBakingDone())
                 {
                     program.FinishBaking();
+                    _bakingProgramRepository.Update(program);
                 }
             }
         }
@@ -252,29 +247,32 @@ namespace SAP_API.Services
         public void StartBaking(BakingProgram bakingProgram)
         {
             bakingProgram.StartBaking();
-            //TODO save changes
+            _bakingProgramRepository.Update(bakingProgram);
+
         }
 
         public bool CheckIfUserIsAlreadyPreparingAnotherProgram()
         {
-            User user = new User
-            {
-                Id = new Guid("00000000-0000-0000-0000-000000000001"),
-                Username = "Natalija",
-                Password = "pass123"
-            };
+            //TODO user from request
+            Guid userId = new Guid("00000000-0000-0000-0000-000000000008");
 
             DateTime timeNow = DateTime.Now;
             DateTime startTime = timeNow.AddDays(-1);
             DateTime endTime = timeNow.AddHours(4);
             List<BakingProgram> bakingPrograms = _bakingProgramRepository.GetProgramsWithBakingProgrammedAtBetweenDateTimes(startTime, endTime);
-            List<BakingProgram> programsBeingPreparedByUser = bakingPrograms.FindAll(bp => bp.Status.Equals(BakingProgramStatus.Preparing) && bp.PreparedBy.Id.Equals(user.Id));
+            List<BakingProgram> programsBeingPreparedByUser = bakingPrograms.FindAll(bp => bp.Status.Equals(BakingProgramStatus.Preparing) && bp.PreparedByUser.Id.Equals(userId));
             return programsBeingPreparedByUser.Count > 0;
         }
 
         public BakingProgram GetById(Guid bakingProgramId)
         {
             return _bakingProgramRepository.GetById(bakingProgramId);
+        }
+
+        public void Finish(BakingProgram bakingProgram)
+        {
+            bakingProgram.Finish();
+            _bakingProgramRepository.Update(bakingProgram);
         }
     }
 }

@@ -4,8 +4,13 @@ namespace SAP_API.Models
     public class ReservedOrderProduct: IEntity
     {
         public Guid Id { get; set; }
+        public Guid ProductId { get; set; }
         public Product Product { get; set; }
+        public Guid OrderId { get; set; }
         public Order Order { get; set; }
+        public Guid StockLocationId { get; set; }
+        public StockLocation LocationWhereProductIsReserved { get; set; }
+
 
         /// <summary>
         /// Quantity that is reserved from the location when order is created.
@@ -25,7 +30,6 @@ namespace SAP_API.Models
         /// remaining 2 products from L1 and 5 products from L2.
         /// </summary>
         public int PreparedQuantity { get; set; }
-        public StockLocation LocationWhereProductIsReserved { get; set; }
 
         public void GetReadyForPreparing(int quantityToBePrepared)
         {
