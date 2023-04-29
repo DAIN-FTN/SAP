@@ -1,10 +1,12 @@
 import { FC } from "react";
 import { NavLink } from "react-router-dom";
 import styled from "styled-components";
-import HomeRoundedIcon from '@mui/icons-material/HomeRounded';
-import ProductionQuantityLimitsRoundedIcon from '@mui/icons-material/ProductionQuantityLimitsRounded';
-import Inventory2RoundedIcon from '@mui/icons-material/Inventory2Rounded';
-import { ReceiptLongRounded } from "@mui/icons-material";
+
+export interface ButtonProps {
+    to: string;
+    name: string;
+    icon: React.ReactNode;
+}
 
 const StyledButton = styled.div`
     display: flex;
@@ -17,6 +19,7 @@ const StyledButton = styled.div`
     box-sizing: border-box;
     align-items: center;
     transition: background-color 0.1s ease-in-out;
+    text-align: center;
 
     &:hover {
         cursor: pointer;
@@ -38,36 +41,13 @@ const LinkWrapper = styled(NavLink)`
     };
 `;
 
-export interface ButtonProps {
-    to: string;
-    name: string;
-}
-
-const NavMenuButton: FC<{ buttonProps: ButtonProps }> = ({ buttonProps }) => {
-    let icon = null;
-    switch (buttonProps.name) {
-        case 'Home':
-        icon = <HomeRoundedIcon />;
-        break;
-        case 'View orders':
-        icon = <ReceiptLongRounded />;
-        break;
-        case 'Create new order':
-        icon = <ProductionQuantityLimitsRoundedIcon />;
-        break;
-        case 'Products':
-        icon = <Inventory2RoundedIcon />;
-        break;
-        // Add other cases here for different icon types
-        default:
-        break;
-    }
-
+const NavMenuButton: FC<ButtonProps> = ({ name, to, icon }) => {
+    
     return (
-        <LinkWrapper to={buttonProps.to} >
+        <LinkWrapper to={to} >
             <StyledButton>
                 {icon}
-                {buttonProps.name}
+                {name}
             </StyledButton>
         </LinkWrapper>
     );
