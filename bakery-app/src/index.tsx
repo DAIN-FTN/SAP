@@ -36,6 +36,10 @@ const router = createBrowserRouter([
         element: <ViewOrdersPage />,
       },
       {
+        path: "order/view/:orderId",
+        element: <ViewOrdersPage />,
+      },
+      {
         path: "order/create",
         element: <CreateOrderPage />,
       },
@@ -54,7 +58,6 @@ const root = ReactDOM.createRoot(
 root.render(
   <React.StrictMode>
     <RouterProvider router={router} />
-    {/* <App /> */}
   </React.StrictMode>
 );
 

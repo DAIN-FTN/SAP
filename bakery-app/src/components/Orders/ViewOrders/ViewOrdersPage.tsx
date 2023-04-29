@@ -1,6 +1,8 @@
-import { FC } from "react";
+import { FC, useEffect, useState } from "react";
 import styled from "styled-components";
 import OrderDetailsView from "./OrderDetailsView";
+import { useParams } from "react-router-dom";
+import OrdersList from "./OrdersList";
 
 const Container = styled.div`
     width: 100%;
@@ -24,14 +26,21 @@ const Panel = styled.div`
 `;
 
 const ViewOrdersPage: FC = () => {
+    const { orderId } = useParams();
+    const [selectedOrderId, setSelectedOrderId] = useState<string | null>(null); 
+
+    useEffect(() => {
+        if (!orderId) return;
+        setSelectedOrderId(orderId);
+    }, [orderId]);
 
     return (
         <Container>
             <Panel>
-                {/* <OrdersList availableProducts={} orderProducts={} setOrderProducts={} /> */}
+                <OrdersList setSelectedOrderId={setSelectedOrderId}  />
             </Panel>
             <Panel>
-                <OrderDetailsView order={null} />
+                <OrderDetailsView orderId={selectedOrderId} />
             </Panel>
         </Container>
     );

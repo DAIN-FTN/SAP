@@ -39,22 +39,40 @@ const CreateOrderPage: FC = () => {
     const [creationPossible, setCreationPossible] = useState<boolean>(false);
     const navigate = useNavigate();
 
-    function changeRequestedQuantityHandler(productId: string, productName: string, quantity: number) {
+    function changeRequestedQuantityHandler(productId: string, productName: string, availableQuantity: number, quantity: number) {
         if (orderProducts.length === 0 && quantity > 0) {
-            setOrderProducts([{ id: productId, name: productName, requestedQuantity: quantity }]);
+            setOrderProducts([{
+                id: productId,
+                name: productName,
+                availableQuantity,
+                requestedQuantity: quantity
+            }]);
             return;
         }
 
         const productInOrderProducts = orderProducts.find((product) => product.id === productId) as ProductRequestItem;
 
-        if (!productInOrderProducts || quantity === 0) return;
+        if (productInOrderProducts) {
+            if (productInOrderProducts.requestedQuantity + quantity > availableQuantity) return;
 
-        productInOrderProducts.requestedQuantity += quantity;
+            productInOrderProducts.requestedQuantity += quantity;
 
-        if (productInOrderProducts.requestedQuantity === 0) {
-            setOrderProducts(orderProducts.filter((product) => product.id !== productId));
+            if (productInOrderProducts.requestedQuantity === 0) {
+                setOrderProducts(orderProducts.filter((product) => product.id !== productId));
+            } else {
+                setOrderProducts([...orderProducts]);
+            }
         } else {
-            setOrderProducts([...orderProducts]);
+            if (quantity < 1) return;
+            setOrderProducts([
+                ...orderProducts,
+                {
+                    id: productId,
+                    name: productName,
+                    availableQuantity,
+                    requestedQuantity: quantity
+                }
+            ]);
         }
     }
 
@@ -71,7 +89,7 @@ const CreateOrderPage: FC = () => {
         };
         create(orderRequest).then((response: CreateOrderResponse) => {
             console.log(response);
-            navigate(`/orders/view/${response.id}`);
+            navigate(`/order/view/${response.id}`);
         });
     };
 
@@ -91,7 +109,7 @@ const CreateOrderPage: FC = () => {
                 <OrderProductsList requestedQuantityChangeHandler={changeRequestedQuantityHandler} products={orderProducts} />
             </Panel>
             <Panel>
-                {orderProducts.length > 0 && <CheckDeliveryTime orderProducts={orderProducts} setCreationPossible={setCreationPossible} setDeliveryTime={setDeliveryTime} /> }
+                {orderProducts.length > 0 && <CheckDeliveryTime orderProducts={orderProducts} setCreationPossible={setCreationPossible} setDeliveryTime={setDeliveryTime} />}
                 {creationPossible && <Button variant="contained" onClick={createOrderHandler}>Create order</Button>}
             </Panel>
         </Container>

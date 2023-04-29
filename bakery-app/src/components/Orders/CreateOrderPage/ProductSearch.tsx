@@ -15,7 +15,7 @@ import styled from "styled-components";
 import { getProductStock } from "../../../services/ProductService";
 
 export interface ProductSearchProps {
-    requestedQuantityChangeHandler: (productId: string, productName: string, quantity: number) => void;
+    requestedQuantityChangeHandler: (productId: string, productName: string, availableQuantity: number, quantity: number) => void;
 }
 
 const Label = styled.p`
@@ -30,14 +30,12 @@ const SearchWrapper = styled.div`
 const ProductSearch: FC<ProductSearchProps> = ({ requestedQuantityChangeHandler }) => {
     const [productSearchResults, setProductSearchResults] = useState<ProductStockResponse[]>([]);
 
-    function removeProductHandler(productId: string, productName: string) {
-        console.log("removeProductHandler", productId);
-        requestedQuantityChangeHandler(productId, productName, -1);
+    function removeProductHandler(productId: string, productName: string, availableQuantity: number) {
+        requestedQuantityChangeHandler(productId, productName, availableQuantity, -1);
     }
 
-    function addProductHandler(productId: string, productName: string) {
-        console.log("addProductHandler", productId);
-        requestedQuantityChangeHandler(productId, productName, 1);
+    function addProductHandler(productId: string, productName: string, availableQuantity: number) {
+        requestedQuantityChangeHandler(productId, productName, availableQuantity, 1);
     }
 
     function productNameSearchChangeHandler(productName: string) {
@@ -73,8 +71,8 @@ const ProductSearch: FC<ProductSearchProps> = ({ requestedQuantityChangeHandler 
                                 <TableCell component="th" scope="row">{product.name}</TableCell>
                                 <TableCell align="right">{product.availableQuantity}</TableCell>
                                 <TableCell align="right">
-                                    <IconButton aria-label="delete" onClick={() => removeProductHandler(product.id, product.name)}><RemoveCircleIcon /></IconButton>
-                                    <IconButton aria-label="delete" onClick={() => addProductHandler(product.id, product.name)}><AddCircleIcon /></IconButton>
+                                    <IconButton aria-label="delete" onClick={() => removeProductHandler(product.id, product.name, product.availableQuantity)}><RemoveCircleIcon /></IconButton>
+                                    <IconButton aria-label="delete" onClick={() => addProductHandler(product.id, product.name, product.availableQuantity)}><AddCircleIcon /></IconButton>
                                 </TableCell>
                             </TableRow>
                         ))}
