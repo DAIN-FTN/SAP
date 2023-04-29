@@ -11,6 +11,8 @@ import CreateOrderRequest from "../../../models/Requests/CreateOrderRequest";
 import OrderProductRequest from "../../../models/Requests/OrderProductRequest";
 import CreateOrderResponse from "../../../models/Responses/Order/CreateOrderResponse";
 import { useNavigate } from "react-router-dom";
+import Customer from "../../../models/Requests/Customer";
+import CustomerForm from "./CustomerForm";
 
 const Container = styled.div`
     width: 100%;
@@ -37,6 +39,7 @@ const CreateOrderPage: FC = () => {
     const [orderProducts, setOrderProducts] = useState<ProductRequestItem[]>([]);
     const [deliveryTime, setDeliveryTime] = useState<Date | null>(null);
     const [creationPossible, setCreationPossible] = useState<boolean>(false);
+    const [customer, setCustomer] = useState<Customer | null>(null);
     const navigate = useNavigate();
 
     function changeRequestedQuantityHandler(productId: string, productName: string, availableQuantity: number, quantity: number) {
@@ -77,18 +80,15 @@ const CreateOrderPage: FC = () => {
     }
 
     async function createOrderHandler() {
-        console.log("new order request");
+        if (!customer || !deliveryTime || orderProducts.length === 0) return;
+
         const orderRequest: CreateOrderRequest = {
-            shouldBeDoneAt: deliveryTime as Date,
-            customer: {
-                fullName: "John Smith",
-                email: "email@example.com",
-                telephone: "+3811234567"
-            },
+            shouldBeDoneAt: deliveryTime,
+            customer,
             products: mapProductRequestItemsToProductRequest(orderProducts)
         };
+
         create(orderRequest).then((response: CreateOrderResponse) => {
-            console.log(response);
             navigate(`/order/view/${response.id}`);
         });
     };
@@ -98,7 +98,7 @@ const CreateOrderPage: FC = () => {
             return {
                 productId: productRequestItem.id,
                 quantity: productRequestItem.requestedQuantity
-            } as OrderProductRequest;
+            };
         });
     }
 
@@ -110,7 +110,8 @@ const CreateOrderPage: FC = () => {
             </Panel>
             <Panel>
                 {orderProducts.length > 0 && <CheckDeliveryTime orderProducts={orderProducts} setCreationPossible={setCreationPossible} setDeliveryTime={setDeliveryTime} />}
-                {creationPossible && <Button variant="contained" onClick={createOrderHandler}>Create order</Button>}
+                {creationPossible && <CustomerForm setCustomer={setCustomer} />}
+                {customer && <Button variant="contained" onClick={createOrderHandler}>Create order</Button>}
             </Panel>
         </Container>
     );
