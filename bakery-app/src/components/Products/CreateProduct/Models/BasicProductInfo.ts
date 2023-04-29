@@ -1,6 +1,6 @@
 export default interface BasicProductInfo {
     name: string;
     bakingTimeInMins: number;
-    bakingTimeInC: number;
+    bakingTempInC: number;
     size: number;
 }

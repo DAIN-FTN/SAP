@@ -1,10 +1,6 @@
 import { useState } from "react";
 import { FC } from "react";
 import styled from "styled-components";
-import Button from '@mui/material/Button';
-import TextField from "@mui/material/TextField";
-import { getProductStock } from "../../../services/ProductService";
-import ProductStockResponse from "../../../models/Responses/ProductStockResponse";
 import BasicProductInfo from "./Models/BasicProductInfo";
 import BasicProductInfoForm from "./BasicProductInfoForm";
 
@@ -44,7 +40,7 @@ const CreateProductPage: FC = () => {
     return (
         <Container>
             <Panel>
-                <BasicProductInfoForm />
+                <BasicProductInfoForm setBasicProductInfo={setBasicProductInfo} />
             </Panel>
             <Panel>
                 {/* <ProductDetailsView productId={selectedProductId} /> */}

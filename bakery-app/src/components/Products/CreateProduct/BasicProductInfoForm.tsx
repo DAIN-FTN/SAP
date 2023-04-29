@@ -1,48 +1,44 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { FC } from "react";
 import styled from "styled-components";
 import BasicProductInfo from "./Models/BasicProductInfo";
+import TextField from "@mui/material/TextField";
 
 export interface BasicProductInfoProps {
+    setBasicProductInfo: (basicProductInfo: BasicProductInfo | null) => void;
 }
-
-const Container = styled.div`
-    width: 100%;
-    padding: 36px;
-    display: flex;
-    flex-direction: row;
-    -webkit-box-shadow: 0px 2px 14px 0px rgba(122,122,122,1);
-    -moz-box-shadow: 0px 2px 14px 0px rgba(122,122,122,1);
-    box-shadow: 0px 2px 14px 0px rgba(122,122,122,1);
-    background-color: white;
-    margin: 48px;
-`;
-
-const Panel = styled.div`
-    width: 50%;
-    padding: 24px;
-    display: flex;
-    flex-direction: column;
-    
-`;
 
 const Label = styled.p`
     font-size: 24px;
 `;
 
-const SearchWrapper = styled.div`
-    display: flex;
-    flex-direction: row;
-`;
+const BasicProductInfoForm: FC<BasicProductInfoProps> = ({ setBasicProductInfo }) => {
+    const [name, setName] = useState<string>();
+    const [bakingTimeInMins, setBakingTimeInMins] = useState<number>();
+    const [bakingTempInC, setBakingTempInC] = useState<number>();
+    const [size, setSize] = useState<number>();
 
-const BasicProductInfoForm: FC<BasicProductInfoProps> = ({}) => {
-    const [basicProductInfo, setBasicProductInfo] = useState<BasicProductInfo | null>(null);
-    const [selectedProductId, setSelectedProductId] = useState<string | null>(null);
+    useEffect(() => {
+        if (!name || !bakingTimeInMins || !bakingTempInC || !size) {
+            setBasicProductInfo(null);
+        } else {
+            setBasicProductInfo({
+                name,
+                bakingTimeInMins,
+                bakingTempInC,
+                size
+            }); 
+        }
+    }, [name, bakingTimeInMins, bakingTempInC, size]);
 
     return (
-        <Container>
-            123
-        </Container>
+        <>
+            <Label>Basic product info</Label>
+            <TextField id="standard-basic" label="Name" sx={{ marginBottom: '16px' }} variant="standard" fullWidth onChange={(e) => setName(e.target.value)} />
+            <TextField id="standard-basic" label="Baking time in minutes" sx={{ marginBottom: '16px' }} variant="standard" fullWidth onChange={(e) => setBakingTimeInMins(parseInt(e.target.value))} />
+            <TextField id="standard-basic" label="Baking temperature in °C" sx={{ marginBottom: '16px' }} variant="standard" fullWidth onChange={(e) => setBakingTempInC(parseInt(e.target.value))} />
+            <TextField id="standard-basic" label="Size" variant="standard" sx={{ marginBottom: '16px' }} fullWidth onChange={(e) => setSize(parseInt(e.target.value))} />
+        </>
     );
 };
 
