@@ -2,6 +2,11 @@ import { FC } from "react";
 import styled from "styled-components";
 import NavMenuButton from "./NavMenuButton";
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
+import HomeRoundedIcon from '@mui/icons-material/HomeRounded';
+import ProductionQuantityLimitsRoundedIcon from '@mui/icons-material/ProductionQuantityLimitsRounded';
+import Inventory2RoundedIcon from '@mui/icons-material/Inventory2Rounded';
+import BakeryDiningRoundedIcon from '@mui/icons-material/BakeryDiningRounded';
+import { ReceiptLongRounded } from "@mui/icons-material";
 
 const Container = styled.div`
     display: flex;
@@ -55,16 +60,17 @@ const NavMenu: FC = () => {
     return (
         <Container>
             <NavLinks>
-                <NavMenuButton buttonProps={{to: 'home', name: 'Home'}}></NavMenuButton>
-                <NavMenuButton buttonProps={{to: 'order/view', name: 'View orders'}}></NavMenuButton>
-                <NavMenuButton buttonProps={{to: 'order/create', name: 'Create new order'}}></NavMenuButton>
-                <NavMenuButton buttonProps={{to: 'products', name: 'Products'}}></NavMenuButton>
+                <NavMenuButton to='home' name='Home' icon={<HomeRoundedIcon />} />
+                <NavMenuButton to='order/view' name='View orders' icon={<ReceiptLongRounded />} />
+                <NavMenuButton to='order/create' name='Create new order' icon={<ProductionQuantityLimitsRoundedIcon />} />
+                <NavMenuButton to='products' name='Products' icon={<Inventory2RoundedIcon />} />
+                <NavMenuButton to='products/create' name='Create new product' icon={<BakeryDiningRoundedIcon />} />
             </NavLinks>
             <BottomNavigation>
-                <AccountCircleIcon sx={{color: '#fff', fontSize: '45px', position: 'absolute', top: '-23px', backgroundColor: '#DC3F3F', borderRadius: '50px'}} />
+                <AccountCircleIcon sx={{ color: '#fff', fontSize: '45px', position: 'absolute', top: '-23px', backgroundColor: '#DC3F3F', borderRadius: '50px' }} />
                 <UsernameLabel>John Smith</UsernameLabel>
                 <HiddenLogoutContent>
-                    <NavMenuButton buttonProps={{to: 'logout', name: 'Logout'}}></NavMenuButton>
+                    <NavMenuButton to='logout' name='Logout' icon={null} />
                 </HiddenLogoutContent>
             </BottomNavigation>
         </Container>

@@ -19,7 +19,7 @@ const LoginPage: FC = () => {
     <Grid container>
         <Grid item xs={4}/>
         <Grid item xs={4}>
-            <PaperContainer margin={'50px 0px 0px 0px'} content={<LoginForm />} padding={'10px 10px 10px 10px'} opacity={0.7} width={'400px'}/>
+            <PaperContainer margin={'50px 0px 0px 0px'} content={<LoginForm width={'400px'}/>} padding={'10px 10px 10px 10px'} opacity={0.7} width={'400px'}/>
         </Grid>
         <Grid item xs={4}/>
     </Grid>

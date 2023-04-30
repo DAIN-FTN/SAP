@@ -5,8 +5,8 @@ import Button from '@mui/material/Button';
 import TextField from "@mui/material/TextField";
 import ProductsInStockList from "./ProductsInStockList";
 import ProductDetailsView from "./ProductDetailsView";
-import { getProductStock } from "../../services/ProductService";
-import ProductStockResponse from "../../models/Responses/ProductStockResponse";
+import { getProductStock } from "../../../services/ProductService";
+import ProductStockResponse from "../../../models/Responses/ProductStockResponse";
 
 const Container = styled.div`
     width: 100%;

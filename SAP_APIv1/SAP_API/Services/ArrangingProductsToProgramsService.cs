@@ -3,6 +3,7 @@ using SAP_API.DTOs;
 using SAP_API.Models;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace SAP_API.Services
 {
@@ -90,6 +91,13 @@ namespace SAP_API.Services
             {
                 List<BakingProgram> bakingProgramsFromGroup = GetExistingBakingProgramsFromGroup(group);
                 List<OrderProduct> productsFromGroup = productsGroupedByTempAndTimeDict[group];
+
+                bool programsExistForGroup = bakingProgramsFromGroup.Count != 0;
+
+                if(!programsExistForGroup)
+                {
+                    continue;
+                }
 
                 ArrangeProductsToExistingPrograms(bakingProgramsFromGroup, productsFromGroup, orderId);
 
@@ -185,34 +193,40 @@ namespace SAP_API.Services
         {
             int temp = group.Temp;
             int time = group.Time;
-            List<BakingProgram> bakingPrograms = _bakingProgramRepository.GetByTempAndTime(temp, time);
+
+            List<BakingProgram> bakingPrograms = _bakingProgramRepository
+                .GetByTempAndTime(temp, time)
+                .FindAll(p => p.RemainingOvenCapacity > 0);
+
             return bakingPrograms;
         }
 
         private void ArrangeProductsToExistingPrograms(List<BakingProgram> bakingPrograms, List<OrderProduct> products, Guid orderId)
         {
-            int currentProgramIndex = 0;
-            int currentProductIndex = 0;
             while (ThereAreProductsLeftForArranging(products) && ThereAreProgramsLeftForArranging(bakingPrograms))
             {
-                BakingProgram program = bakingPrograms[currentProgramIndex];
-                bakingPrograms.RemoveAt(currentProgramIndex);
+                BakingProgram program = bakingPrograms.First();
+                OrderProduct product = products.First();
 
-                while (program.RemainingOvenCapacity > 0 && ThereAreProductsLeftForArranging(products))
+                if (program.RemainingOvenCapacity == 0)
                 {
-                    OrderProduct product = products[currentProductIndex];
-                    int numberOfProductsThatCanBeArrangedToProgram = GetNumberOfProductsThatCanBeArrangedToProgram(program, product);
-                    if (numberOfProductsThatCanBeArrangedToProgram == 0)
-                    {
-                        FinishArrangingCurrentProgram(bakingPrograms);
-                        break;
-                    }
-                    ArrangeProductToExistingProgram(product, numberOfProductsThatCanBeArrangedToProgram, program, orderId);
+                    FinishArrangingCurrentProgram(bakingPrograms);
+                    continue;
+                };
 
-                    if (product.QuantityToBake == 0)
-                    {
-                        FinishArrangingCurrentProduct(products);
-                    }
+                int numberOfProductsThatCanBeArrangedToProgram = GetNumberOfProductsThatCanBeArrangedToProgram(program, product);
+                
+                if(numberOfProductsThatCanBeArrangedToProgram == 0)
+                {
+                    FinishArrangingCurrentProgram(bakingPrograms);
+                    continue;
+                }
+
+                ArrangeProductToExistingProgram(product, numberOfProductsThatCanBeArrangedToProgram, program, orderId);
+
+                if (product.QuantityToBake == 0)
+                {
+                    FinishArrangingCurrentProduct(products);
                 }
             }
         }
@@ -394,7 +408,8 @@ namespace SAP_API.Services
                     RemainingOvenCapacity = oven.Capacity,
                     Oven = oven,
                     BakingProgrammedAt = time,
-                    Products = new List<BakingProgramProduct>()
+                    Products = new List<BakingProgramProduct>(),
+                    Code = Guid.NewGuid().ToString(),
                 };
                 ovenPrograms.Add(newBakingProgram);
             }
@@ -404,28 +419,30 @@ namespace SAP_API.Services
 
         private void ArrangeProductsFromGroupToNewPrograms(List<BakingProgram> bakingPrograms, List<OrderProduct> products, TimeAndTempGroup group, Guid orderId)
         {
-            int currentProgramIndex = 0;
-            int currentProductIndex = 0;
             while (ThereAreProductsLeftForArranging(products) && ThereAreProgramsLeftForArranging(bakingPrograms))
             {
-                BakingProgram program = bakingPrograms[currentProgramIndex];
-                bakingPrograms.RemoveAt(currentProgramIndex);
+                BakingProgram program = bakingPrograms.First();
+                OrderProduct product = products.First();
 
-                while (program.RemainingOvenCapacity > 0 && ThereAreProductsLeftForArranging(products))
+                if(program.RemainingOvenCapacity == 0)
                 {
-                    OrderProduct product = products[currentProductIndex];
-                    int numberOfProductsThatCanBeArrangedToProgram = GetNumberOfProductsThatCanBeArrangedToProgram(program, product);
-                    if (numberOfProductsThatCanBeArrangedToProgram == 0)
-                    {
-                        FinishArrangingCurrentProgram(bakingPrograms);
-                        break;
-                    }
-                    ArrangeProductToNewProgram(product, numberOfProductsThatCanBeArrangedToProgram, program, group, orderId);
+                    FinishArrangingCurrentProgram(bakingPrograms);
+                    continue;
+                }
 
-                    if (product.QuantityToBake == 0)
-                    {
-                        FinishArrangingCurrentProduct(products);
-                    }
+                int numberOfProductsThatCanBeArrangedToProgram = GetNumberOfProductsThatCanBeArrangedToProgram(program, product);
+
+                if(numberOfProductsThatCanBeArrangedToProgram == 0)
+                {
+                    FinishArrangingCurrentProgram(bakingPrograms);
+                    continue;
+                }
+
+                ArrangeProductToNewProgram(product, numberOfProductsThatCanBeArrangedToProgram, program, group, orderId);
+
+                if (product.QuantityToBake == 0)
+                {
+                    FinishArrangingCurrentProduct(products);
                 }
             }
 

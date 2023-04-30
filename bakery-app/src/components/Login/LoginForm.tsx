@@ -3,6 +3,10 @@ import { FC, useState} from "react";
 import { Button, FormControl, Grid, IconButton, InputAdornment, InputLabel, OutlinedInput, TextField } from "@mui/material";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 
+export interface LoginFormProps{
+    width: string
+}
+
 export interface LoginValues{
     username: string,
     password: string
@@ -19,7 +23,7 @@ const StyledButton = styled(Button)`
     background-color: rgba(0,0,255,1);
 `
 
-const LoginForm: FC = () => {
+const LoginForm: FC<LoginFormProps> = ({width}) => {
     const [values, setValues] = useState<LoginValues>({username: '', password:''});
     const [showPassword, setShowPassword] = useState(false);
 
@@ -41,10 +45,10 @@ const LoginForm: FC = () => {
         <form>
             <Grid container direction="column" justifyContent="center">
                 <ControlContainer> 
-                    <TextField sx={{width: '400px'}} label="Username" name="username" value={values.username} onChange={handleInputChange}/>
+                    <TextField sx={{width: width}} label="Username" name="username" value={values.username} onChange={handleInputChange}/>
                 </ControlContainer>
                 <ControlContainer> 
-                    <FormControl sx={{ width: '400px' }} variant="outlined">
+                    <FormControl sx={{ width: width }} variant="outlined">
                     <InputLabel htmlFor="password">Password</InputLabel>
                     <OutlinedInput
                         id="password"
@@ -66,7 +70,7 @@ const LoginForm: FC = () => {
                     </FormControl>
                 </ControlContainer>
                 <ControlContainer>
-                    <StyledButton variant="contained" sx={{width: '400px'}}>Log in</StyledButton>
+                    <StyledButton variant="contained" sx={{width: width}}>Log in</StyledButton>
                 </ControlContainer>
             </Grid>
         </form>

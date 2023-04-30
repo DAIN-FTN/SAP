@@ -13,10 +13,11 @@ import {
 } from "react-router-dom";
 import { ErrorPage } from './components/ErrorPage';
 import CreateOrderPage from './components/Orders/CreateOrderPage/CreateOrderPage';
-import ProductsPage from './components/ProductsPage/ProductsPage';
+import ProductsPage from './components/Products/ViewProducts/ProductsPage';
 import HomePage from './components/Home/HomePage';
 import ViewOrdersPage from './components/Orders/ViewOrders/ViewOrdersPage';
 import LoginPage from './components/Login/LoginPage';
+import CreateProductPage from './components/Products/CreateProduct/CreateProductPage';
 
 const router = createBrowserRouter([
   {
@@ -41,13 +42,25 @@ const router = createBrowserRouter([
         element: <ViewOrdersPage />,
       },
       {
+        path: "order/view/:orderId",
+        element: <ViewOrdersPage />,
+      },
+      {
         path: "order/create",
         element: <CreateOrderPage />,
       },
       {
         path: "products",
         element: <ProductsPage />,
-      }
+      },
+      {
+        path: "products/:productId",
+        element: <ProductsPage />,
+      },
+      {
+        path: "products/create",
+        element: <CreateProductPage />,
+      },
     ],
   },
 ]);
@@ -59,7 +72,6 @@ const root = ReactDOM.createRoot(
 root.render(
   <React.StrictMode>
     <RouterProvider router={router} />
-    {/* <App /> */}
   </React.StrictMode>
 );
 

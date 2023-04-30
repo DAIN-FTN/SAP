@@ -14,7 +14,7 @@ import styled from "styled-components";
 
 export interface OrderProductsListProps {
     products: ProductRequestItem[];
-    requestedQuantityChangeHandler: (productId: string, productName: string, quantity: number) => void;
+    requestedQuantityChangeHandler: (productId: string, productName: string, availableQuantity: number, quantity: number) => void;
 }
 
 const Label = styled.p`
@@ -44,8 +44,8 @@ const OrderProductsList: FC<OrderProductsListProps> = ({ products, requestedQuan
                                 <TableCell component="th" scope="row">{product.name}</TableCell>
                                 <TableCell align="right">{product.requestedQuantity}</TableCell>
                                 <TableCell align="right">
-                                    <IconButton onClick={() => requestedQuantityChangeHandler(product.id, product.name, -1)}><RemoveCircleIcon /></IconButton>
-                                    <IconButton onClick={() => requestedQuantityChangeHandler(product.id, product.name, 1)}><AddCircleIcon /></IconButton>
+                                    <IconButton onClick={() => requestedQuantityChangeHandler(product.id, product.name, product.availableQuantity, -1)}><RemoveCircleIcon /></IconButton>
+                                    <IconButton onClick={() => requestedQuantityChangeHandler(product.id, product.name, product.availableQuantity, 1)}><AddCircleIcon /></IconButton>
                                 </TableCell>
                             </TableRow>
                         ))}

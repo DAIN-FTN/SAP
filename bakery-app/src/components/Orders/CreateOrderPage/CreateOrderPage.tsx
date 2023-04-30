@@ -11,6 +11,8 @@ import CreateOrderRequest from "../../../models/Requests/CreateOrderRequest";
 import OrderProductRequest from "../../../models/Requests/OrderProductRequest";
 import CreateOrderResponse from "../../../models/Responses/Order/CreateOrderResponse";
 import { useNavigate } from "react-router-dom";
+import Customer from "../../../models/Requests/Customer";
+import CustomerForm from "./CustomerForm";
 
 const Container = styled.div`
     width: 100%;
@@ -37,41 +39,57 @@ const CreateOrderPage: FC = () => {
     const [orderProducts, setOrderProducts] = useState<ProductRequestItem[]>([]);
     const [deliveryTime, setDeliveryTime] = useState<Date | null>(null);
     const [creationPossible, setCreationPossible] = useState<boolean>(false);
+    const [customer, setCustomer] = useState<Customer | null>(null);
     const navigate = useNavigate();
 
-    function changeRequestedQuantityHandler(productId: string, productName: string, quantity: number) {
+    function changeRequestedQuantityHandler(productId: string, productName: string, availableQuantity: number, quantity: number) {
         if (orderProducts.length === 0 && quantity > 0) {
-            setOrderProducts([{ id: productId, name: productName, requestedQuantity: quantity }]);
+            setOrderProducts([{
+                id: productId,
+                name: productName,
+                availableQuantity,
+                requestedQuantity: quantity
+            }]);
             return;
         }
 
         const productInOrderProducts = orderProducts.find((product) => product.id === productId) as ProductRequestItem;
 
-        if (!productInOrderProducts || quantity === 0) return;
+        if (productInOrderProducts) {
+            if (productInOrderProducts.requestedQuantity + quantity > availableQuantity) return;
 
-        productInOrderProducts.requestedQuantity += quantity;
+            productInOrderProducts.requestedQuantity += quantity;
 
-        if (productInOrderProducts.requestedQuantity === 0) {
-            setOrderProducts(orderProducts.filter((product) => product.id !== productId));
+            if (productInOrderProducts.requestedQuantity === 0) {
+                setOrderProducts(orderProducts.filter((product) => product.id !== productId));
+            } else {
+                setOrderProducts([...orderProducts]);
+            }
         } else {
-            setOrderProducts([...orderProducts]);
+            if (quantity < 1) return;
+            setOrderProducts([
+                ...orderProducts,
+                {
+                    id: productId,
+                    name: productName,
+                    availableQuantity,
+                    requestedQuantity: quantity
+                }
+            ]);
         }
     }
 
     async function createOrderHandler() {
-        console.log("new order request");
+        if (!customer || !deliveryTime || orderProducts.length === 0) return;
+
         const orderRequest: CreateOrderRequest = {
-            shouldBeDoneAt: deliveryTime as Date,
-            customer: {
-                fullName: "John Smith",
-                email: "email@example.com",
-                telephone: "+3811234567"
-            },
+            shouldBeDoneAt: deliveryTime,
+            customer,
             products: mapProductRequestItemsToProductRequest(orderProducts)
         };
+
         create(orderRequest).then((response: CreateOrderResponse) => {
-            console.log(response);
-            navigate(`/orders/view/${response.id}`);
+            navigate(`/order/view/${response.id}`);
         });
     };
 
@@ -80,7 +98,7 @@ const CreateOrderPage: FC = () => {
             return {
                 productId: productRequestItem.id,
                 quantity: productRequestItem.requestedQuantity
-            } as OrderProductRequest;
+            };
         });
     }
 
@@ -91,8 +109,9 @@ const CreateOrderPage: FC = () => {
                 <OrderProductsList requestedQuantityChangeHandler={changeRequestedQuantityHandler} products={orderProducts} />
             </Panel>
             <Panel>
-                {orderProducts.length > 0 && <CheckDeliveryTime orderProducts={orderProducts} setCreationPossible={setCreationPossible} setDeliveryTime={setDeliveryTime} /> }
-                {creationPossible && <Button variant="contained" onClick={createOrderHandler}>Create order</Button>}
+                {orderProducts.length > 0 && <CheckDeliveryTime orderProducts={orderProducts} setCreationPossible={setCreationPossible} setDeliveryTime={setDeliveryTime} />}
+                {creationPossible && <CustomerForm setCustomer={setCustomer} />}
+                {customer && <Button variant="contained" onClick={createOrderHandler}>Create order</Button>}
             </Panel>
         </Container>
     );

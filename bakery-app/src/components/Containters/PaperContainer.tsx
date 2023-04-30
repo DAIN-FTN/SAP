@@ -1,5 +1,4 @@
 import { Paper } from '@mui/material';
-import styled from "styled-components";
 import { FC} from "react";
 
 export interface PaperContainerProps {

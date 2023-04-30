@@ -30,6 +30,9 @@ namespace SAP_API.DataAccess.DbContexts
             modelBuilder.Entity<StockLocation>()
                .HasAlternateKey(x => x.Code);
 
+            modelBuilder.Entity<Role>()
+                .HasIndex(x => x.Name).IsUnique();
+
             modelBuilder.Entity<StockedProduct>()
                 .HasAlternateKey(x => new { x.ProductId, x.LocationId })
                 .HasName("UQ_ProductId_LocationId");
@@ -44,7 +47,8 @@ namespace SAP_API.DataAccess.DbContexts
         public DbSet<StockLocation> StockLocation { get; }
         public DbSet<ReservedOrderProduct> ReservedOrderProduct { get;  }
         public DbSet<ProductToPrepare> ProductToPrepare { get; }
-        public DbSet<User> User { get; }
+        public DbSet<Role> Role { get; }
+        public DbSet<User> User { get;  }
     }
     
 }
