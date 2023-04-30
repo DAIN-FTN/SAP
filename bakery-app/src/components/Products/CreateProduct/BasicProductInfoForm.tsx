@@ -28,16 +28,17 @@ const BasicProductInfoForm: FC<BasicProductInfoProps> = ({ setBasicProductInfo }
                 bakingTempInC,
                 size
             }); 
+            console.log("Basic product info set");
         }
     }, [name, bakingTimeInMins, bakingTempInC, size]);
 
     return (
         <>
             <Label>Basic product info</Label>
-            <TextField id="standard-basic" label="Name" sx={{ marginBottom: '16px' }} variant="standard" fullWidth onChange={(e) => setName(e.target.value)} />
-            <TextField id="standard-basic" label="Baking time in minutes" sx={{ marginBottom: '16px' }} variant="standard" fullWidth onChange={(e) => setBakingTimeInMins(parseInt(e.target.value))} />
-            <TextField id="standard-basic" label="Baking temperature in °C" sx={{ marginBottom: '16px' }} variant="standard" fullWidth onChange={(e) => setBakingTempInC(parseInt(e.target.value))} />
-            <TextField id="standard-basic" label="Size" variant="standard" sx={{ marginBottom: '16px' }} fullWidth onChange={(e) => setSize(parseInt(e.target.value))} />
+            <TextField id="id1" label="Name" sx={{ marginBottom: '16px' }} variant="standard" fullWidth onChange={(e) => setName(e.target.value)} />
+            <TextField id="id2" label="Baking time in minutes" sx={{ marginBottom: '16px' }} variant="standard" fullWidth onChange={(e) => setBakingTimeInMins(parseInt(e.target.value))} />
+            <TextField id="id3" label="Baking temperature in °C" sx={{ marginBottom: '16px' }} variant="standard" fullWidth onChange={(e) => setBakingTempInC(parseInt(e.target.value))} />
+            <TextField id="id4" label="Size" variant="standard" sx={{ marginBottom: '16px' }} fullWidth onChange={(e) => setSize(parseInt(e.target.value))} />
         </>
     );
 };

@@ -2,7 +2,7 @@ import CreateStockedProductRequest from "../StockedProducts/CreateStockedProduct
 
 export default interface CreateProductRequest {
     name: string;
-    bakingTimeinMins: number;
+    bakingTimeInMins: number;
     bakingTempInC: number;
     size: number;
     stock: CreateStockedProductRequest[];

@@ -3,6 +3,12 @@ import { FC } from "react";
 import styled from "styled-components";
 import BasicProductInfo from "./Models/BasicProductInfo";
 import BasicProductInfoForm from "./BasicProductInfoForm";
+import CreateStockedProductRequest from "../../../models/Requests/StockedProducts/CreateStockedProductRequest";
+import { create } from "../../../services/ProductService";
+import CreateProductResponse from "../../../models/Responses/Product/CreateProductResponse";
+import CreateProductRequest from "../../../models/Requests/Products/CreateProductRequest";
+import Button from "@mui/material/Button";
+import StockForm from "./StockForm/StockForm";
 
 const Container = styled.div`
     width: 100%;
@@ -24,18 +30,30 @@ const Panel = styled.div`
     
 `;
 
-const Label = styled.p`
-    font-size: 24px;
-`;
-
-const SearchWrapper = styled.div`
-    display: flex;
-    flex-direction: row;
-`;
-
 const CreateProductPage: FC = () => {
     const [basicProductInfo, setBasicProductInfo] = useState<BasicProductInfo | null>(null);
-    const [selectedProductId, setSelectedProductId] = useState<string | null>(null);
+    const [stockInfo, setStockInfo] = useState<CreateStockedProductRequest[] | null>(null);
+
+    function createProduct() {
+        if (!basicProductInfo || !stockInfo) {
+            return;
+        }
+
+        const request: CreateProductRequest = {
+            name: basicProductInfo.name,
+            bakingTimeInMins: basicProductInfo.bakingTimeInMins,
+            bakingTempInC: basicProductInfo.bakingTempInC,
+            size: basicProductInfo.size,
+            stock: stockInfo
+        };
+
+        console.log("Request: ", request);
+
+        // create(request).then((response: CreateProductResponse) => {
+        //     console.log(response);
+        // });
+
+    }
 
     return (
         <Container>
@@ -43,7 +61,8 @@ const CreateProductPage: FC = () => {
                 <BasicProductInfoForm setBasicProductInfo={setBasicProductInfo} />
             </Panel>
             <Panel>
-                {/* <ProductDetailsView productId={selectedProductId} /> */}
+                {basicProductInfo && <StockForm setStock={setStockInfo} />}
+                {stockInfo && <Button variant="contained" sx={{ marginTop: '24px' }} onClick={createProduct}>Create product</Button>}
             </Panel>
         </Container>
     );
