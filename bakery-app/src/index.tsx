@@ -16,8 +16,13 @@ import CreateOrderPage from './components/Orders/CreateOrderPage/CreateOrderPage
 import ProductsPage from './components/ProductsPage/ProductsPage';
 import HomePage from './components/Home/HomePage';
 import ViewOrdersPage from './components/Orders/ViewOrders/ViewOrdersPage';
+import LoginPage from './components/Login/LoginPage';
 
 const router = createBrowserRouter([
+  {
+    path: "login",
+    element: <LoginPage/>
+  },
   {
     path: "/",
     element: <App />,
@@ -42,7 +47,7 @@ const router = createBrowserRouter([
       {
         path: "products",
         element: <ProductsPage />,
-      },
+      }
     ],
   },
 ]);
