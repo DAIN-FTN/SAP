@@ -9,6 +9,7 @@ import CreateProductResponse from "../../../models/Responses/Product/CreateProdu
 import CreateProductRequest from "../../../models/Requests/Products/CreateProductRequest";
 import Button from "@mui/material/Button";
 import StockForm from "./StockForm/StockForm";
+import { useNavigate } from "react-router-dom";
 
 const Container = styled.div`
     width: 100%;
@@ -33,6 +34,7 @@ const Panel = styled.div`
 const CreateProductPage: FC = () => {
     const [basicProductInfo, setBasicProductInfo] = useState<BasicProductInfo | null>(null);
     const [stockInfo, setStockInfo] = useState<CreateStockedProductRequest[] | null>(null);
+    const navigate = useNavigate();
 
     function createProduct() {
         if (!basicProductInfo || !stockInfo) {
@@ -47,11 +49,9 @@ const CreateProductPage: FC = () => {
             stock: stockInfo
         };
 
-        console.log("Request: ", request);
-
-        // create(request).then((response: CreateProductResponse) => {
-        //     console.log(response);
-        // });
+        create(request).then((response: CreateProductResponse) => {
+            navigate(`/products/${response.id}`);
+        });
 
     }
 

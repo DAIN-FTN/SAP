@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { FC } from "react";
 import styled from "styled-components";
 import Button from '@mui/material/Button';
@@ -7,6 +7,7 @@ import ProductsInStockList from "./ProductsInStockList";
 import ProductDetailsView from "./ProductDetailsView";
 import { getProductStock } from "../../../services/ProductService";
 import ProductStockResponse from "../../../models/Responses/ProductStockResponse";
+import { useParams } from "react-router-dom";
 
 const Container = styled.div`
     width: 100%;
@@ -38,8 +39,14 @@ const SearchWrapper = styled.div`
 `;
 
 const ProductsPage: FC = () => {
+    const { productId } = useParams();
     const [productsOnStock, setProductsOnStock] = useState<ProductStockResponse[] | []>([]);
     const [selectedProductId, setSelectedProductId] = useState<string | null>(null);
+
+    useEffect(() => {
+        if (!productId) return;
+        setSelectedProductId(productId);
+    }, [productId]);
 
     const productNameSearchChangeHandler = (e: { target: { value: string; }; }) => {
         const productName = e.target.value;
