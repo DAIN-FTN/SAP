@@ -1,5 +1,12 @@
 import { createContext } from "react";
-import { User } from "../hooks/useUser";
+
+export interface User {
+    id: string;
+    username: string;
+    roleId: string;
+    role: string;
+    token: string;
+  }
 
 interface AuthContextFields {
   user: User | null;

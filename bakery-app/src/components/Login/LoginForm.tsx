@@ -2,14 +2,10 @@ import styled from "styled-components";
 import { FC, useEffect, useState} from "react";
 import { Button, FormControl, Grid, IconButton, InputAdornment, InputLabel, OutlinedInput, TextField } from "@mui/material";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
-import { getUserFromToken, postLogin } from "../../services/AuthService";
 import LoginRequest from "../../models/Requests/Auth/LoginRequest";
-import LoginResponse from "../../models/Requests/Auth/LoginResponse";
 import { useNavigate } from "react-router-dom";
+import { useAuthContext } from "../../hooks/useAuthContext";
 
-import UserDetailsResponse from "../../models/Responses/User/UserDetailsResponse";
-import { useAuth } from "../../hooks/useAuth";
-import { useUser } from "../../hooks/useUser";
 
 export interface LoginFormProps{
     width: string
@@ -45,11 +41,15 @@ const LoginForm: FC<LoginFormProps> = ({width}) => {
     const [showPassword, setShowPassword] = useState(false);
     const [error, setError] = useState('');
     const navigate = useNavigate();
-    const { user, login, logout } = useAuth();
+    const { user, login } = useAuthContext();
 
     useEffect(() => {
-       console.log('user in LoginForm: ', user);
-    }, [user]);
+        console.log("useEffect in LoginForm, user: ", user);
+        if(user){
+            setError('');
+            navigate("/");
+        }
+      }, [user]);
 
     const handleClickShowPassword = () => setShowPassword((show) => !show);
 
@@ -79,10 +79,9 @@ const LoginForm: FC<LoginFormProps> = ({width}) => {
             password: values.password
         }
 
-        login(loginRequest);
-        console.log(user);
+        const loggedInUser = await login(loginRequest);
 
-        if(user){
+        if(loggedInUser){
             setError('');
             navigate("/");
         }else{
