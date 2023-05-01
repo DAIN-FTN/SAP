@@ -1,13 +1,11 @@
-import { useState, useEffect, ReactNode } from 'react';
+import { useState, useEffect, ReactNode, FC } from 'react';
 import { AuthContext, User } from './contexts/AuthContext';
 
 interface AuthProviderProps {
     children: ReactNode;
 }
 
-
-
-export const AuthProvider = ({ children }: AuthProviderProps) => {
+const AuthProvider: FC<AuthProviderProps> = ({ children }) => {
     const [user, setUser] = useState<User | null>(null);
 
     useEffect(() => {
@@ -21,3 +19,5 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
         <AuthContext.Provider value={{ user, setUser }}>{children}</AuthContext.Provider>
     );
 };
+
+export default AuthProvider;

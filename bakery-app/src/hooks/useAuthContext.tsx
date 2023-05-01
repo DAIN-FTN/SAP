@@ -7,7 +7,7 @@ import { AuthContext, User } from "../contexts/AuthContext";
 
 
 export const useAuthContext = () => {
-    const {user, setUser} = useContext(AuthContext);
+    const { user, setUser } = useContext(AuthContext);
 
     if (user === undefined) {
         throw new Error("useAuthContext can only be used inside AuthProvider");
@@ -17,33 +17,33 @@ export const useAuthContext = () => {
         const user = localStorage.getItem('sap-bakery-user');
         if (user) {
             setUser(JSON.parse(user));
-        }else{
+        } else {
             setUser(null);
         }
-      }, []);
-    
+    }, []);
+
 
     const login = async (loginRequest: LoginRequest): Promise<User | null> => {
         const response: LoginResponse = await postLogin(loginRequest);
 
-        if(response){
+        if (response) {
             const token = response.token;
             const userDetails: UserDetailsResponse | null = await getUserFromToken(token);
             const loggedInUser: User = {
-                    id: userDetails.id,
-                    roleId: userDetails.roleId,
-                    role: userDetails.role,
-                    token: token,
-                    username: userDetails.username
+                id: userDetails.id,
+                roleId: userDetails.roleId,
+                role: userDetails.role,
+                token: token,
+                username: userDetails.username
             }
             addUserInfo(loggedInUser);
-                
-        }else{
+
+        } else {
             removeUserInfo();
         }
         return user;
     };
-  
+
     const logout = () => {
         removeUserInfo();
     };
@@ -53,11 +53,11 @@ export const useAuthContext = () => {
         setUser(user);
         localStorage.setItem('sap-bakery-user', JSON.stringify(user));
     };
-  
+
     const removeUserInfo = () => {
         setUser(null);
         localStorage.setItem('sap-bakery-user', '');
     };
-    
-    return {user, login, logout};
+
+    return { user, login, logout };
 };

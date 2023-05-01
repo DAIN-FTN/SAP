@@ -5,7 +5,7 @@ import NavMenu from './components/Navigation/NavMenu';
 import { AdapterLuxon } from '@mui/x-date-pickers/AdapterLuxon';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider'
 import { Outlet } from 'react-router-dom';
-import { AuthProvider } from './AuthProvider';
+import AuthProvider from './AuthProvider';
 
 
 const Container = styled.div`
@@ -23,19 +23,19 @@ const SecondRow = styled.div`
 
 function App() {
 
-  return (
-    <AuthProvider>
-      <LocalizationProvider dateAdapter={AdapterLuxon}>
-        <Container>
-          <Header />
-          <SecondRow>
-            <NavMenu />
-            <Outlet />
-          </SecondRow>
-        </Container>
-      </LocalizationProvider>
-    </AuthProvider>
-  );
+    return (
+        <AuthProvider>
+            <LocalizationProvider dateAdapter={AdapterLuxon}>
+                <Container>
+                    <Header />
+                    <SecondRow>
+                        <NavMenu />
+                        <Outlet />
+                    </SecondRow>
+                </Container>
+            </LocalizationProvider>
+        </AuthProvider>
+    );
 }
 
 export default App;

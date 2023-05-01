@@ -6,14 +6,14 @@ export interface User {
     roleId: string;
     role: string;
     token: string;
-  }
+}
 
 interface AuthContextFields {
-  user: User | null;
-  setUser: (user: User | null) => void;
+    user: User | null;
+    setUser: (user: User | null) => void;
 }
 
 export const AuthContext = createContext<AuthContextFields>({
-  user: null,
-  setUser: () => {},
+    user: null,
+    setUser: () => { },
 });
