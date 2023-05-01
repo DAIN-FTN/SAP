@@ -1,13 +1,15 @@
 import styled from "styled-components";
-import { FC, useState} from "react";
+import { FC, useEffect, useState} from "react";
 import { Button, FormControl, Grid, IconButton, InputAdornment, InputLabel, OutlinedInput, TextField } from "@mui/material";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
-import { getUserFromToken, login } from "../../services/AuthService";
+import { getUserFromToken, postLogin } from "../../services/AuthService";
 import LoginRequest from "../../models/Requests/Auth/LoginRequest";
 import LoginResponse from "../../models/Requests/Auth/LoginResponse";
 import { useNavigate } from "react-router-dom";
 
 import UserDetailsResponse from "../../models/Responses/User/UserDetailsResponse";
+import { useAuth } from "../../hooks/useAuth";
+import { useUser } from "../../hooks/useUser";
 
 export interface LoginFormProps{
     width: string
@@ -43,6 +45,11 @@ const LoginForm: FC<LoginFormProps> = ({width}) => {
     const [showPassword, setShowPassword] = useState(false);
     const [error, setError] = useState('');
     const navigate = useNavigate();
+    const { user, login, logout } = useAuth();
+
+    useEffect(() => {
+       console.log('user in LoginForm: ', user);
+    }, [user]);
 
     const handleClickShowPassword = () => setShowPassword((show) => !show);
 
@@ -72,18 +79,15 @@ const LoginForm: FC<LoginFormProps> = ({width}) => {
             password: values.password
         }
 
-        login(loginRequest).then((response: LoginResponse | null) => {
-            if(response){
-                setError('');
-                localStorage.setItem('sap-bakery-token', response.token);
-                getUserFromToken().then((user: UserDetailsResponse) => {
-                    navigate("/");
-                });                
-            }
-            else{
-                setError('Wrong username or password');
-            }
-        });
+        login(loginRequest);
+        console.log(user);
+
+        if(user){
+            setError('');
+            navigate("/");
+        }else{
+            setError('Wrong username or password');
+        }
     }
     
     return (

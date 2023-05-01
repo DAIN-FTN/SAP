@@ -3,7 +3,7 @@ import LoginResponse from "../models/Requests/Auth/LoginResponse";
 import UserDetailsResponse from "../models/Responses/User/UserDetailsResponse";
 import { getData, postData } from "./DataService";
 
-export async function login(loginRequest: LoginRequest): Promise<LoginResponse> {
+export async function postLogin(loginRequest: LoginRequest): Promise<LoginResponse> {
     try {
         const response = await postData<LoginResponse>(`/api/auth/login`, loginRequest);
         return response;
@@ -12,9 +12,9 @@ export async function login(loginRequest: LoginRequest): Promise<LoginResponse> 
     }
 }
 
-export async function getUserFromToken(): Promise<UserDetailsResponse> {
+export async function getUserFromToken(token: string): Promise<UserDetailsResponse> {
     try {
-        const response = await getData<UserDetailsResponse>(`/api/auth/Me`);
+        const response = await getData<UserDetailsResponse>(`/api/auth/Me`, token);
         return response;
     } catch (error) {
         return null as unknown as UserDetailsResponse;

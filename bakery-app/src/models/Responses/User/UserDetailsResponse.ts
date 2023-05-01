@@ -5,5 +5,6 @@ export default interface UserDetailsResponse {
     username: string;
     password: string;
     roleId: string;
+    role: string;
     preparedPrograms: PreparedBakingProgramResponse[];
 }

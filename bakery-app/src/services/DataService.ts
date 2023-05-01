@@ -3,10 +3,10 @@ import { ResponseError } from "../models/Errors/ResponseError";
 
 const baseUrl = `${config.httpProtocol}${config.serverAddress}${config.port}`;
 
-export async function getData<T>(url: string): Promise<T> {
+export async function getData<T>(url: string, token?: string): Promise<T> {
     const rawResponse = await fetch(`${baseUrl}${url}`, {
         headers: {
-            'authorization': getUserToken()
+            'authorization': getUserToken(token)
         }
     });
 
@@ -20,6 +20,7 @@ export async function getData<T>(url: string): Promise<T> {
 
     return jsonResponse as T;
 }
+
 
 export async function postData<T>(url: string, payload: any): Promise<T> {
 
@@ -56,9 +57,16 @@ function handleUnauthorizedAccess() {
     throw error;
 }
 
-function getUserToken(): string {
-    const token = localStorage.getItem('sap-bakery-token');
-    return token != null? 'Bearer ' + token: '';
+function getUserToken(token?: string): string {
+    if(token !== 'undefined')
+        return 'Bearer ' + token;
+
+    const user = localStorage.getItem('sap-bakery-user')
+    if(!user)
+        return 'Bearer ';
+
+    const tokenFromStorage = JSON.parse(user).token;
+    return tokenFromStorage !== ''? 'Bearer ' + tokenFromStorage: '';
 }
 
 export async function putData<T>(url: string, payload: any = null): Promise<T> {

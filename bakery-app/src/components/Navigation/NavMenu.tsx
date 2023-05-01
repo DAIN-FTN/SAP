@@ -1,4 +1,4 @@
-import { FC } from "react";
+import { FC, useEffect } from "react";
 import styled from "styled-components";
 import NavMenuButton from "./NavMenuButton";
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
@@ -7,6 +7,7 @@ import ProductionQuantityLimitsRoundedIcon from '@mui/icons-material/ProductionQ
 import Inventory2RoundedIcon from '@mui/icons-material/Inventory2Rounded';
 import BakeryDiningRoundedIcon from '@mui/icons-material/BakeryDiningRounded';
 import { ReceiptLongRounded } from "@mui/icons-material";
+import { useUser } from "../../hooks/useUser";
 
 const Container = styled.div`
     display: flex;
@@ -57,6 +58,14 @@ const HiddenLogoutContent = styled.div`
 `;
 
 const NavMenu: FC = () => {
+    const {user} = useUser();
+
+
+    useEffect(() => {
+        
+        console.log('user in NavMenu:', user);
+      }, [user]);
+
     return (
         <Container>
             <NavLinks>
