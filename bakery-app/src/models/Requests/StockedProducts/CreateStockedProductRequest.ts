@@ -1,5 +1,5 @@
 export default interface CreateStockedProductRequest {
-    productId: string;
+    productId: string | null;
     locationId: string;
     quantity: number;
 }

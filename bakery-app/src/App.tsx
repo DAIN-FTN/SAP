@@ -20,6 +20,7 @@ const SecondRow = styled.div`
     display: flex;
     flex-direction: row;
     height: 100%;
+    /* background-image: url('./bakery-pattern.jpg'); */
 `;
 
 function App() {
