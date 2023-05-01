@@ -1,9 +1,14 @@
 import { config } from "../config";
+import { ResponseError } from "../models/Errors/ResponseError";
 
 const baseUrl = `${config.httpProtocol}${config.serverAddress}${config.port}`;
 
-export async function getData<T>(url: string): Promise<T> {
-    const rawResponse = await fetch(`${baseUrl}${url}`);
+export async function getData<T>(url: string, token?: string): Promise<T> {
+    const rawResponse = await fetch(`${baseUrl}${url}`, {
+        headers: {
+            'authorization': getUserToken(token)
+        }
+    });
 
     const jsonResponse = await rawResponse.json();
 
@@ -16,21 +21,52 @@ export async function getData<T>(url: string): Promise<T> {
     return jsonResponse as T;
 }
 
-export async function postData<T>(url: string, payload: any): Promise<T> {
-    try {
-        const response = await fetch(`${baseUrl}${url}`, {
-            method: "POST",
-            body: JSON.stringify(payload),
-            headers: {
-                'content-type': 'application/json'
-            }
-        });
 
-        return await response.json() as T;
-    } catch (error) {
-        console.error(error);
-        return [] as T;
+export async function postData<T>(url: string, payload: any): Promise<T> {
+
+    const response = await fetch(`${baseUrl}${url}`, {
+        method: "POST",
+        body: JSON.stringify(payload),
+        headers: {
+            'content-type': 'application/json'
+        }
+    });
+
+    if(response.status === 401)
+        handleUnauthorizedAccess();
+
+    
+    const jsonResponse = await response.json()
+    if(jsonResponse.errors){
+        console.warn("Shit hit the fan... throwing error in component DataService.ts", jsonResponse.errors.ErrorToDisplay[0]);
+
+        throw new Error(jsonResponse.errors.ErrorToDisplay[0]);
     }
+
+    return jsonResponse as T;
+    
+}
+
+function handleUnauthorizedAccess() {
+    var message = 'Unauthorized access';
+    console.warn(message);
+    
+    var error = new ResponseError(message);
+    error.setStatus(401);
+    
+    throw error;
+}
+
+function getUserToken(token?: string): string {
+    if(token !== 'undefined')
+        return 'Bearer ' + token;
+
+    const user = localStorage.getItem('sap-bakery-user')
+    if(!user)
+        return 'Bearer ';
+
+    const tokenFromStorage = JSON.parse(user).token;
+    return tokenFromStorage !== ''? 'Bearer ' + tokenFromStorage: '';
 }
 
 export async function putData<T>(url: string, payload: any = null): Promise<T> {

@@ -16,9 +16,14 @@ import CreateOrderPage from './components/Orders/CreateOrderPage/CreateOrderPage
 import ProductsPage from './components/Products/ViewProducts/ProductsPage';
 import HomePage from './components/Home/HomePage';
 import ViewOrdersPage from './components/Orders/ViewOrders/ViewOrdersPage';
+import LoginPage from './components/Login/LoginPage';
 import CreateProductPage from './components/Products/CreateProduct/CreateProductPage';
 
 const router = createBrowserRouter([
+  {
+    path: "login",
+    element: <LoginPage/>
+  },
   {
     path: "/",
     element: <App />,

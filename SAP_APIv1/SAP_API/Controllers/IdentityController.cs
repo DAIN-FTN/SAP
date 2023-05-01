@@ -44,7 +44,7 @@ namespace SAP_API.Controllers
 
                 string token = _tokenService.GenerateToken(user);
 
-                return Ok(token);
+                return Ok(new LoginResponse { Token = token });
             }
             catch (Exception ex)
             {
