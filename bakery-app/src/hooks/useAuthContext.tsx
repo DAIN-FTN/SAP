@@ -5,7 +5,6 @@ import { getUserFromToken, postLogin } from "../services/AuthService";
 import UserDetailsResponse from "../models/Responses/User/UserDetailsResponse";
 import { AuthContext, User } from "../contexts/AuthContext";
 
-
 export const useAuthContext = () => {
     const { user, setUser } = useContext(AuthContext);
 
