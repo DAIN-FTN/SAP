@@ -9,6 +9,7 @@ import { AuthContext } from './contexts/AuthContext';
 import { useAuth } from './hooks/useAuth';
 import { User } from './hooks/useUser';
 import { useEffect } from 'react';
+import { AuthProvider } from './AuthProvider';
 
 const Container = styled.div`
     display: flex;
@@ -39,7 +40,7 @@ function App() {
   };*/
 
   return (
-    <AuthContext.Provider value={{user, setUser}} >
+    <AuthProvider>
       <LocalizationProvider dateAdapter={AdapterLuxon}>
         <Container>
           <Header />
@@ -49,7 +50,7 @@ function App() {
           </SecondRow>
         </Container>
       </LocalizationProvider>
-    </AuthContext.Provider>
+    </AuthProvider>
   );
 }
 

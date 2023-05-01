@@ -8,6 +8,7 @@ import Inventory2RoundedIcon from '@mui/icons-material/Inventory2Rounded';
 import BakeryDiningRoundedIcon from '@mui/icons-material/BakeryDiningRounded';
 import { ReceiptLongRounded } from "@mui/icons-material";
 import { useUser } from "../../hooks/useUser";
+import { useAuthContext } from "../../hooks/useAuthContext";
 
 const Container = styled.div`
     display: flex;
@@ -58,7 +59,8 @@ const HiddenLogoutContent = styled.div`
 `;
 
 const NavMenu: FC = () => {
-    const {user} = useUser();
+    // const {user} = useUser();
+    const { user } = useAuthContext();
 
 
     useEffect(() => {
