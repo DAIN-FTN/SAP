@@ -2,6 +2,12 @@ import styled from "styled-components";
 import { FC, useState} from "react";
 import { Button, FormControl, Grid, IconButton, InputAdornment, InputLabel, OutlinedInput, TextField } from "@mui/material";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
+import { getUserFromToken, login } from "../../services/AuthService";
+import LoginRequest from "../../models/Requests/Auth/LoginRequest";
+import LoginResponse from "../../models/Requests/Auth/LoginResponse";
+import { useNavigate } from "react-router-dom";
+
+import UserDetailsResponse from "../../models/Responses/User/UserDetailsResponse";
 
 export interface LoginFormProps{
     width: string
@@ -19,6 +25,15 @@ const ControlContainer = styled.div`
     justify-content: center;
 `
 
+const ErrorContainer = styled(ControlContainer)`
+    background-color: rgba(255,0,0,0.4);
+    border-radius: 4px;
+`
+
+const ErrorParagraph = styled.p`
+    color: rgba(0,0,0,0.8);
+`
+
 const StyledButton = styled(Button)`
     background-color: rgba(0,0,255,1);
 `
@@ -26,6 +41,8 @@ const StyledButton = styled(Button)`
 const LoginForm: FC<LoginFormProps> = ({width}) => {
     const [values, setValues] = useState<LoginValues>({username: '', password:''});
     const [showPassword, setShowPassword] = useState(false);
+    const [error, setError] = useState('');
+    const navigate = useNavigate();
 
     const handleClickShowPassword = () => setShowPassword((show) => !show);
 
@@ -40,12 +57,40 @@ const LoginForm: FC<LoginFormProps> = ({width}) => {
             [name]: value
         })
     }
+
+   function resetError(){
+        setError('')
+   }
+
+    async function handleLogin() {
+        if(!values.username || !values.password ){
+            return;
+        }
+        
+        const loginRequest: LoginRequest = {
+            username: values.username, 
+            password: values.password
+        }
+
+        login(loginRequest).then((response: LoginResponse | null) => {
+            if(response){
+                setError('');
+                localStorage.setItem('sap-bakery-token', response.token);
+                getUserFromToken().then((user: UserDetailsResponse) => {
+                    navigate("/");
+                });                
+            }
+            else{
+                setError('Wrong username or password');
+            }
+        });
+    }
     
     return (
         <form>
             <Grid container direction="column" justifyContent="center">
                 <ControlContainer> 
-                    <TextField sx={{width: width}} label="Username" name="username" value={values.username} onChange={handleInputChange}/>
+                    <TextField sx={{width: width}} label="Username" name="username" value={values.username} onClick={resetError} onChange={handleInputChange}/>
                 </ControlContainer>
                 <ControlContainer> 
                     <FormControl sx={{ width: width }} variant="outlined">
@@ -53,6 +98,10 @@ const LoginForm: FC<LoginFormProps> = ({width}) => {
                     <OutlinedInput
                         id="password"
                         type={showPassword ? 'text' : 'password'}
+                        name="password"
+                        value={values.password}
+                        onClick={resetError}
+                        onChange={handleInputChange}
                         endAdornment={
                         <InputAdornment position="end">
                             <IconButton
@@ -69,8 +118,11 @@ const LoginForm: FC<LoginFormProps> = ({width}) => {
                     />
                     </FormControl>
                 </ControlContainer>
+                <ErrorContainer>
+                    {error!=='' && <ErrorParagraph>{error}</ErrorParagraph>}  
+                </ErrorContainer>
                 <ControlContainer>
-                    <StyledButton variant="contained" sx={{width: width}}>Log in</StyledButton>
+                    <StyledButton variant="contained" sx={{width: width}} onClick={handleLogin}>Log in</StyledButton>
                 </ControlContainer>
             </Grid>
         </form>
