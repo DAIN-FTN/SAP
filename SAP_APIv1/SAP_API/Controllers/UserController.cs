@@ -50,11 +50,12 @@ namespace SAP_API.Controllers
         }
 
         [HttpGet]
-        public IActionResult GetAll([FromQuery] string name)
+        [Authorize(Policy = Policies.Admin)]
+        public IActionResult GetAll([FromQuery] string name, [FromQuery] bool? active)
         {
             try
             {
-                List<UserResponse> response = _userService.GetAll(name);
+                List<UserResponse> response = _userService.GetAll(name, active);
 
                 if (response == null || response.Count == 0)
                     return NoContent();
