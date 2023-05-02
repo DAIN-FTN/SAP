@@ -5,18 +5,15 @@ const baseUrl = `${config.httpProtocol}${config.serverAddress}${config.port}`;
 
 export async function getData<T>(url: string, token?: string): Promise<T> {
     let rawResponse: Response
-    
+
     rawResponse = await fetch(`${baseUrl}${url}`, {
         headers: {
             'authorization': getUserToken(token)
         }
     });
 
-    if (rawResponse.status === 401) {
-        console.error("Unauthorized access. Token was not provided or is invalid.", getUserToken(token));
-    
-        window.dispatchEvent(new CustomEvent("unauthorized"));
-    }
+    if (rawResponse.status === 401)
+        handleUnauthorizedAccess();
 
     const jsonResponse = await rawResponse.json();
 
@@ -61,6 +58,8 @@ function handleUnauthorizedAccess() {
 
     var error = new ResponseError(message);
     error.setStatus(401);
+
+    window.dispatchEvent(new CustomEvent("unauthorized"));
 
     throw error;
 }
