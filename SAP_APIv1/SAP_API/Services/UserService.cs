@@ -36,15 +36,24 @@ namespace SAP_API.Services
             return verified ? user : null;
         }
 
-        public List<UserResponse> GetAll(string name)
+        public List<UserResponse> GetAll(string name, bool? active)
         {
+            List<User> users;
+
             if (String.IsNullOrEmpty(name))
             {
-                List<User> users = (List<User>)_userRepository.GetAll();
-                return UserMapper.UserListToUserResponseList(users);
+                users = (List<User>)_userRepository.GetAll();
+            }
+            else
+            {
+                users = (_userRepository.GetUsersByUsername(name));
+
             }
 
-            return UserMapper.UserListToUserResponseList(_userRepository.GetUsersByUsername(name));
+            if (active != null)
+                users = users.FindAll(u => u.Active == active);
+
+            return UserMapper.UserListToUserResponseList(users);
         }
 
         public UserDetailsResponse GetById(Guid userId)
@@ -77,11 +86,20 @@ namespace SAP_API.Services
             if (!user.Username.Equals(body.Username))
                 CheckIfUsernameUnique(body.Username);
             CheckIfRoleValid((Guid)body.RoleId);
+            if (user.Active && (bool)!body.Active)
+                CheckIfUserCanBeDeactivated(user);
 
             UpdateUserFields(body, user);
             User updatedUser = _userRepository.Update(user);
             return UserMapper.UserToUpdateUserResponse(updatedUser);
 
+        }
+
+        private void CheckIfUserCanBeDeactivated(User user)
+        {
+            List<BakingProgram> bakingProgramsCurrentlyPreparedByUser = user.BakingProgramsMade.FindAll(bp => bp.Status.Equals(BakingProgramStatus.Preparing));
+            if (bakingProgramsCurrentlyPreparedByUser.Count > 0)
+                throw new UnableToDeactivateUserException("Unable to deactivate user. There are programs user is preparing.");
         }
 
         private void UpdateUserFields(UpdateUserRequest body, User user)

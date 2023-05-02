@@ -13,5 +13,6 @@ namespace SAP_API.DTOs.Responses
         public Guid RoleId { get; set; }
         public string Role { get; set; }
         public List<PreparedBakingProgramResponse> PreparedPrograms { get; set; }
+        public bool? Active { get; set; }
     }
 }

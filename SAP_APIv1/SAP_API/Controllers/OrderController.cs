@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using SAP_API.DTOs;
@@ -17,6 +18,7 @@ namespace SAP_API.Controllers
 {
     [ApiController]
     [Route("api/orders")]
+    [Authorize]
     public class OrderController : ControllerBase
     {
         private readonly IOrderTransactionsOrchestrator _orderCreationOrchestrator;
