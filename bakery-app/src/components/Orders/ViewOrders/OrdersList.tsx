@@ -64,7 +64,7 @@ const OrdersList: FC<OrdersListProps> = ({ setSelectedOrderId }) => {
                 <TextField id="standard-basic" label="Name" variant="standard" fullWidth sx={{ paddingRight: '0px' }}
                     onChange={(e) => orderNameSearchChangeHandler(e.target.value)} />
             </SearchWrapper> */}
-            {orderResults.length === 0 && <p>No products meet the seach criteria</p>}
+            {orderResults.length === 0 && <p>No products meet the search criteria</p>}
             {orderResults.length > 0 && <TableContainer component={Paper}>
                 <Table sx={{ minWidth: 150 }} size="small" aria-label="simple table">
                     <TableHead>

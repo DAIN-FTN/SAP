@@ -4,6 +4,7 @@ import styled from "styled-components";
 import BasicProductInfo from "./Models/BasicProductInfo";
 import TextField from "@mui/material/TextField";
 import Alert from "@mui/material/Alert/Alert";
+import { SxProps } from "@mui/material";
 
 export interface BasicProductInfoProps {
     setBasicProductInfo: (basicProductInfo: BasicProductInfo | null) => void;
@@ -12,6 +13,16 @@ export interface BasicProductInfoProps {
 const Label = styled.p`
     font-size: 24px;
 `;
+
+const textFieldStyleProps: SxProps = {
+    marginTop: '4px',
+    marginBottom: '8px'
+};
+
+const alertStyleProps: SxProps = {
+    marginBottom: '8px',
+    width: 'fit-content'
+};
 
 const BasicProductInfoForm: FC<BasicProductInfoProps> = ({ setBasicProductInfo }) => {
     const [name, setName] = useState<string>();
@@ -33,58 +44,69 @@ const BasicProductInfoForm: FC<BasicProductInfoProps> = ({ setBasicProductInfo }
                 bakingTimeInMins,
                 bakingTempInC,
                 size
-            }); 
-            console.log("Basic product info set");
+            });
         }
     }, [name, bakingTimeInMins, bakingTempInC, size]);
 
     function setNameHandler(name: string) {
-        if (name.length < 3) {
-            setNameError("Name must be at least 3 characters long");
-        } else {
+        if (name.length > 3) {
+            setName(name);
             setNameError(null);
+        } else {
+            setNameError("Name must be at least 3 characters long");
         }
     }
 
-    function setBakingTimeInMinsHandler(bakingTimeInMins: number) {
-        if (bakingTimeInMins < 0) {
-            setBakingTimeInMinsError("Baking time must be a positive number");
-        } else {
+    function setBakingTimeInMinsHandler(bakingTimeInMins: string) {
+        if (isPositiveInteger(bakingTimeInMins)) {
+            const numericValue = parseInt(bakingTimeInMins);
+            setBakingTimeInMins(numericValue);
             setBakingTimeInMinsError(null);
+        } else {
+            setBakingTimeInMinsError("Baking time must be a positive number");
         }
     }
 
-    function setBakingTempInCHandler(bakingTempInC: number) {
-        if (bakingTempInC < 0) {
-            setBakingTempInCError("Baking temperature must be a positive number");
-        } else {
+    function setBakingTempInCHandler(bakingTempInC: string) {
+        if (isPositiveInteger(bakingTempInC)) {
+            const numericValue = parseInt(bakingTempInC);
+            setBakingTempInC(numericValue);
             setBakingTempInCError(null);
+        } else {
+            setBakingTempInCError("Baking temperature must be a positive number");
         }
     }
 
-    function setSizeHandler(size: number) {
-        if (size < 0) {
-            setSizeError("Size must be a positive number");
-        } else {
+    function setSizeHandler(size: string) {
+        if (isPositiveInteger(size)) {
+            const numericValue = parseInt(size);
+            setSize(numericValue);
             setSizeError(null);
+        } else {
+            setSizeError("Size must be a positive number");
         }
+    }
+
+    function isPositiveInteger(str: string): boolean {
+        const num = parseInt(str, 10);
+        return !isNaN(num) && num.toString() === str && num > 0;
     }
 
     return (
         <>
             <Label>Basic product info</Label>
 
-            <TextField id="id1" label="Name" variant="standard" sx={{ marginBottom: '16px' }} fullWidth onChange={(e) => setNameHandler(e.target.value)} />
-            {nameError && <Alert severity="error" sx={{ marginBottom: '16px' }}>{nameError}</Alert>}
-            
-            <TextField id="id2" label="Baking time in minutes" variant="standard" fullWidth onChange={(e) => setBakingTimeInMinsHandler(parseInt(e.target.value))} />
-            {bakingTimeInMinsError && <Alert severity="error" sx={{ marginBottom: '16px' }}>{bakingTimeInMinsError}</Alert>}
+            <TextField id="id1" label="Name" variant="standard" sx={textFieldStyleProps} fullWidth onChange={(e) => setNameHandler(e.target.value)} />
+            {nameError && <Alert severity="error" sx={alertStyleProps}>{nameError}</Alert>}
 
-            <TextField id="id3" label="Baking temperature in °C" variant="standard" fullWidth onChange={(e) => setBakingTempInCHandler(parseInt(e.target.value))} />
-            {bakingTempInCError && <Alert severity="error" sx={{ marginBottom: '16px' }}>{bakingTempInCError}</Alert>}
+            <TextField id="id2" label="Baking time in minutes" variant="standard" sx={textFieldStyleProps} fullWidth onChange={(e) => setBakingTimeInMinsHandler(e.target.value)} />
+            {bakingTimeInMinsError && <Alert severity="error" sx={alertStyleProps}>{bakingTimeInMinsError}</Alert>}
 
-            <TextField id="id4" label="Size" variant="standard" fullWidth onChange={(e) => setSizeHandler(parseInt(e.target.value))} />
-            {sizeError && <Alert severity="error" sx={{ marginBottom: '16px' }}>{sizeError}</Alert>}
+            <TextField id="id3" label="Baking temperature in °C" variant="standard" sx={textFieldStyleProps} fullWidth onChange={(e) => setBakingTempInCHandler(e.target.value)} />
+            {bakingTempInCError && <Alert severity="error" sx={alertStyleProps}>{bakingTempInCError}</Alert>}
+
+            <TextField id="id4" label="Size" variant="standard" sx={textFieldStyleProps} fullWidth onChange={(e) => setSizeHandler(e.target.value)} />
+            {sizeError && <Alert severity="error" sx={alertStyleProps}>{sizeError}</Alert>}
         </>
     );
 };

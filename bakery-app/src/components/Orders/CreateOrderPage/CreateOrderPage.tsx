@@ -111,7 +111,7 @@ const CreateOrderPage: FC = () => {
             <Panel>
                 {orderProducts.length > 0 && <CheckDeliveryTime orderProducts={orderProducts} setCreationPossible={setCreationPossible} setDeliveryTime={setDeliveryTime} />}
                 {creationPossible && <CustomerForm setCustomer={setCustomer} />}
-                {customer && <Button variant="contained" onClick={createOrderHandler}>Create order</Button>}
+                {customer && <Button variant="contained" onClick={createOrderHandler} sx={{marginTop: '16px'}}>Create order</Button>}
             </Panel>
         </Container>
     );

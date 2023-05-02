@@ -55,7 +55,7 @@ const ProductSearch: FC<ProductSearchProps> = ({ requestedQuantityChangeHandler 
                 <TextField id="standard-basic" label="Name" variant="standard" fullWidth sx={{ paddingRight: '0px' }}
                     onChange={(e) => productNameSearchChangeHandler(e.target.value)} />
             </SearchWrapper>
-            {productSearchResults.length === 0 && <p>No products meet the seach criteria</p>}
+            {productSearchResults.length === 0 && <p>No products meet the search criteria</p>}
             {productSearchResults.length > 0 && <TableContainer component={Paper} sx={{ marginTop: '16px' }}>
                 <Table sx={{ minWidth: 150 }} size="small" aria-label="simple table">
                     <TableHead>
