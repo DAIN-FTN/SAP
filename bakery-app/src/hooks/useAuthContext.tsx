@@ -27,7 +27,10 @@ export const useAuthContext = () => {
 
         if (response) {
             const token = response.token;
-            const userDetails: UserDetailsResponse | null = await getUserFromToken(token);
+            const userDetails = await getUserFromToken(token);
+
+            if (!userDetails) throw Error('User details not found');
+
             const loggedInUser: User = {
                 id: userDetails.id,
                 roleId: userDetails.roleId,
@@ -36,7 +39,7 @@ export const useAuthContext = () => {
                 username: userDetails.username
             }
             addUserInfo(loggedInUser);
-
+            return loggedInUser;
         } else {
             removeUserInfo();
         }
@@ -55,7 +58,7 @@ export const useAuthContext = () => {
 
     const removeUserInfo = () => {
         setUser(null);
-        localStorage.setItem('sap-bakery-user', '');
+        localStorage.removeItem('sap-bakery-user');
     };
 
     return { user, login, logout };

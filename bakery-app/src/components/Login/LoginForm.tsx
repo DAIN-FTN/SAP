@@ -77,14 +77,22 @@ const LoginForm: FC<LoginFormProps> = ({ width }) => {
             password: values.password
         }
 
-        const loggedInUser = await login(loginRequest);
+        // const loggedInUser = await login(loginRequest);
 
-        if (loggedInUser) {
+        // if (loggedInUser) {
+        //     setError('');
+        //     navigate("/");
+        // } else {
+        //     setError('Wrong username or password');
+        // }
+
+        login(loginRequest).then((loggedInUser) => {
             setError('');
             navigate("/");
-        } else {
+        }).catch((errorResponse) => {
+            console.error('LoginForm.handleLogin()', errorResponse);
             setError('Wrong username or password');
-        }
+        });
     }
 
     return (

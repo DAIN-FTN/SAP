@@ -8,15 +8,16 @@ export async function postLogin(loginRequest: LoginRequest): Promise<LoginRespon
         const response = await postData<LoginResponse>(`/api/auth/login`, loginRequest);
         return response;
     } catch (error) {
+        console.error("Unable to login", error);
         return null as unknown as LoginResponse;
     }
 }
 
-export async function getUserFromToken(token: string): Promise<UserDetailsResponse> {
+export async function getUserFromToken(token: string): Promise<UserDetailsResponse | null> {
     try {
-        const response = await getData<UserDetailsResponse>(`/api/auth/Me`, token);
-        return response;
+        return await getData<UserDetailsResponse>(`/api/auth/Me`, token);
     } catch (error) {
+        console.error("Unable to get user from token", error);
         return null as unknown as UserDetailsResponse;
     }
 }
