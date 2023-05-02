@@ -8,6 +8,28 @@ import Inventory2RoundedIcon from '@mui/icons-material/Inventory2Rounded';
 import BakeryDiningRoundedIcon from '@mui/icons-material/BakeryDiningRounded';
 import { ReceiptLongRounded } from "@mui/icons-material";
 import { useAuthContext } from "../../hooks/useAuthContext";
+import { useNavigate } from "react-router-dom";
+
+
+const StyledButton = styled.div`
+    display: flex;
+    flex-direction: column;
+    background-color: #DC3F3F;
+    border: none;
+    width: 100%;
+    padding: 10px;
+    color: #fff;
+    box-sizing: border-box;
+    align-items: center;
+    transition: background-color 0.1s ease-in-out;
+    text-align: center;
+
+    &:hover {
+        cursor: pointer;
+        background-color: #ce3939;
+    }
+`;
+
 
 const Container = styled.div`
     display: flex;
@@ -58,12 +80,19 @@ const HiddenLogoutContent = styled.div`
 `;
 
 const NavMenu: FC = () => {
-    const { user } = useAuthContext();
-
+    const { user, logout } = useAuthContext();
+    const navigate = useNavigate();
 
     useEffect(() => {
         console.log("useEffect in NavMenu, user: ", user);
-      }, [user]);
+        if(!user)
+            navigate('/login');
+    }, [user]);
+     
+      
+    function handleLogout(){
+        logout();
+    }
 
     return (
         <Container>
@@ -78,7 +107,7 @@ const NavMenu: FC = () => {
                 <AccountCircleIcon sx={{ color: '#fff', fontSize: '45px', position: 'absolute', top: '-23px', backgroundColor: '#DC3F3F', borderRadius: '50px' }} />
                 <UsernameLabel>John Smith</UsernameLabel>
                 <HiddenLogoutContent>
-                    <NavMenuButton to='logout' name='Logout' icon={null} />
+                    <StyledButton onClick={handleLogout}>Logout</StyledButton>
                 </HiddenLogoutContent>
             </BottomNavigation>
         </Container>
