@@ -6,6 +6,7 @@ import { getDetails } from "../../../services/OrderService";
 import styled from "styled-components";
 import { DateUtils } from "../../../services/Utils";
 import { OrderStatus } from "../../../models/Enums/OrderStatus";
+import OrderDetailsProductsList from "./OrderDatailsProductsList";
 
 export interface OrderDetailsViewProps {
     orderId: string | null;
@@ -15,6 +16,10 @@ const Container = styled.div`
     padding: 8px;
     display: flex;
     flex-direction: column;
+`;
+
+const Label = styled.p`
+    font-size: 24px;
 `;
 
 const PropertyLabel = styled.p`
@@ -52,12 +57,16 @@ const OrderDetailsView: FC<OrderDetailsViewProps> = ({ orderId }) => {
         
     return (
         <Container>
+            <Label>Order details</Label>
+            
             <PropertyLabel>Id</PropertyLabel>
             <PropertyValue>{orderDetails.id}</PropertyValue>
             <PropertyLabel>Should be done at</PropertyLabel>
             <PropertyValue>{DateUtils.getMeaningfulDate(orderDetails.shouldBeDoneAt)}</PropertyValue>
             <PropertyLabel>Status</PropertyLabel>
             <PropertyValue>{OrderStatus[orderDetails.status]}</PropertyValue>
+
+            <OrderDetailsProductsList products={orderDetails.products} />
         </Container>
     );
 };
