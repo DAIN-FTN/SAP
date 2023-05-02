@@ -1,4 +1,5 @@
 ﻿
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -15,6 +16,7 @@ namespace SAP_API.Controllers
 {
     [ApiController]
     [Route("api/stocked-products")]
+    [Authorize]
     public class StockedProductController: ControllerBase
     {
         private readonly IStockedProductService _stockedProductService;

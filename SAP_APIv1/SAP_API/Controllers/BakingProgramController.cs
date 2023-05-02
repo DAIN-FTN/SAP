@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using SAP_API.DTOs;
@@ -14,6 +15,7 @@ namespace SAP_API.Controllers
 {
     [ApiController]
     [Route("api/baking-programs")]
+    [Authorize]
     public class BakingProgramController : ControllerBase
     {
         private readonly IBakingProgramService _bakingProgramService;

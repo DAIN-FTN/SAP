@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using SAP_API.DTOs.Responses.StockLocation;
 using SAP_API.Services;
@@ -9,6 +10,7 @@ namespace SAP_API.Controllers
 {
     [ApiController]
     [Route("api/stock-locations")]
+    [Authorize]
     public class StockLocationController: ControllerBase
     {
         private readonly IStockLocationService _stockLocationService;
