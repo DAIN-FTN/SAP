@@ -86,11 +86,20 @@ namespace SAP_API.Services
             if (!user.Username.Equals(body.Username))
                 CheckIfUsernameUnique(body.Username);
             CheckIfRoleValid((Guid)body.RoleId);
+            if (user.Active && (bool)!body.Active)
+                CheckIfUserCanBeDeactivated(user);
 
             UpdateUserFields(body, user);
             User updatedUser = _userRepository.Update(user);
             return UserMapper.UserToUpdateUserResponse(updatedUser);
 
+        }
+
+        private void CheckIfUserCanBeDeactivated(User user)
+        {
+            List<BakingProgram> bakingProgramsCurrentlyPreparedByUser = user.BakingProgramsMade.FindAll(bp => bp.Status.Equals(BakingProgramStatus.Preparing));
+            if (bakingProgramsCurrentlyPreparedByUser.Count > 0)
+                throw new UnableToDeactivateUserException("Unable to deactivate user. There are programs user is preparing.");
         }
 
         private void UpdateUserFields(UpdateUserRequest body, User user)

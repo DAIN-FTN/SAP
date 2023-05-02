@@ -2,8 +2,8 @@ import { useEffect, useState } from "react";
 import { FC } from "react";
 import styled from "styled-components";
 import PrepareForOvenList from "./PrepareForOvenList";
-import { fetchAllBakingPrograms } from "../../services/BakingProgramService";
-import AllBakingPrograms from "../../models/AllBakingPrograms";
+import { getAll } from "../../services/BakingProgramService";
+import AllBakingPrograms from "../../models/Responses/AllBakingProgramsResponse";
 import PreparingList from "./PreparingList";
 import BakingList from "./BakingList";
 import DoneList from "./DoneList";
@@ -44,20 +44,20 @@ const HomePage: FC = () => {
 
     useEffect(() => {
         console.log('useEffect() in HomePage');
-        fetchAllBakingPrograms().then((allBakingPrograms) => { 
+        getAll().then((allBakingPrograms) => { 
             console.log('fetch finished for fetchAllBakingPrograms() in HomePage');
             setAllBakingPrograms(allBakingPrograms);
         });
     }, []);
 
     function refreshView () {
-        fetchAllBakingPrograms().then((allBakingPrograms) => { 
+        getAll().then((allBakingPrograms) => { 
             console.log('fetch finished for fetchAllBakingPrograms() in HomePage');
             setAllBakingPrograms(allBakingPrograms);
         });
     }
 
-    if (allBakingPrograms == undefined || allBakingPrograms == null) {
+    if (allBakingPrograms === undefined || allBakingPrograms === null) {
         return (
             <Container>
                 {/* <ErrorMessage>No baking programs available</ErrorMessage> */}
