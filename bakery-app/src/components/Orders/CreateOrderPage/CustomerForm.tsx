@@ -32,7 +32,7 @@ const CustomerForm: FC<CustomerFormProps> = ({ setCustomer }) => {
     const [telephone, setTelephone] = useState<string>("");
 
     const [nameError, setNameError] = useState<string | null>(null);
-    const [addressError, setAddressError] = useState<string | null>(null);
+    const [emailError, setAddressError] = useState<string | null>(null);
     const [telephoneError, setTelephoneError] = useState<string | null>(null);
 
     useEffect(() => {
@@ -81,8 +81,8 @@ const CustomerForm: FC<CustomerFormProps> = ({ setCustomer }) => {
             <TextField id="standard-basic" label="Name" variant="standard" sx={textFieldStyleProps} fullWidth onChange={(e) => setFullNameHandler(e.target.value)} />
             {nameError && <Alert severity="error" sx={alertStyleProps}>{nameError}</Alert>}
 
-            <TextField id="standard-basic" label="Address" variant="standard" sx={textFieldStyleProps} fullWidth onChange={(e) => setEmailHandler(e.target.value)} />
-            {addressError && <Alert severity="error" sx={alertStyleProps}>{addressError}</Alert>}
+            <TextField id="standard-basic" label="Email" variant="standard" sx={textFieldStyleProps} fullWidth onChange={(e) => setEmailHandler(e.target.value)} />
+            {emailError && <Alert severity="error" sx={alertStyleProps}>{emailError}</Alert>}
 
             <TextField id="standard-basic" label="Telephone" variant="standard" sx={textFieldStyleProps} fullWidth onChange={(e) => setTelephoneHandler(e.target.value)} />
             {telephoneError && <Alert severity="error" sx={alertStyleProps}>{telephoneError}</Alert>}
