@@ -1,9 +1,11 @@
-import { FC } from "react";
+import { FC, useState } from "react";
 import List from "@mui/material/List";
-import { Label } from "@mui/icons-material";
 import TextField from "@mui/material/TextField";
 import { getAvailable } from "../../../services/BakingProgramService";
 import ProductRequestItem from "./Models/ProductRequestItem";
+import styled from "styled-components";
+import Alert from "@mui/material/Alert/Alert";
+import { SxProps } from "@mui/material/styles";
 
 export interface CheckDeliveryTimeProps {
     orderProducts: ProductRequestItem[];
@@ -11,19 +13,29 @@ export interface CheckDeliveryTimeProps {
     setCreationPossible: (creationPossible: boolean) => void;
 }
 
+const Label = styled.p`
+    font-size: 24px;
+`;
+
+const alertStyleProps: SxProps = {
+    marginTop: '12px',
+    width: 'fit-content'
+};
+
 const CheckDeliveryTime: FC<CheckDeliveryTimeProps> = ({ orderProducts, setDeliveryTime, setCreationPossible }) => {
+    const [dateInPastError, setDateInPastError] = useState<boolean>(false);
     
     function setDateTimeHandler(value: any) {
         let dateTime = new Date(value);
 
-        console.log("setDateTimeHandler", dateTime);
-
         getAvailable(dateTime, mapProductRequestItemsToProductRequest(orderProducts))
             .then((availableProgramsResponse) => {
-                console.log('fetch finished for getAvailable() in CreateOrderPage', availableProgramsResponse);
                 const createPossible = availableProgramsResponse.allProductsCanBeSuccessfullyArranged && availableProgramsResponse.isThereEnoughStockedProducts;
                 setCreationPossible(createPossible);
+                setDateInPastError(false);
                 setDeliveryTime(createPossible ? dateTime : null);
+            }).catch((error) => {
+                setDateInPastError(true);
             });
     };
 
@@ -35,15 +47,6 @@ const CheckDeliveryTime: FC<CheckDeliveryTimeProps> = ({ orderProducts, setDeliv
             };
         });
     }
-
-    // console.log('props.bakingTimeSlots', props.bakingTimeSlots)
-
-    // if (props.bakingTimeSlots.length === 0)
-    //     return (
-    //         <>
-    //             <p>No baking time slots available</p>
-    //         </>
-    //     );
 
     return (
         <>
@@ -59,7 +62,8 @@ const CheckDeliveryTime: FC<CheckDeliveryTimeProps> = ({ orderProducts, setDeliv
                     }}
                     onChange={(e) => setDateTimeHandler(e.target.value)}
                 />
-                <Label>Available baking time slots</Label>
+                {dateInPastError && <Alert severity="error" sx={alertStyleProps}>The delivery date should be in the future.</Alert>}
+                {/* <Label>Available baking time slots</Label> */}
                 {/* <BakingTimeSlotsList props={{ bakingTimeSlots }} /> */}
                 {/* {props.bakingTimeSlots.map((bakingTimeSlot) => (
                     <ListItem disablePadding key={bakingTimeSlot.id}
