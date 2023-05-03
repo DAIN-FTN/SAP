@@ -10,7 +10,6 @@ import { ReceiptLongRounded } from "@mui/icons-material";
 import { useAuthContext } from "../../hooks/useAuthContext";
 import { useNavigate } from "react-router-dom";
 
-
 const StyledButton = styled.div`
     display: flex;
     flex-direction: column;
@@ -29,7 +28,6 @@ const StyledButton = styled.div`
         background-color: #ce3939;
     }
 `;
-
 
 const Container = styled.div`
     display: flex;
@@ -89,7 +87,6 @@ const NavMenu: FC = () => {
             navigate('/login');
     }, [user]);
      
-      
     function handleLogout(){
         logout();
     }
@@ -101,11 +98,11 @@ const NavMenu: FC = () => {
                 <NavMenuButton to='order/view' name='View orders' icon={<ReceiptLongRounded />} />
                 <NavMenuButton to='order/create' name='Create new order' icon={<ProductionQuantityLimitsRoundedIcon />} />
                 <NavMenuButton to='products' name='Products' icon={<Inventory2RoundedIcon />} />
-                <NavMenuButton to='products/create' name='Create new product' icon={<BakeryDiningRoundedIcon />} />
+                { user?.role == "Admin" && <NavMenuButton to='products/create' name='Create new product' icon={<BakeryDiningRoundedIcon />} /> }
             </NavLinks>
             <BottomNavigation>
                 <AccountCircleIcon sx={{ color: '#fff', fontSize: '45px', position: 'absolute', top: '-23px', backgroundColor: '#DC3F3F', borderRadius: '50px' }} />
-                <UsernameLabel>John Smith</UsernameLabel>
+                <UsernameLabel>{user?.username}</UsernameLabel>
                 <HiddenLogoutContent>
                     <StyledButton onClick={handleLogout}>Logout</StyledButton>
                 </HiddenLogoutContent>

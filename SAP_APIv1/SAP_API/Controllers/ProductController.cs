@@ -85,6 +85,7 @@ namespace SAP_API.Controllers
         }
 
         [HttpPost]
+        [Authorize(Policy = Policies.Admin)]
         public IActionResult CreateProduct([FromBody] CreateProductRequest body, [FromServices] IOptions<ApiBehaviorOptions> apiBehaviorOptions)
         {
             try

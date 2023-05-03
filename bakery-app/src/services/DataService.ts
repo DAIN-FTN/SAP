@@ -33,7 +33,8 @@ export async function postData<T>(url: string, payload: any): Promise<T> {
         method: "POST",
         body: JSON.stringify(payload),
         headers: {
-            'content-type': 'application/json'
+            'content-type': 'application/json',
+            'authorization': getUserToken()
         }
     });
 
@@ -95,7 +96,8 @@ export async function putData<T>(url: string, payload: any = null): Promise<T> {
         method: "PUT",
         body: JSON.stringify(payload),
         headers: {
-            'content-type': 'application/json'
+            'content-type': 'application/json',
+            'authorization': getUserToken()
         }
     });
 
@@ -114,7 +116,8 @@ export async function putDataWithoutResponse(url: string, payload: any = null) {
         method: "PUT",
         body: JSON.stringify(payload),
         headers: {
-            'content-type': 'application/json'
+            'content-type': 'application/json',
+            'authorization': getUserToken()
         }
     });
 

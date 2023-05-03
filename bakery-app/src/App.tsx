@@ -20,7 +20,7 @@ const SecondRow = styled.div`
 `;
 
 function App() {
-    const { logout } = useAuthContext();
+    const { user, logout } = useAuthContext();
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -28,6 +28,10 @@ function App() {
             logout();
             navigate("/login");
         });
+
+        if (!user) {
+            navigate("/login");
+        }
     }, []);
 
     return (
