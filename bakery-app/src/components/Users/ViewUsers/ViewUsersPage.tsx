@@ -1,6 +1,8 @@
-import React, { FC } from 'react';
+import React, { FC, useEffect, useState } from 'react';
 import styled from 'styled-components';
 import UsersList from './UsersList';
+import UserDetailsView from './UserDetailsView';
+import { useParams } from 'react-router-dom';
 
 const Container = styled.div`
     width: 100%;
@@ -24,15 +26,19 @@ const Panel = styled.div`
 `;
 interface UsersProps { }
 
-const ViewUsersPage: FC<UsersProps> = () => (
-    <Container>
+const ViewUsersPage: FC<UsersProps> = () => {
+    const {userId} = useParams() 
+    console.log(userId)
+    const [selectedUserId, setUserId] = useState<string | null>(userId? userId : null);
+
+    return <Container>
         <Panel>
-            <UsersList />
+            <UsersList  setSelectedUserId={setUserId} />
         </Panel>
-        {/* <Panel>
-            <OrderDetailsView orderId={selectedOrderId} />
-        </Panel> */}
+        <Panel>
+            <UserDetailsView userId={selectedUserId} />
+        </Panel>
     </Container>
-);
+};
 
 export default ViewUsersPage;

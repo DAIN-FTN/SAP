@@ -10,7 +10,7 @@ import { Paper, TableBody, TableContainer, TextField } from "@mui/material";
 import { DateUtils } from "../../../services/Utils";
 
 export interface UsersListProps {
-    setSelectedUserId?: (userId: string) => void;
+    setSelectedUserId: (userId: string) => void;
 }
 
 const Container = styled.div`
@@ -64,7 +64,7 @@ const UsersList: FC<UsersListProps> = ({ setSelectedUserId }) => {
                     </TableHead>
                     <TableBody>
                         {userResults.map((user) => (
-                            <TableRowStyled key={user.id} sx={{ '&:last-child td, &:last-child th': { border: 0 } }} onClick={() => setSelectedUserId!(user.id)}>
+                            <TableRowStyled key={user.id} sx={{ '&:last-child td, &:last-child th': { border: 0 } }} onClick={() => setSelectedUserId(user.id)}>
                                 <TableCell component="th" scope="row">{user.username}</TableCell>
                                 <TableCell component="th" scope="row">{user.role}</TableCell>
                                 <TableCell component="th"  scope="row">{user.active?'Active': 'Inactive'}</TableCell>
