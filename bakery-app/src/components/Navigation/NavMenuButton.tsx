@@ -8,7 +8,7 @@ export interface ButtonProps {
     icon: React.ReactNode;
 }
 
-const StyledButton = styled.div`
+export const StyledButton = styled.div`
     display: flex;
     flex-direction: column;
     background-color: #DC3F3F;

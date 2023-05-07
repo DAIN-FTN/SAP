@@ -6,7 +6,7 @@ import { getDetails } from "../../../services/OrderService";
 import styled from "styled-components";
 import { DateUtils } from "../../../services/Utils";
 import { OrderStatus } from "../../../models/Enums/OrderStatus";
-import OrderDetailsProductsList from "./OrderDatailsProductsList";
+import OrderDetailsProductsList from "./OrderDetailsProductsList";
 
 export interface OrderDetailsViewProps {
     orderId: string | null;
@@ -50,6 +50,8 @@ const OrderDetailsView: FC<OrderDetailsViewProps> = ({ orderId }) => {
         });
 
     }, [orderId]);
+
+
 
     if (orderId === null || orderDetails === null) {
         return <p>No order details to show</p>;

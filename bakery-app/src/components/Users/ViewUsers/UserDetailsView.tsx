@@ -1,7 +1,8 @@
 import { FC, useEffect, useState } from "react";
+import styled from "styled-components";
 import UserDetailsResponse from "../../../models/Responses/User/UserDetailsResponse";
 import { getDetails } from "../../../services/UserService";
-import styled from "styled-components";
+import UserBakingProgramsList from "./UserBakingProgramsList";
 
 type UserDetailsViewProps = {
     userId: string | null;
@@ -45,6 +46,7 @@ const UserDetailsView : FC<UserDetailsViewProps> = ({ userId }) => {
 
     }, [userId]);
 
+
     if (userId === null || user === null) {
         return <p>No user details to show</p>;
     }
@@ -60,6 +62,7 @@ const UserDetailsView : FC<UserDetailsViewProps> = ({ userId }) => {
             <PropertyValue>{user.role}</PropertyValue>
             <PropertyLabel>Status</PropertyLabel>
             <PropertyValue>{user.active ? 'Active': 'Inactive'}</PropertyValue>
+            <UserBakingProgramsList bakingPrograms={user.preparedPrograms} />
         </Container>
     );
 

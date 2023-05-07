@@ -28,7 +28,6 @@ interface UsersProps { }
 
 const ViewUsersPage: FC<UsersProps> = () => {
     const {userId} = useParams() 
-    console.log(userId)
     const [selectedUserId, setUserId] = useState<string | null>(userId? userId : null);
 
     return <Container>

@@ -7,16 +7,27 @@ import styled from "styled-components";
 import UserResponse from "../../../models/Responses/User/UserResponse";
 import { getAll } from "../../../services/UserService";
 import { Paper, TableBody, TableContainer, TextField } from "@mui/material";
-import { DateUtils } from "../../../services/Utils";
+import AddIcon from '@mui/icons-material/Add';
+import { NavLink } from "react-router-dom";
 
 export interface UsersListProps {
     setSelectedUserId: (userId: string) => void;
+}
+
+const filterUsers = (users: UserResponse[], filter: string) => {
+    return users.filter(u => u.username.toLowerCase().includes(filter.toLowerCase()));
 }
 
 const Container = styled.div`
     padding: 8px;
     display: flex;
     flex-direction: column;
+`;
+
+const LabelIconWrapper = styled.div`
+    display: flex;
+    flex-direction: row;
+    align-items: center;
 `;
 
 const Label = styled.p`
@@ -28,6 +39,21 @@ const SearchWrapper = styled.div`
     flex-direction: row;
 `;
 
+
+const ActionButton = styled(NavLink)`
+display: flex;
+flex-direction: column;
+border: none;
+padding: 15px 10px 10px 10px;
+box-sizing: border-box;
+align-items: center;
+text-align: center;
+
+&:hover {
+    cursor: pointer;
+}
+`;
+
 const TableRowStyled = styled(TableRow)`
     cursor: pointer;
     &:hover {
@@ -35,22 +61,36 @@ const TableRowStyled = styled(TableRow)`
     }
 `;
 
+const AddIconCustom = styled(AddIcon)`
+    color: #DC3F3F;
+    &:hover {
+        background-color: #f5f5f5;
+    }
+`
+
 const UsersList: FC<UsersListProps> = ({ setSelectedUserId }) => {
     const [userResults, setUserResults] = useState<UserResponse[]>([]);
+    const [initialUserResults, setInitalUserResults] = useState<UserResponse[]>([]);
 
     useEffect(() => {
         getAll().then((users) => {
             setUserResults(users);
+            setInitalUserResults(users);
         });
     }, []);
 
 
     return (
         <Container>
-            <Label>Users</Label>
+            <LabelIconWrapper>
+                <Label>Users</Label>
+                <ActionButton to={'users/create'}>
+                    <AddIconCustom></AddIconCustom>
+                </ActionButton>
+            </LabelIconWrapper>
             <SearchWrapper>
                 <TextField id="standard-basic" label="Name" variant="standard" fullWidth sx={{ paddingRight: '0px' }}
-                    onChange={(e) => console.log('changed)')} />
+                    onChange={({target}) =>setUserResults(filterUsers(initialUserResults, target.value))} />
             </SearchWrapper>
             {userResults.length === 0 && <p>No users meet the search criteria</p>}
             {userResults.length > 0 && <TableContainer component={Paper}>
