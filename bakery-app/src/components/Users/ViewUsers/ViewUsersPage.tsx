@@ -3,6 +3,8 @@ import styled from 'styled-components';
 import UsersList from './UsersList';
 import UserDetailsView from './UserDetailsView';
 import { useParams } from 'react-router-dom';
+import CreateUser from '../CreateUser/CreateUser';
+import RegisterRequest from '../../../models/Requests/Users/RegisterRequest';
 
 const Container = styled.div`
     width: 100%;
@@ -29,13 +31,16 @@ interface UsersProps { }
 const ViewUsersPage: FC<UsersProps> = () => {
     const {userId} = useParams() 
     const [selectedUserId, setUserId] = useState<string | null>(userId? userId : null);
+    const [editedUser, setEditedUser] = useState<RegisterRequest | null>(null);
+    const [isCreateMode, setIsCreatemode] = useState<boolean>(false);
 
     return <Container>
         <Panel>
-            <UsersList  setSelectedUserId={setUserId} />
+            <UsersList  setSelectedUserId={setUserId} setIsCreateMode = {setIsCreatemode} />
         </Panel>
         <Panel>
-            <UserDetailsView userId={selectedUserId} />
+            { (editedUser !== null || isCreateMode) && <CreateUser registerUserRequestData={editedUser} />}
+            { editedUser === null && !isCreateMode && <UserDetailsView userId={selectedUserId} />}
         </Panel>
     </Container>
 };

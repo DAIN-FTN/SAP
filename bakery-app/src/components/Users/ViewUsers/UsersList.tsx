@@ -12,6 +12,7 @@ import { NavLink } from "react-router-dom";
 
 export interface UsersListProps {
     setSelectedUserId: (userId: string) => void;
+    setIsCreateMode: (isCreateMode: boolean) => void;
 }
 
 const filterUsers = (users: UserResponse[], filter: string) => {
@@ -40,7 +41,7 @@ const SearchWrapper = styled.div`
 `;
 
 
-const ActionButton = styled(NavLink)`
+const ActionButton = styled.div`
 display: flex;
 flex-direction: column;
 border: none;
@@ -68,9 +69,14 @@ const AddIconCustom = styled(AddIcon)`
     }
 `
 
-const UsersList: FC<UsersListProps> = ({ setSelectedUserId }) => {
+const UsersList: FC<UsersListProps> = ({ setSelectedUserId, setIsCreateMode }) => {
     const [userResults, setUserResults] = useState<UserResponse[]>([]);
     const [initialUserResults, setInitalUserResults] = useState<UserResponse[]>([]);
+
+    function rowClickedHandler (userId: string) {
+        setSelectedUserId(userId);
+        setIsCreateMode(false);
+    }
 
     useEffect(() => {
         getAll().then((users) => {
@@ -84,8 +90,8 @@ const UsersList: FC<UsersListProps> = ({ setSelectedUserId }) => {
         <Container>
             <LabelIconWrapper>
                 <Label>Users</Label>
-                <ActionButton to={'users/create'}>
-                    <AddIconCustom></AddIconCustom>
+                <ActionButton>
+                    <AddIconCustom onClick={() => setIsCreateMode(true)}></AddIconCustom>
                 </ActionButton>
             </LabelIconWrapper>
             <SearchWrapper>
@@ -104,7 +110,7 @@ const UsersList: FC<UsersListProps> = ({ setSelectedUserId }) => {
                     </TableHead>
                     <TableBody>
                         {userResults.map((user) => (
-                            <TableRowStyled key={user.id} sx={{ '&:last-child td, &:last-child th': { border: 0 } }} onClick={() => setSelectedUserId(user.id)}>
+                            <TableRowStyled key={user.id} sx={{ '&:last-child td, &:last-child th': { border: 0 } }} onClick={() => rowClickedHandler(user.id)}>
                                 <TableCell component="th" scope="row">{user.username}</TableCell>
                                 <TableCell component="th" scope="row">{user.role}</TableCell>
                                 <TableCell component="th"  scope="row">{user.active?'Active': 'Inactive'}</TableCell>

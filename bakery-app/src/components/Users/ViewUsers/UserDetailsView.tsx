@@ -48,7 +48,7 @@ const UserDetailsView : FC<UserDetailsViewProps> = ({ userId }) => {
 
 
     if (userId === null || user === null) {
-        return <p>No user details to show</p>;
+        return <p>Nothing to show</p>;
     }
 
     return (
