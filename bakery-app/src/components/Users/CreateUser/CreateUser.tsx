@@ -1,11 +1,14 @@
 import { FC, useState } from "react";
 import RegisterRequest from "../../../models/Requests/Users/RegisterRequest";
 import styled from "styled-components";
-import { Alert, MenuItem, Select, SxProps, TextField } from "@mui/material";
+import { Alert, FormControl, IconButton, Input, InputAdornment, InputLabel, MenuItem, Select, SxProps, TextField } from "@mui/material";
+import { Visibility, VisibilityOff } from "@mui/icons-material";
 
 type CreateUserProps = {
     registerUserRequestData?: RegisterRequest | null;
 };
+
+
 
 const Label = styled.p`
     font-size: 24px;
@@ -21,23 +24,54 @@ const alertStyleProps: SxProps = {
     width: 'fit-content'
 };
 
+const selectStyleProps: SxProps = {
+    marginTop: '12px',
+    marginBottom: '12px'
+};
+
+// const InputContainer = styled.div`
+//     display: flex;
+//     flex-direction: column;
+//     marginTop: '4px',
+//     marginBottom: '4px'
+// `;
+
 const CreateUser: FC<CreateUserProps> = ({registerUserRequestData}) => {
     const [username, setUsername] = useState<string>(registerUserRequestData?.username || "");
     const [password, setPassword] = useState<string>(registerUserRequestData?.password || "");
     const [role, setRole] = useState<string>(registerUserRequestData?.roleId || "");
+    const [showPassword, setShowPassword] = useState(false);
+   
 
     const [usernameError, setUsernameError] = useState<string | null>(null);
     const [passwordError, setPasswordError] = useState<string | null>(null);
     const [roleError, setRoleError] = useState<string | null>(null);
 
+    const handleClickShowPassword = () => setShowPassword((show) => !show);
+    const handleMouseDownPassword = (event: React.MouseEvent<HTMLButtonElement>) => {
+    event.preventDefault();
+     };
 
     function setUsernameHandler(username: string) {
+        if (username.length >= 3) {
+            setUsername(username);
+            setUsernameError(null);
+        } else {
+            setUsernameError("Username must be at least 3 characters long");
+        }
     };
 
     function setPasswordHandler(password: string) {
     };
 
     function setRoleHandler(role: string) {
+        if (role) {
+            setRole(role);
+            setRoleError(null);
+        } else {
+            setRoleError("Role must be selected");
+        }
+
     };
     
     return (
@@ -47,16 +81,37 @@ const CreateUser: FC<CreateUserProps> = ({registerUserRequestData}) => {
             <TextField id="standard-basic" label="Username" variant="standard" sx={textFieldStyleProps} fullWidth onChange={(e) => setUsernameHandler(e.target.value)} />
             {usernameError && <Alert severity="error" sx={alertStyleProps}>{usernameError}</Alert>}
 
-            <TextField id="standard-basic" label="Initial password" variant="standard" sx={textFieldStyleProps} fullWidth onChange={(e) => setPasswordHandler(e.target.value)} />
-            {passwordError && <Alert severity="error" sx={alertStyleProps}>{passwordError}</Alert>}
+            <FormControl fullWidth sx={textFieldStyleProps}>
+                <InputLabel htmlFor="standard-password-input">Password</InputLabel>
+                <Input
+                    id="standard-password-input"
+                    type={showPassword ? 'text' : 'password'}
+                    fullWidth
+                    sx={textFieldStyleProps}
 
+                    endAdornment={
+                        <InputAdornment position="end">
+                            <IconButton
+                                aria-label="toggle password visibility"
+                                onClick={handleClickShowPassword}
+                                onMouseDown={handleMouseDownPassword}
+                                edge="end"
+                            >
+                                {showPassword ? <VisibilityOff /> : <Visibility />}
+                            </IconButton>
+                        </InputAdornment>
+                    }
+                />
+                {passwordError && <Alert severity="error" sx={alertStyleProps}>{passwordError}</Alert>}
+            </FormControl>
+           
             <Select
-                labelId="demo-simple-select-filled-label"
-                id="demo-simple-select-filled"
+                labelId="role-select"
+                id="role-select"
                 variant="standard" 
-                sx={{marginTop: '8px', marginBottom: '8px'}}
-                // value={''}
-                // onChange={}
+                fullWidth
+                sx={selectStyleProps}
+                onChange={(e) => setRoleHandler(e.target.value as string)}
                 //TODO: get roles from backend
             >
                 <MenuItem value={"Admin"}>Admin</MenuItem>

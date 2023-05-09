@@ -42,7 +42,6 @@ const LoginForm: FC<LoginFormProps> = ({ width }) => {
     const { user, login } = useAuthContext();
 
     useEffect(() => {
-        console.log("useEffect in LoginForm, user: ", user);
         if (user) {
             setError('');
             navigate("/");
