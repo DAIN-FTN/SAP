@@ -72,6 +72,7 @@ namespace SAP_API.Services
 
             User userToCreate = UserMapper.RegisterRequestToUser(body);
             userToCreate.Password = _hasher.Hash(userToCreate.Password);
+            userToCreate.Active = true;
 
             User user = _userRepository.Create(userToCreate);
             return UserMapper.UserToRegisterResponse(user);
