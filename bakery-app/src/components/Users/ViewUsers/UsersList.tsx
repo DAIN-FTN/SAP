@@ -5,17 +5,19 @@ import TableRow from "@mui/material/TableRow";
 import { FC, useEffect, useState } from "react";
 import styled from "styled-components";
 import UserResponse from "../../../models/Responses/User/UserResponse";
-import { getAll } from "../../../services/UserService";
-import { Paper, TableBody, TableContainer, TextField } from "@mui/material";
-import AddIcon from '@mui/icons-material/Add';
-import { NavLink } from "react-router-dom";
-
+import { getAll, update } from "../../../services/UserService";
+import { CircularProgress, IconButton, Paper, TableBody, TableContainer, TextField } from "@mui/material";
+import AddOutlinedIcon from '@mui/icons-material/AddOutlined';import { NavLink } from "react-router-dom";
+import ToggleOffOutlinedIcon from '@mui/icons-material/ToggleOffOutlined';
+import ToggleOnOutlinedIcon from '@mui/icons-material/ToggleOnOutlined';
+import RegisterRequest from "../../../models/Requests/Users/RegisterRequest";
 export interface UsersListProps {
     setSelectedUserId: (userId: string) => void;
     setIsCreateMode: (isCreateMode: boolean) => void;
+    setEditedUser: (user: RegisterRequest | null) => void;
 }
 
-const filterUsers = (users: UserResponse[], filter: string) => {
+const filterUsers = (users: UserUiResponse[], filter: string) => {
     return users.filter(u => u.username.toLowerCase().includes(filter.toLowerCase()));
 }
 
@@ -62,20 +64,22 @@ const TableRowStyled = styled(TableRow)`
     }
 `;
 
-const AddIconCustom = styled(AddIcon)`
+const AddIconCustom = styled(AddOutlinedIcon)`
     color: #DC3F3F;
     &:hover {
         background-color: #f5f5f5;
     }
 `
+export type UserUiResponse = UserResponse & { isLoading?: boolean };
 
-const UsersList: FC<UsersListProps> = ({ setSelectedUserId, setIsCreateMode }) => {
-    const [userResults, setUserResults] = useState<UserResponse[]>([]);
+const UsersList: FC<UsersListProps> = ({ setSelectedUserId, setIsCreateMode, setEditedUser}) => {
+    const [userResults, setUserResults] = useState<UserUiResponse[]>([]);
     const [initialUserResults, setInitalUserResults] = useState<UserResponse[]>([]);
 
     function rowClickedHandler (userId: string) {
         setSelectedUserId(userId);
         setIsCreateMode(false);
+        setEditedUser(null);
     }
 
     useEffect(() => {
@@ -85,13 +89,40 @@ const UsersList: FC<UsersListProps> = ({ setSelectedUserId, setIsCreateMode }) =
         });
     }, []);
 
+    async function toggleUserActivity(event: any, userId: string) {
+        event.stopPropagation();
+
+        const user = userResults.find(u => u.id === userId);
+        if (user) {
+            user.isLoading = true;
+            user.active = !user.active;
+            setUserResults([...userResults]);
+
+            //arbitrary delay to show loading
+            await new Promise(resolve => setTimeout(resolve, 1000));
+            await update(userId, {
+                active: user.active,
+                username: user.username,
+                roleId: user.roleId
+            });
+
+            user.isLoading = false;
+            setUserResults([...userResults]);
+        }
+    }
+
+    function handleAddUserClick() {
+        setIsCreateMode(true);
+        setEditedUser(null);
+    }
+
 
     return (
         <Container>
             <LabelIconWrapper>
                 <Label>Users</Label>
                 <ActionButton>
-                    <AddIconCustom onClick={() => setIsCreateMode(true)}></AddIconCustom>
+                    <AddIconCustom onClick={() => handleAddUserClick()}></AddIconCustom>
                 </ActionButton>
             </LabelIconWrapper>
             <SearchWrapper>
@@ -106,6 +137,7 @@ const UsersList: FC<UsersListProps> = ({ setSelectedUserId, setIsCreateMode }) =
                             <TableCell>Username</TableCell>
                             <TableCell>Role</TableCell>
                             <TableCell>Status</TableCell>
+                            <TableCell>Toggle activity</TableCell>
                         </TableRow>
                     </TableHead>
                     <TableBody>
@@ -113,7 +145,13 @@ const UsersList: FC<UsersListProps> = ({ setSelectedUserId, setIsCreateMode }) =
                             <TableRowStyled key={user.id} sx={{ '&:last-child td, &:last-child th': { border: 0 } }} onClick={() => rowClickedHandler(user.id)}>
                                 <TableCell component="th" scope="row">{user.username}</TableCell>
                                 <TableCell component="th" scope="row">{user.role}</TableCell>
-                                <TableCell component="th"  scope="row">{user.active?'Active': 'Inactive'}</TableCell>
+                                {!user.isLoading && <TableCell component="th" scope="row">{user.active ? 'Active' : 'Inactive'}</TableCell>}
+                                {user.isLoading && <TableCell component="th" scope="row"><CircularProgress /></TableCell>}
+                                {user.active && <TableCell component="th" scope="row"><IconButton onClick={event => toggleUserActivity(event, user.id)}>
+                                    <ToggleOffOutlinedIcon /> </IconButton></TableCell>}
+                                {!user.active &&
+                                    <TableCell component="th" scope="row"><IconButton onClick={event => toggleUserActivity(event, user.id)}>
+                                        <ToggleOnOutlinedIcon /> </IconButton></TableCell>}
                             </TableRowStyled>
                         ))}
                     </TableBody>

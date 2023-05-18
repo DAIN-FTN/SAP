@@ -88,6 +88,7 @@ namespace SAP_API
             services.AddScoped<IStartPreparingService, StartPreparingService>();
             services.AddScoped<IStockedProductService, StockedProductService>();
             services.AddScoped<IOrderService, OrderService>();
+            services.AddScoped<IRoleService, RoleService>();
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IStockLocationService, StockLocationService>();
 

@@ -5,6 +5,7 @@ import UserDetailsView from './UserDetailsView';
 import { useParams } from 'react-router-dom';
 import CreateUser from '../CreateUser/CreateUser';
 import RegisterRequest from '../../../models/Requests/Users/RegisterRequest';
+import { Box, CircularProgress } from '@mui/material';
 
 const Container = styled.div`
     width: 100%;
@@ -26,6 +27,17 @@ const Panel = styled.div`
     flex-direction: column;
     box-sizing: border-box;
 `;
+
+const LoadingPanel = styled.div`
+    width: 100%;
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    box-sizing: border-box;
+    align-items: center;
+    justify-content: center;
+`;
+
 interface UsersProps { }
 
 const ViewUsersPage: FC<UsersProps> = () => {
@@ -33,15 +45,23 @@ const ViewUsersPage: FC<UsersProps> = () => {
     const [selectedUserId, setUserId] = useState<string | null>(userId? userId : null);
     const [editedUser, setEditedUser] = useState<RegisterRequest | null>(null);
     const [isCreateMode, setIsCreatemode] = useState<boolean>(false);
+    const [isLoading, setIsLoading] = useState<boolean>(false);
 
     return <Container>
-        <Panel>
-            <UsersList  setSelectedUserId={setUserId} setIsCreateMode = {setIsCreatemode} />
-        </Panel>
-        <Panel>
-            { (editedUser !== null || isCreateMode) && <CreateUser registerUserRequestData={editedUser} />}
-            { editedUser === null && !isCreateMode && <UserDetailsView userId={selectedUserId} />}
-        </Panel>
+        {isLoading && <LoadingPanel><Box><CircularProgress color="warning" /></Box></LoadingPanel>}
+        {
+            !isLoading &&
+            <Panel>
+                <UsersList setSelectedUserId={setUserId} setIsCreateMode={setIsCreatemode} setEditedUser={setEditedUser} />
+            </Panel>
+        }
+        {
+            !isLoading &&
+            <Panel>
+                {(editedUser !== null || isCreateMode ) && <CreateUser setIsLoading={setIsLoading} registerUserRequestData={editedUser} />}
+                {editedUser === null && !isCreateMode && <UserDetailsView setEditedUser={setEditedUser} userId={selectedUserId} />}
+            </Panel>
+        }
     </Container>
 };
 

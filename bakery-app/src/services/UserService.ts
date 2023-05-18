@@ -24,6 +24,6 @@ export async function create(createRequest: RegisterRequest): Promise<RegisterRe
 }
 
 export async function update(userId: string, updateRequest: UpdateUserRequest): Promise<UpdateUserResponse> {
-    return await putData<UpdateUserResponse>(`/api/products/${userId}`, updateRequest);
+    return await putData<UpdateUserResponse>(`/api/users/${userId}`, updateRequest);
 }
 

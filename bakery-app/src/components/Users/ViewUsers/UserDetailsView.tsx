@@ -3,9 +3,11 @@ import styled from "styled-components";
 import UserDetailsResponse from "../../../models/Responses/User/UserDetailsResponse";
 import { getDetails } from "../../../services/UserService";
 import UserBakingProgramsList from "./UserBakingProgramsList";
-
+import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
+import RegisterRequest from "../../../models/Requests/Users/RegisterRequest";
 type UserDetailsViewProps = {
     userId: string | null;
+    setEditedUser(user: RegisterRequest): void;
 };
 
 const Container = styled.div`
@@ -16,6 +18,27 @@ const Container = styled.div`
 
 const Label = styled.p`
     font-size: 24px;
+`;
+
+
+const LabelIconWrapper = styled.div`
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+`;
+
+const ActionButton = styled.div`
+display: flex;
+flex-direction: column;
+border: none;
+padding: 15px 10px 10px 10px;
+box-sizing: border-box;
+align-items: center;
+text-align: center;
+
+&:hover {
+    cursor: pointer;
+}
 `;
 
 const PropertyLabel = styled.p`
@@ -34,7 +57,14 @@ const PropertyValue = styled.p`
     color: black;
     margin-top: 0px;
 `;
-const UserDetailsView : FC<UserDetailsViewProps> = ({ userId }) => {
+
+const EditIconCustom = styled(EditOutlinedIcon)`
+    color: #DC3F3F;
+    &:hover {
+        background-color: #f5f5f5;
+   `;
+
+const UserDetailsView : FC<UserDetailsViewProps> = ({ userId, setEditedUser }) => {
     const [user, setUserDetails] = useState<UserDetailsResponse | null>(null);
 
     useEffect(() => {
@@ -53,7 +83,12 @@ const UserDetailsView : FC<UserDetailsViewProps> = ({ userId }) => {
 
     return (
         <Container>
-            <Label>User details</Label>
+          <LabelIconWrapper>
+                <Label>Users</Label>
+                <ActionButton>
+                    <EditIconCustom onClick={() => setEditedUser({username: user.username, password: user.password, roleId: user.roleId})}></EditIconCustom>
+                </ActionButton>
+            </LabelIconWrapper>
             <PropertyLabel>Id</PropertyLabel>
             <PropertyValue>{user.id}</PropertyValue>
             <PropertyLabel>Username</PropertyLabel>
