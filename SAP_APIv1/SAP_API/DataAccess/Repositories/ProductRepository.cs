@@ -52,7 +52,7 @@ namespace SAP_API.DataAccess.Repositories
 
         public List<Product> GetByName(string name)
         {
-            return _products.Where(p => p.Name.Contains(name)).ToList();
+            return _products.Where(p => p.Name.ToLower().Contains(name.ToLower())).ToList();
         }
 
         public Product Update(Product updatedProduct)

@@ -45,6 +45,14 @@ namespace SAP_API.Controllers
         {
             try
             {
+                DateTime utcDateTime = body.ShouldBeDoneAt.Value;
+
+                TimeZoneInfo localTimeZone = TimeZoneInfo.Local;
+
+                DateTime localDateTime = TimeZoneInfo.ConvertTimeFromUtc(utcDateTime, localTimeZone);
+
+                body.ShouldBeDoneAt = localDateTime;
+
                 CustomValidationResult validationResult = body.IsValid();
                 if (!validationResult.Success)
                 {

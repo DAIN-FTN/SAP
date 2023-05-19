@@ -67,6 +67,14 @@ namespace SAP_API.Controllers
         {
             try
             {
+                DateTime utcDateTime = body.ShouldBeDoneAt;
+
+                TimeZoneInfo localTimeZone = TimeZoneInfo.Local;
+
+                DateTime localDateTime = TimeZoneInfo.ConvertTimeFromUtc(utcDateTime, localTimeZone);
+
+                body.ShouldBeDoneAt = localDateTime;
+
                 CreateOrderResponse response = _orderCreationOrchestrator.OrchestrateOrderCreation(body);
                 return Ok(response);
             }
