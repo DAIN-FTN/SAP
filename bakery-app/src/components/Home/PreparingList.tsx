@@ -89,6 +89,8 @@ const PreparingList: FC<{ props: PreparingListProps }> = ({ props: { preparingBa
                 refreshView();
             })
             .catch((error) => {
+                console.warn('error')
+                console.warn(error)
                 setIsErrorDialogOpen(true);
                 setErrorDialogMessage(error.message);
             });
@@ -121,6 +123,11 @@ const PreparingList: FC<{ props: PreparingListProps }> = ({ props: { preparingBa
 
     }
 
+    console.log("PreparingList")
+    console.log(preparingBakingPrograms)
+    console.log("preparingInProgress")
+    console.log(preparingInProgress)
+
     if (preparingBakingPrograms.length === 0) {
         return <ErrorMessage>No baking programs to show.</ErrorMessage>;
     }
@@ -137,7 +144,7 @@ const PreparingList: FC<{ props: PreparingListProps }> = ({ props: { preparingBa
                 </TableHead>
                 <TableBody>
                     {preparingInProgress && <TableRowStyled onClick={() => setShowPreparingDetails(true)}>
-                        <TableCell component="th" scope="row" sx={{ display: 'flex', flexDirection: "row" }}><PreparingTag>Preparing</PreparingTag> {preparingInProgress.ovenCode}</TableCell>
+                        <TableCell component="th" scope="row" sx={{ display: 'flex', flexDirection: "row" }}> {preparingInProgress.ovenCode}</TableCell>
                         <TableCell align="right">{DateUtils.getMeaningfulDate(preparingInProgress.bakingProgrammedAt)}</TableCell>
                         <AvailableActionsTableCell>
                             <PrepareButton onClick={() => finishClickHandler(preparingInProgress.id)}>Finish</PrepareButton>

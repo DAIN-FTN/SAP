@@ -69,7 +69,7 @@ const SuperDetailsModal: FC<SuperDetailsModalProps> = ({ isOpen, bakingProgram, 
     if (!isOpen) return null;
 
     if (!bakingProgram)
-        return <ErrorMessage>Can not display details for the selected baking program because it's "null".</ErrorMessage>;
+        return (<></>);
 
     return (
         <DialogStyled onClose={handleClose} open={isOpen}>
