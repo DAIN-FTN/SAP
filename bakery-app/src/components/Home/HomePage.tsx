@@ -7,6 +7,7 @@ import AllBakingPrograms from "../../models/Responses/AllBakingProgramsResponse"
 import PreparingList from "./PreparingList";
 import BakingList from "./BakingList";
 import DoneList from "./DoneList";
+import { BakingProgramStatus } from "../../models/Enums/BakingProgramStatus";
 
 const Container = styled.div`
     width: 100%;
@@ -46,6 +47,70 @@ const HomePage: FC = () => {
         console.log('useEffect() in HomePage');
         getAll().then((allBakingPrograms) => { 
             console.log('fetch finished for fetchAllBakingPrograms() in HomePage');
+            const alBakingPrograms = {
+                prepareForOven: [
+                ],
+                preparingAndPrepared: [
+                    // {
+                    //     id: "adef3240-0efa-4efc-a232-589de8b91f39",
+                    //     code: "Oven 1",
+                    //     createdAt: new Date(),
+                    //     status: BakingProgramStatus.Prepared,
+                    //     bakingTimeInMins: 10,
+                    //     bakingTempInC: 270,
+                    //     bakingProgrammedAt: new Date("2023-05-20T01:09:55"),
+                    //     canBePreparedAt: new Date("2023-05-20T01:09:55"),
+                    //     canBeBakedAt: new Date("2023-05-20T01:09:55"),
+                    //     bakingStartedAt: new Date("2023-05-20T01:09:55"),
+                    //     ovenId: "adef3240-0efa-4efc-a232-589de8b91f39",
+                    //     ovenCode: "Oven 1"
+                    // }
+                ],
+                preparingInProgress: null,
+                // {
+                //     id: "adef3240-0efa-4efc-a232-589de8b91f39",
+                //     code: "Oven 1",
+                //     bakingTimeInMins: 10,
+                //     bakingTempInC: 270,
+                //     bakingProgrammedAt: new Date("2023-05-20T01:09:55"),
+                //     ovenId: "adef3240-0efa-4efc-a232-589de8b91f39",
+                //     ovenCode: "Oven 1",
+                //     locations: []
+                // },
+                baking: [
+                    // {
+                    //     id: "adef3240-0efa-4efc-a232-589de8b91f39",
+                    //     code: "Oven 1",
+                    //     createdAt: new Date(),
+                    //     status: BakingProgramStatus.Baking,
+                    //     bakingTimeInMins: 10,
+                    //     bakingTempInC: 270,
+                    //     bakingProgrammedAt: new Date("2023-05-20T01:09:55"),
+                    //     canBePreparedAt: new Date("2023-05-20T01:09:55"),
+                    //     canBeBakedAt: new Date("2023-05-20T01:09:55"),
+                    //     bakingStartedAt: new Date("2023-05-20T02:09:55"),
+                    //     ovenId: "adef3240-0efa-4efc-a232-589de8b91f39",
+                    //     ovenCode: "Oven 1"
+                    // }
+                    // 
+                ],
+                done: [
+                    // {
+                    //     id: "adef3240-0efa-4efc-a232-589de8b91f39",
+                    //     code: "Oven 1",
+                    //     createdAt: new Date(),
+                    //     status: BakingProgramStatus.Baking,
+                    //     bakingTimeInMins: 10,
+                    //     bakingTempInC: 270,
+                    //     bakingProgrammedAt: new Date("2023-05-20T01:09:55"),
+                    //     canBePreparedAt: new Date("2023-05-20T01:09:55"),
+                    //     canBeBakedAt: new Date("2023-05-20T01:09:55"),
+                    //     bakingStartedAt: new Date("2023-05-20T02:09:55"),
+                    //     ovenId: "adef3240-0efa-4efc-a232-589de8b91f39",
+                    //     ovenCode: "Oven 1"
+                    // }
+                ]
+            }
             setAllBakingPrograms(allBakingPrograms);
         });
     }, []);
