@@ -62,7 +62,8 @@ const EditIconCustom = styled(EditOutlinedIcon)`
     color: #DC3F3F;
     &:hover {
         background-color: #f5f5f5;
-   `;
+    }
+`;
 
 const UserDetailsView : FC<UserDetailsViewProps> = ({ userId, setEditedUser }) => {
     const [user, setUserDetails] = useState<UserDetailsResponse | null>(null);
