@@ -410,6 +410,7 @@ namespace SAP_API.Services
                     BakingProgrammedAt = time,
                     Products = new List<BakingProgramProduct>(),
                     Code = Guid.NewGuid().ToString(),
+                    CreatedAt = DateTime.Now,
                 };
                 ovenPrograms.Add(newBakingProgram);
             }
