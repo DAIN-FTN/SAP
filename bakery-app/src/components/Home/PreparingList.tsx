@@ -123,11 +123,6 @@ const PreparingList: FC<{ props: PreparingListProps }> = ({ props: { preparingBa
 
     }
 
-    console.log("PreparingList")
-    console.log(preparingBakingPrograms)
-    console.log("preparingInProgress")
-    console.log(preparingInProgress)
-
     if (preparingBakingPrograms.length === 0) {
         return <ErrorMessage>No baking programs to show.</ErrorMessage>;
     }
@@ -147,9 +142,10 @@ const PreparingList: FC<{ props: PreparingListProps }> = ({ props: { preparingBa
                         <TableCell component="th" scope="row" sx={{ display: 'flex', flexDirection: "row" }}> {preparingInProgress.ovenCode}</TableCell>
                         <TableCell align="right">{DateUtils.getMeaningfulDate(preparingInProgress.bakingProgrammedAt)}</TableCell>
                         <AvailableActionsTableCell>
+                            <PrepareButton onClick={() => cancelClickHandler(preparingInProgress.id)}>Cancel</PrepareButton>
                             <PrepareButton onClick={() => finishClickHandler(preparingInProgress.id)}>Finish</PrepareButton>
                         </AvailableActionsTableCell>
-                    </TableRowStyled>}
+                    </TableRowStyled>}  
                     {preparingBakingPrograms
                         .filter(bakingProgram => bakingProgram.status == BakingProgramStatus.Prepared)
                         .map((bakingProgram) => (
@@ -157,10 +153,7 @@ const PreparingList: FC<{ props: PreparingListProps }> = ({ props: { preparingBa
                                 <TableCell component="th" scope="row" onClick={() => rowClickHandler(bakingProgram)}>{bakingProgram.ovenCode}</TableCell>
                                 <TableCell align="right" onClick={() => rowClickHandler(bakingProgram)}>{DateUtils.getMeaningfulDate(bakingProgram.bakingProgrammedAt)}</TableCell>
                                 <AvailableActionsTableCell>
-                                    {(bakingProgram.status === BakingProgramStatus.Preparing)
-                                        && <PrepareButton onClick={() => cancelClickHandler(bakingProgram.id)}>Cancel</PrepareButton>}
-                                    {(bakingProgram.status === BakingProgramStatus.Prepared)
-                                        && <PrepareButton onClick={() => startBakingClickHandler(bakingProgram.id)}>Start baking</PrepareButton>}
+                                   <PrepareButton onClick={() => startBakingClickHandler(bakingProgram.id)}>Start baking</PrepareButton>
                                 </AvailableActionsTableCell>
                             </TableRowStyled>
                         ))}
