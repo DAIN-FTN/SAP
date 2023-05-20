@@ -420,6 +420,10 @@ namespace SAP_API.Services
 
         private void ArrangeProductsFromGroupToNewPrograms(List<BakingProgram> bakingPrograms, List<OrderProduct> products, TimeAndTempGroup group, Guid orderId)
         {
+            /*sort programs by date from most recent to furthest*/
+            bakingPrograms = bakingPrograms.OrderByDescending(program => program.BakingProgrammedAt).ToList();
+
+
             while (ThereAreProductsLeftForArranging(products) && ThereAreProgramsLeftForArranging(bakingPrograms))
             {
                 BakingProgram program = bakingPrograms.First();

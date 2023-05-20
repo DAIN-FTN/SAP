@@ -13,14 +13,14 @@ namespace SAP_API.DataAccess
         {
             SeedOrders(modelBuilder.Entity<Order>());
             SeedOvens(modelBuilder.Entity<Oven>());
-            SeedBakingPrograms(modelBuilder.Entity<BakingProgram>());
+            // SeedBakingPrograms(modelBuilder.Entity<BakingProgram>());
             SeedProducts(modelBuilder.Entity<Product>());
             SeedReservedOrderProducts(modelBuilder.Entity<ReservedOrderProduct>());
             SeedStockedProducts(modelBuilder.Entity<StockedProduct>());
             SeedStockLocations(modelBuilder.Entity<StockLocation>());
             SeedRoles(modelBuilder.Entity<Role>());
             SeedUsers(modelBuilder.Entity<User>());
-            SeedBakingProgramProducts(modelBuilder.Entity<BakingProgramProduct>());
+            // SeedBakingProgramProducts(modelBuilder.Entity<BakingProgramProduct>());
         }
 
         private static void SeedRoles(EntityTypeBuilder<Role> entityTypeBuilder)

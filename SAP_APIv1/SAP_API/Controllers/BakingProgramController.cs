@@ -92,7 +92,6 @@ namespace SAP_API.Controllers
                     ModelState.AddModelError("ErrorToDisplay", "The program is not next for preparing.");
                     return apiBehaviorOptions.Value.InvalidModelStateResponseFactory(ControllerContext);
                 }
-
                 StartPreparingResponse response = _bakingProgramService.GetDataForPreparing(bakingProgram);
                 return Ok(response);
 

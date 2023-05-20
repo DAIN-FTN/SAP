@@ -72,7 +72,7 @@ namespace SAP_API.Services
             if (bakingProgram.Status.Equals(BakingProgramStatus.Created))
             {
                 _startPreparingService.UseReservedProductsFromOrdersForPreparing();
-                bakingProgram.StartPreparing(new Guid("00000000-0000-0000-0000-000000000008"));
+                bakingProgram.StartPreparing(new Guid("00000000-0000-0000-0000-000000000001"));
                 _bakingProgramRepository.Update(bakingProgram);
             }
 
@@ -103,7 +103,8 @@ namespace SAP_API.Services
             List<ProductToPrepare> productsToPrepare = _productToPrepareRepository.GetByBakingProgramId(bakingProgram.Id);
             foreach (ProductToPrepare productToPrepare in productsToPrepare)
             {
-                Guid locationForStockChange = productToPrepare.LocationToPrepareFrom.Id;
+                Guid locationForStockChange = productToPrepare.StockLocationId;
+
                 Guid productForStockChange = productToPrepare.Product.Id;
                 int quantityToSubstract = productToPrepare.QuantityToPrepare;
                 _stockedProductService.ChangeStockOnLocationForProduct(locationForStockChange, productForStockChange, quantityToSubstract);
@@ -158,10 +159,10 @@ namespace SAP_API.Services
         //TODO user from req
         public AllBakingProgramsResponse GetBakingProgramsForUser()
         {
-            Guid userId = new Guid("00000000-0000-0000-0000-000000000008");
+            Guid userId = new Guid("00000000-0000-0000-0000-000000000001");
 
             DateTime timeNow = DateTime.Now;
-            DateTime startTime = timeNow.AddDays(-1);
+            DateTime startTime = timeNow.AddDays(-2);
             DateTime endTime = timeNow.AddHours(4);
             
             List<BakingProgram> bakingPrograms = _bakingProgramRepository.GetProgramsWithBakingProgrammedAtBetweenDateTimes(startTime, endTime);
@@ -209,7 +210,7 @@ namespace SAP_API.Services
             DateTime bakingProgrammedAtTime = bakingProgram.BakingProgrammedAt;
             DateTime timeNow = DateTime.Now;
             int numberOfMinutesBeforeProgrammedTimeBakingIsAllowed = 5;
-            DateTime earliestTimeToStartBaking = timeNow.AddMinutes(-numberOfMinutesBeforeProgrammedTimeBakingIsAllowed);
+            DateTime earliestTimeToStartBaking = bakingProgrammedAtTime.AddMinutes(-numberOfMinutesBeforeProgrammedTimeBakingIsAllowed);
 
             if (bakingProgrammedAtTime < earliestTimeToStartBaking)
                 return false;

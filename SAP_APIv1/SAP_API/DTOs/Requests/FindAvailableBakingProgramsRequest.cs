@@ -24,7 +24,7 @@ namespace SAP_API.DTOs
 
         private bool ShouldBeDoneAtIsInThePast()
         {
-            return DateTime.Compare((DateTime)ShouldBeDoneAt, DateTime.Now) <= 0;
+            return ShouldBeDoneAt.Value - DateTime.Now <= TimeSpan.FromMinutes(0);
         }
 
     }
