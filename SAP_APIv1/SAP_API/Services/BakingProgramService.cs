@@ -93,7 +93,7 @@ namespace SAP_API.Services
 
         public AvailableProgramsResponse FindAvailableBakingPrograms(FindAvailableBakingProgramsRequest body, Guid orderId)
         {
-            ArrangingResult result = GetExistingOrNewProgramsProductShouldBeArrangedInto((DateTime)body.ShouldBeDoneAt, body.OrderProducts, orderId);
+            ArrangingResult result = GetExistingOrNewProgramsProductShouldBeArrangedInto(body.ShouldBeDoneAt.Value, body.OrderProducts, orderId);
             AvailableProgramsResponse resultResponse = BakingProgramMapper.CreateAvailableProgramResponse(result);
             return resultResponse;
         }

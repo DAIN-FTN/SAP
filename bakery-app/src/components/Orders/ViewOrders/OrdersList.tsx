@@ -43,7 +43,8 @@ const OrdersList: FC<OrdersListProps> = ({ setSelectedOrderId }) => {
 
     useEffect(() => {
         getAll().then((orders) => {
-            setOrderResults(orders);
+            const sortedOrders = orders.sort((a, b) => DateUtils.compareDates(a.shouldBeDoneAt, b.shouldBeDoneAt));
+            setOrderResults(sortedOrders);
         });
     }, []);
 
