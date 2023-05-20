@@ -106,6 +106,10 @@ namespace SAP_API.Services
         private void UpdateUserFields(UpdateUserRequest body, User user)
         {
             user.RoleId = (Guid)body.RoleId;
+            if (body.Active != null)
+            {
+                user.Active = (bool)body.Active;
+            }
             user.Username = body.Username;
         }
 
