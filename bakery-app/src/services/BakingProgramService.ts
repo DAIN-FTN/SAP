@@ -39,6 +39,10 @@ export async function startBakingBakingProgram(id: string) {
     return await putDataWithoutResponse(`/api/baking-programs/start-baking/${id}`);
 }
 
+export async function finishBakingProgram(id: string) {
+    return await putDataWithoutResponse(`/api/baking-programs/finish/${id}`);
+}
+
 function mapAllBakingPrograms(allBakingPrograms: AllBakingPrograms): AllBakingPrograms {
     return {
         preparingInProgress: mapPreparingInProgress(allBakingPrograms.preparingInProgress),

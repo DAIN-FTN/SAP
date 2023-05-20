@@ -7,7 +7,7 @@ import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import { FC, useState } from "react";
 import styled from "styled-components";
-import { cancellBakingProgram } from "../../services/BakingProgramService";
+import { cancellBakingProgram, finishBakingProgram } from "../../services/BakingProgramService";
 import ErrorDialogue from "./ErrorDialogue";
 import DetailsModal from "./DetailsModal";
 import BakingProgramResponse from "../../models/Responses/BakingProgramResponse";
@@ -63,18 +63,7 @@ const DoneList: FC<{ props: DoneListProps }> = ({ props: { doneBakingPrograms, r
     }
 
     function finishClickHandler(bakingProgramId: string) {
-        throw new Error("Not implemented");
-    }
-
-    function cancelClickHandler(bakingProgramId: string) {
-        cancellBakingProgram(bakingProgramId)
-            .then(() => {
-                refreshView();
-            });
-    }
-
-    function startBakingClickHandler(bakingProgramId: string) {
-        cancellBakingProgram(bakingProgramId)
+        finishBakingProgram(bakingProgramId)
             .then(() => {
                 refreshView();
             });
@@ -90,21 +79,16 @@ const DoneList: FC<{ props: DoneListProps }> = ({ props: { doneBakingPrograms, r
                 <TableHead>
                     <TableRow>
                         <TableCell>Oven code</TableCell>
-                        {/* <TableCell align="right">Baking programmed at</TableCell>
-                        <TableCell align="right" sx={{ width: '110px' }}>Available action</TableCell> */}
+                        <TableCell align="right" sx={{ width: '110px' }}>Available action</TableCell>
                     </TableRow>
                 </TableHead>
                 <TableBody>
                     {doneBakingPrograms.map((bakingProgram) => (
                         <TableRowStyled key={bakingProgram.id} sx={{ '&:last-child td, &:last-child th': { border: 0 } }} >
                             <TableCell component="th" scope="row" onClick={() => rowClickHandler(bakingProgram)}>{bakingProgram.ovenCode}</TableCell>
-                            {/* <TableCell align="right" onClick={() => rowClickHandler(bakingProgram)}>{DateUtils.getMeaningfulDate(bakingProgram.bakingProgrammedAt)}</TableCell>
                             <AvailableActionsTableCell>
                                 <PrepareButton onClick={() => finishClickHandler(bakingProgram.id)}>Finish</PrepareButton>
-                                <PrepareButton onClick={() => cancelClickHandler(bakingProgram.id)}>Cancel</PrepareButton>
-                                {(bakingProgram.status === BakingProgramStatus.Prepared)
-                                    && <PrepareButton onClick={() => startBakingClickHandler(bakingProgram.id)}>Start baking</PrepareButton>}
-                            </AvailableActionsTableCell> */}
+                            </AvailableActionsTableCell>
                         </TableRowStyled>
                     ))}
                 </TableBody>
